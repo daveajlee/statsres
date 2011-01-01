@@ -15,7 +15,11 @@ import statsres.main.*;
  */
 public class SplashWindow extends JFrame {
     
-    private ImageScreen theStatsresLogo;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2481626829536427543L;
+	private ImageScreen theStatsresLogo;
     private JLabel theTitleLabel;
     private JLabel theLoadingLabel;
     private JLabel theVersionLabel;

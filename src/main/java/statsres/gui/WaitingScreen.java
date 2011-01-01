@@ -14,19 +14,21 @@ import statsres.main.*;
  */
 public class WaitingScreen extends JFrame {
     
-    private JLabel thePleaseWaitLabel;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8872811946893980953L;
+	private JLabel thePleaseWaitLabel;
     private JButton theCancelButton;
-    private UserInterface theInterface;
     private StatsresProg theProg;
     
     /**
      * Default constructor to display the waiting screen to the user.
      * @param ui a <code>UserInterface</code> object which controls interface processing in Statsres.
      */
-    public WaitingScreen ( UserInterface ui, StatsresProg sp ) {
+    public WaitingScreen ( StatsresProg sp ) {
         
         //Initialise user interface and program variables.
-        theInterface = ui;
         theProg = sp;
         
         //Set image icon.

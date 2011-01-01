@@ -5,10 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 //Import java io and util packages.
 import java.io.*;
-import java.util.*;
 //Import java swing packages.
 import javax.swing.*;
-import javax.swing.border.*;
 import javax.swing.event.*;
 
 /**
@@ -18,7 +16,11 @@ import javax.swing.event.*;
  */
 public class HelpGUI extends JFrame {
 
-    private JTextField theSearchField;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2946013407669763566L;
+	private JTextField theSearchField;
     private JList theTopicsList;
     private DefaultListModel theTopicsModel;
     private JEditorPane theDisplayPane;

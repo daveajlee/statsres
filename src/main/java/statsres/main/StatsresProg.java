@@ -1,8 +1,6 @@
 package statsres.main;
 //Import Java Util package.
 import java.util.*;
-//Import Java Swing packages.
-import javax.swing.*;
 //Import Java IO package.
 import java.io.*;
 

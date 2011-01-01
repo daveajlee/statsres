@@ -15,7 +15,11 @@ import java.net.URL;
  */
 public class ImageScreen extends Canvas implements MouseListener {
     
-    private Image theImage;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1654247785804050403L;
+	private Image theImage;
     private JFrame theAssociateScreen;
     private int theLeftBorder;
     private int theTopBorder;

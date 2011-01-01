@@ -65,7 +65,7 @@ public class ProcessRunner extends Thread {
                     }
                     sp.setCalcParameters(fileList, columns, theStatsOptions);
                     //theInterface.getCurrentFrame().dispose();
-                    WaitingScreen ws = new WaitingScreen(theInterface, sp);
+                    WaitingScreen ws = new WaitingScreen(sp);
                     sp.start();
                     while ( sp.isStillRunning() ) {
                         //Process is running in separate thread ... do nothing here!

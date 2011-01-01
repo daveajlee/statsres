@@ -3,11 +3,8 @@ package statsres.gui;
 import statsres.main.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
 //Import file extension package.
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -18,7 +15,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class StatsresGUI extends JFrame {
     
-    private JLabel theFileOptionsLabel;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2556833225592251195L;
+	private JLabel theFileOptionsLabel;
     private JLabel theResultsFileLabel;
     private JTextField theResultsFileField;
     private JButton theResultsFileButton;
@@ -118,7 +119,7 @@ public class StatsresGUI extends JFrame {
                 if ( !fileName.equalsIgnoreCase("") ) {
                     String[] settings = theOperations.loadSettingsFile(fileName);
                     if ( settings != null ) {
-                        StatsresGUI srs = new StatsresGUI(theInterface, "", false, settings);
+                        new StatsresGUI(theInterface, "", false, settings);
                         dispose();
                     }
                     else {
@@ -186,7 +187,7 @@ public class StatsresGUI extends JFrame {
         theContentMenu = new JMenuItem("Contents");
         theContentMenu.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                HelpGUI hs = new HelpGUI();
+                new HelpGUI();
             }
         });
         theHelpMenu.add(theContentMenu);
@@ -194,7 +195,7 @@ public class StatsresGUI extends JFrame {
         theAboutMenu = new JMenuItem("About");
         theAboutMenu.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                SplashWindow ss = new SplashWindow(true, theInterface);
+                new SplashWindow(true, theInterface);
             }
         });
         theHelpMenu.add(theAboutMenu);
@@ -245,7 +246,7 @@ public class StatsresGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String file = loadResultsFile(theResultsFileField.getText(), theIncludeSubFoldersBox.isSelected());
                 if ( !file.equalsIgnoreCase("") ) {
-                    StatsresGUI rus = new StatsresGUI(theInterface, file, theIncludeSubFoldersBox.isSelected(),theCurrentSettings);
+                    new StatsresGUI(theInterface, file, theIncludeSubFoldersBox.isSelected(),theCurrentSettings);
                     dispose();
                 }
             }

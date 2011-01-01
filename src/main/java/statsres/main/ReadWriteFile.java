@@ -7,8 +7,6 @@ import java.util.*;
 
 //Import swing packages.
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;;
 
 /*
  * Class for writing and reading result files.

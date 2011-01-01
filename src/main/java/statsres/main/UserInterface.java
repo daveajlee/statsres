@@ -86,7 +86,7 @@ public class UserInterface {
         try {
             SplashWindow ss = new SplashWindow(false, new UserInterface());
             Thread.sleep(2000);
-            StatsresGUI rus = new StatsresGUI(new UserInterface(), "", false,null);
+            new StatsresGUI(new UserInterface(), "", false,null);
             ss.dispose();
         }
         catch ( InterruptedException ie) {
