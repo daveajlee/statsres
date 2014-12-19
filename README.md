@@ -8,6 +8,7 @@ Thank you for your interest in Statsres - Statistical Analysis Software. This re
 
 ### How do I get set up? ###
 
+* First of all download the current version from Downloads. There are versions for Linux/Mac (zip) and Windows (exe or setup exe). Have a look around and get to know Statsres!
 * Clone the git branch and import the project in your favourite IDE.
 * The current main class is UserInterface.
 * Dependencies are managed through the pom.xml file and Apache Maven.
