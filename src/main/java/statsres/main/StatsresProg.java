@@ -16,7 +16,7 @@ public class StatsresProg extends Thread {
     
     //Variables to remember files, columns and outputs to allow run method in Thread class with no parameters to be executed as calculate tasks.
     private LinkedList<String> theFiles;
-    private String[] theColumns;
+    private List<String> theColumns;
     private LinkedList<Boolean> theOutputs;
     //Variable to display output and boolean variable indicating whether finished or not.
     private String theOutput;
@@ -32,10 +32,10 @@ public class StatsresProg extends Thread {
      * Set the file, columns and output parameters for later calculation of statistical measurements.
      * Added in version 1.1 to enable better threading support.
      * @param files a <code>String</code> linkedlist containing the results file to process.
-     * @param columns a <code>String</code> array containing the columns of the results file to process.
+     * @param columns a <code>String</code> List containing the columns of the results file to process.
      * @param outputs a <code>boolean</code> linked list containing the statistical measurements required by user.
      */
-    public void setCalcParameters ( LinkedList<String> files, String[] columns, LinkedList<Boolean> outputs ) {
+    public void setCalcParameters ( LinkedList<String> files, List<String> columns, LinkedList<Boolean> outputs ) {
         theFiles = files;
         theColumns = columns;
         theOutputs = outputs;
@@ -56,7 +56,7 @@ public class StatsresProg extends Thread {
             ReadWriteFile resultsFile = new ReadWriteFile();
             LinkedList<String> resultsFileContents = resultsFile.readFile(theFiles.get(g));
             //Look through first row of data file to determine which positions in the array we need to look through.
-            int[] columnPositions = new int[theColumns.length];
+            int[] columnPositions = new int[theColumns.size()];
             for ( int i = 0; i < columnPositions.length; i++ ) {
                 columnPositions[i] = 0;
                 if ( !isProcessing ) { return; }
@@ -64,9 +64,9 @@ public class StatsresProg extends Thread {
             String[] firstRow = resultsFileContents.get(0).split(",");
             for ( int i = 0; i < firstRow.length; i++ ) {
                 //Check if this row is included in any of the columns.
-                for ( int j = 0; j < theColumns.length; j++ ) {
+                for ( int j = 0; j < theColumns.size(); j++ ) {
                     //For the moment, only support one column, so break when find first one.
-                    if ( firstRow[i].equalsIgnoreCase(theColumns[j]) ) { columnPositions[j] = i; }
+                    if ( firstRow[i].equalsIgnoreCase(theColumns.get(j)) ) { columnPositions[j] = i; }
                     if ( !isProcessing ) { return; }
                 }
             }
@@ -84,8 +84,8 @@ public class StatsresProg extends Thread {
                     if ( !isProcessing ) { return; }
                 }
                 //Now call performCalculations method on the String LinkedList.
-                if (h == 0) { theOutput += "\n" + performCalculations ( fileData, theColumns[h], theOutputs); }
-                else { theOutput += "\n\n" + performCalculations ( fileData, theColumns[h], theOutputs); }
+                if (h == 0) { theOutput += "\n" + performCalculations ( fileData, theColumns.get(h), theOutputs); }
+                else { theOutput += "\n\n" + performCalculations ( fileData, theColumns.get(h), theOutputs); }
             }
         }
         //Finished so set isProcessing to false.
@@ -268,13 +268,10 @@ public class StatsresProg extends Thread {
                     setFileCounter = false;
                 }
                 else {
-                    String[] fileSplit = currentFile.split("\\\\"); currentFile = ""; String aboveFile = "";
+                    String[] fileSplit = currentFile.split("\\\\"); currentFile = "";
                     for ( int i = 0; i < fileSplit.length-1; i++ ) {
                         if ( !fileSplit[i].equalsIgnoreCase("") ) {
                             currentFile += fileSplit[i] + "\\";
-                            if ( i != fileSplit.length-2 ) {
-                                aboveFile += fileSplit[i] + "\\";
-                            }
                         }
                     }
                     //Find location of previous file in array to start from there.

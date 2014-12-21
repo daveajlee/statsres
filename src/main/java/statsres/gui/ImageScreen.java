@@ -32,22 +32,9 @@ public class ImageScreen extends Canvas implements MouseListener {
      * @param assocScreen a <code>JFrame</code> containing the currently displayed screen - 
      * important for removing that screen when clicking on image.
      */
-    public ImageScreen ( String fileName, int lborder, int tborder, JFrame assocScreen ) {
-        //Initialise variables.
-        theLeftBorder = lborder;
-        theTopBorder = tborder;
-        theAssociateScreen = assocScreen;
-        addMouseListener(this);
-        //Construct and display image.
-        theImage = Toolkit.getDefaultToolkit().getImage(fileName);
-        MediaTracker mediaTracker = new MediaTracker(this);
-	mediaTracker.addImage(theImage, 0);
-        try {
-            mediaTracker.waitForID(0);
-        }
-	catch (InterruptedException ie) {
-            System.out.println("Unable to load image!");
-        }
+    public ImageScreen ( final String fileName, final int lborder, final int tborder, final JFrame assocScreen ) {
+    	theImage = Toolkit.getDefaultToolkit().getImage(fileName);
+    	displayImage(lborder, tborder, assocScreen);
     }
     
     /**
@@ -58,22 +45,30 @@ public class ImageScreen extends Canvas implements MouseListener {
      * @param assocScreen a <code>JFrame</code> containing the currently displayed screen - 
      * important for removing that screen when clicking on image.
      */
-    public ImageScreen ( URL fileName, int lborder, int tborder, JFrame assocScreen ) {
-        //Initialise variables.
+    public ImageScreen ( final URL fileName, final int lborder, final int tborder, final JFrame assocScreen ) {
+        theImage = Toolkit.getDefaultToolkit().getImage(fileName);
+        displayImage(lborder, tborder, assocScreen);
+    }
+    
+    /**
+     * Helper method to display image regardless of whether it is URL or String parameter.
+     * @param lborder a <code>int</code> containing the size of the left border.
+     * @param tborder a <code>int</code> containing the size of the right border.
+     * @param assocScreen a <code>JFrame</code> containing the currently displayed screen - 
+     * important for removing that screen when clicking on image.
+     */
+    private void displayImage ( final int lborder, final int tborder, final JFrame assocScreen ) {
+    	//Initialise variables.
         theLeftBorder = lborder;
         theTopBorder = tborder;
         theAssociateScreen = assocScreen;
         addMouseListener(this);
         //Construct and display image.
-        theImage = Toolkit.getDefaultToolkit().getImage(fileName);
         MediaTracker mediaTracker = new MediaTracker(this);
-	mediaTracker.addImage(theImage, 0);
-        try
-	{
+        mediaTracker.addImage(theImage, 0);
+        try {
             mediaTracker.waitForID(0);
-        }
-	catch (InterruptedException ie)
-	{
+        } catch (InterruptedException ie) {
             System.out.println("Unable to load image!");
         }
     }

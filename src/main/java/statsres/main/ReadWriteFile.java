@@ -43,6 +43,7 @@ public class ReadWriteFile {
             }
             //Until the end of the file is reached.
             while(line!=null);
+            theReader.close();
         }
         // If any exception then show error message and return null;
         catch (IOException e){
@@ -59,16 +60,19 @@ public class ReadWriteFile {
      * @return a <code>String</code> with contents of first line of the file.
      */
     public String readFileFirstLine(String location) {
+    	String firstLine = ""; BufferedReader theReader;
         //Commencing reading of the file.
         try{
             //Create a new buffered reader object and a new string called line.
-            BufferedReader theReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(location))));
-            return theReader.readLine();
+            theReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(location))));
+            firstLine = theReader.readLine();
+            theReader.close();
         }
         // If any exception then show error message and return null;
         catch (IOException e){
             return null;
         }
+        return firstLine;
     }
     
     /*

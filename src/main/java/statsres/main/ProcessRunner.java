@@ -17,14 +17,14 @@ import javax.swing.*;
 public class ProcessRunner extends Thread {
 
     private String theResultsFileFolder;
-    private JList theColumnHeadings;
+    private JList<String> theColumnHeadings;
     private LinkedList<Boolean> theStatsOptions;
     private JTextArea theOutputArea;
     private boolean isFolders;
     private UserInterface theInterface;
     private JFrame theGUI;
     
-    public ProcessRunner ( UserInterface ui, String resFileFolder, LinkedList<Boolean> so, JList ch, JTextArea oa, boolean folders, JFrame gui ) {
+    public ProcessRunner ( UserInterface ui, String resFileFolder, LinkedList<Boolean> so, JList<String> ch, JTextArea oa, boolean folders, JFrame gui ) {
         theInterface = ui;
         theResultsFileFolder = resFileFolder;
         theStatsOptions = so;
@@ -36,21 +36,15 @@ public class ProcessRunner extends Thread {
     
     public void run () {
         //First, error checking - does selected file/directory exist.
-        File f = new File(theResultsFileFolder);
-        if ( f.exists() ) {
+        if ( new File(theResultsFileFolder).exists() ) {
             //Next, error checking - is at least one column heading selected.
-            if ( theColumnHeadings.getSelectedValues().length != 0 ) {
+            if ( theColumnHeadings.getSelectedValuesList().size() != 0 ) {
                 //Final, error checking - are some stats options selected.
                 int booleanCount = 0;
                 for ( int i = 0; i < theStatsOptions.size(); i++ ) {
                     if ( theStatsOptions.get(i) == true ) { booleanCount++; }
                 }
                 if ( booleanCount != 0 ) {
-                    //Convert the column headings into a string array.
-                    String[] columns = new String[theColumnHeadings.getSelectedValues().length];
-                    for ( int i = 0; i < columns.length; i++ ) {
-                        columns[i] = theColumnHeadings.getSelectedValues()[i].toString();
-                    }
                     //Run program.
                     theOutputArea.setText("");
                     StatsresProg sp = new StatsresProg();
@@ -63,7 +57,7 @@ public class ProcessRunner extends Thread {
                     else {
                         fileList.add(theResultsFileFolder);
                     }
-                    sp.setCalcParameters(fileList, columns, theStatsOptions);
+                    sp.setCalcParameters(fileList, theColumnHeadings.getSelectedValuesList(), theStatsOptions);
                     //theInterface.getCurrentFrame().dispose();
                     WaitingScreen ws = new WaitingScreen(sp);
                     sp.start();

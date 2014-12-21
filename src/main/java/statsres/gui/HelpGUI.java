@@ -5,6 +5,10 @@ import java.awt.*;
 import java.awt.event.*;
 //Import java io and util packages.
 import java.io.*;
+import java.util.HashMap;
+
+import java.util.Iterator;
+
 //Import java swing packages.
 import javax.swing.*;
 import javax.swing.event.*;
@@ -21,14 +25,26 @@ public class HelpGUI extends JFrame {
 	 */
 	private static final long serialVersionUID = 2946013407669763566L;
 	private JTextField theSearchField;
-    private JList theTopicsList;
-    private DefaultListModel theTopicsModel;
+    private JList<String> theTopicsList;
+    private DefaultListModel<String> theTopicsModel;
     private JEditorPane theDisplayPane;
+    
+    private HashMap<String, String> contentUrls;
     
     /**
      * Default constructor for HelpGUI which creates the help screen interface and displays it to the user.
      */
     public HelpGUI ( ) {
+    	
+    	contentUrls = new HashMap<String, String>();
+    	contentUrls.put("Welcome", "/intro.html");
+    	contentUrls.put("Getting Started", "/gettingstarted.html");
+    	contentUrls.put("Input Options", "/inputoptions.html");
+    	contentUrls.put("Output", "/output.html");
+    	contentUrls.put("Load Settings", "/loadsettings.html");
+    	contentUrls.put("Save Settings", "/savesettings.html");
+    	contentUrls.put("Load Output", "/loadoutput.html");
+    	contentUrls.put("Save Output", "/saveoutput.html");
         
         //Set image icon.
         Image img = Toolkit.getDefaultToolkit().getImage(HelpGUI.class.getResource("/logosmall.png"));
@@ -74,12 +90,12 @@ public class HelpGUI extends JFrame {
         leftPanel.add(Box.createRigidArea(new Dimension(0, 20))); //Spacer.
         
         //Add topics list.
-        theTopicsModel = new DefaultListModel();
-        theTopicsModel.addElement("Welcome"); theTopicsModel.addElement("Getting Started");
-        theTopicsModel.addElement("Input Options"); theTopicsModel.addElement("Output");
-        theTopicsModel.addElement("Load Settings"); theTopicsModel.addElement("Save Settings");
-        theTopicsModel.addElement("Load Output"); theTopicsModel.addElement("Save Output");
-        theTopicsList = new JList(theTopicsModel);
+        theTopicsModel = new DefaultListModel<String>();
+        Iterator<String> contentIterator = contentUrls.keySet().iterator();
+        while ( contentIterator.hasNext() ) {
+        	theTopicsModel.addElement(contentIterator.next());
+        }
+        theTopicsList = new JList<String>(theTopicsModel);
         theTopicsList.setVisibleRowCount(20);
         theTopicsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         //Default.
@@ -98,31 +114,7 @@ public class HelpGUI extends JFrame {
                 }
                 //If loading content fails, then stack trace and dispose.
                 try {
-                    //If statements to display correct content.
-                    if ( selectedItem.equalsIgnoreCase("Welcome") ) {
-                        theDisplayPane.setPage(HelpGUI.class.getResource("/intro.html"));
-                    }
-                    else if ( selectedItem.equalsIgnoreCase("Getting Started") ) {
-                        theDisplayPane.setPage(HelpGUI.class.getResource("/gettingstarted.html"));
-                    }
-                    else if ( selectedItem.equalsIgnoreCase("Input Options") ) {
-                        theDisplayPane.setPage(HelpGUI.class.getResource("/inputoptions.html"));
-                    }
-                    else if ( selectedItem.equalsIgnoreCase("Output") ) {
-                        theDisplayPane.setPage(HelpGUI.class.getResource("/output.html"));
-                    }
-                    else if ( selectedItem.equalsIgnoreCase("Load Settings") ) {
-                        theDisplayPane.setPage(HelpGUI.class.getResource("/loadsettings.html"));
-                    }
-                    else if ( selectedItem.equalsIgnoreCase("Save Settings") ) {
-                        theDisplayPane.setPage(HelpGUI.class.getResource("/savesettings.html"));
-                    }
-                    else if ( selectedItem.equalsIgnoreCase("Load Output") ) {
-                        theDisplayPane.setPage(HelpGUI.class.getResource("/loadoutput.html"));
-                    }
-                    else if ( selectedItem.equalsIgnoreCase("Save Output") ) {
-                        theDisplayPane.setPage(HelpGUI.class.getResource("/saveoutput.html"));
-                    }
+                    theDisplayPane.setPage(HelpGUI.class.getResource(contentUrls.get(selectedItem)));
                 }
                 catch ( IOException e ) {
                     e.printStackTrace();
@@ -184,7 +176,7 @@ public class HelpGUI extends JFrame {
      */
     public void updateList ( String text ) {
         //Create temp model.
-        DefaultListModel tempModel = new DefaultListModel();
+        DefaultListModel<String> tempModel = new DefaultListModel<String>();
         //If text is blank then set tempModel to fullModel.
         if ( text.equalsIgnoreCase("") ) {
             tempModel = theTopicsModel;

@@ -27,8 +27,8 @@ public class StatsresGUI extends JFrame {
     
     private JLabel theDataOptionsLabel;
     private JLabel theColumnLabel;
-    private DefaultListModel theColumnData;
-    private JList theColumnHeadings;
+    private DefaultListModel<String> theColumnData;
+    private JList<String> theColumnHeadings;
     private JButton theSelectAllButton;
     private JButton theDeselectAllButton;
     
@@ -115,7 +115,7 @@ public class StatsresGUI extends JFrame {
         theLoadSettingsMenu = new JMenuItem("Settings");
         theLoadSettingsMenu.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
-                String fileName = loadInputOutputFile("", true);
+                String fileName = loadSaveInputOutputFile("", true, true);
                 if ( !fileName.equalsIgnoreCase("") ) {
                     String[] settings = theOperations.loadSettingsFile(fileName);
                     if ( settings != null ) {
@@ -132,7 +132,7 @@ public class StatsresGUI extends JFrame {
         theLoadOutputMenu = new JMenuItem("Output");
         theLoadOutputMenu.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
-                String fileName = loadInputOutputFile("", false);
+                String fileName = loadSaveInputOutputFile("", false, true);
                 if ( !fileName.equalsIgnoreCase("") ) {
                     String result = theOperations.loadOutputFile(fileName);
                     if ( !result.equalsIgnoreCase("") ) {
@@ -151,7 +151,7 @@ public class StatsresGUI extends JFrame {
         theSaveSettingsMenu = new JMenuItem("Settings");
         theSaveSettingsMenu.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
-                String fileName = saveInputOutputFile("", true);
+                String fileName = loadSaveInputOutputFile("", true, false);
                 if ( !fileName.equalsIgnoreCase("") ) {
                     if ( theOperations.saveSettingsFile(getCurrentSettings(), fileName ) ) {
                         JOptionPane.showMessageDialog(StatsresGUI.this, "Current settings were successfully saved to the selected file!", "Settings Saved Successfully", JOptionPane.INFORMATION_MESSAGE);
@@ -163,7 +163,7 @@ public class StatsresGUI extends JFrame {
         theSaveOutputMenu = new JMenuItem("Output");
         theSaveOutputMenu.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
-                String fileName = saveInputOutputFile("", false);
+                String fileName = loadSaveInputOutputFile("", false, false);
                 if ( !fileName.equalsIgnoreCase("") ) {
                     if ( theOperations.saveOutputFile(theOutputArea.getText(), fileName ) ) {
                         JOptionPane.showMessageDialog(StatsresGUI.this, "Output was successfully saved to the selected file!", "Output Saved Successfully", JOptionPane.INFORMATION_MESSAGE);
@@ -307,7 +307,7 @@ public class StatsresGUI extends JFrame {
         theColumnLabel = new JLabel("Select Column(s):");
         columnPanel.add(theColumnLabel);
         //JList for column headings.
-        theColumnData = new DefaultListModel();
+        theColumnData = new DefaultListModel<String>();
         //Only process contents of file if current settings is not null or a file was selected!
         if ( theCurrentSettings != null ) {
             String[] columns = theCurrentSettings[2].split(",");
@@ -359,7 +359,7 @@ public class StatsresGUI extends JFrame {
                 JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
             }
         }
-        theColumnHeadings = new JList(theColumnData);
+        theColumnHeadings = new JList<String>(theColumnData);
         theColumnHeadings.setVisibleRowCount(3);
         JScrollPane columnPane = new JScrollPane(theColumnHeadings);
         columnPanel.add(columnPane);
@@ -584,12 +584,13 @@ public class StatsresGUI extends JFrame {
     }
     
     /**
-     * Method to load either input or output file into the interface.
+     * Method to load/save either input or output file into the interface.
      * @param location a <code>String</code> with the last opened file.
      * @param isInput a <code>Boolean</code> indicating whether it is input (true) or output (false).
+     * @param load a <code>Boolean</code> which is true iff load function activated. Otherwise save will be displayed in title.
      * @return a <code>String</code> containing the name of the file to load.
      */
-    public String loadInputOutputFile ( String location, boolean isInput ) {
+    public String loadSaveInputOutputFile ( String location, boolean isInput, boolean load ) {
         //Determine location of last file as user may wish to choose another file from that directory.
         JFileChooser fileDialog;
         if ( !location.equalsIgnoreCase("") ) {
@@ -605,8 +606,19 @@ public class StatsresGUI extends JFrame {
             //Create results file open dialog box.
             fileDialog = new JFileChooser();
         }
-        if (isInput) { fileDialog.setDialogTitle("Load Settings File"); }
-        else { fileDialog.setDialogTitle("Load Output File"); }
+        if (isInput) { 
+        	if (load) { 
+        		fileDialog.setDialogTitle("Load Settings File"); 
+        	} else {
+        		fileDialog.setDialogTitle("Save Settings File");
+        	}
+        } else {
+        	if (load) {
+        		fileDialog.setDialogTitle("Load Output File"); 
+        	} else {
+        		fileDialog.setDialogTitle("Save Output File");
+        	}
+        }
         //Set file selection mode to files only.
         fileDialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
         //Only display relevant extension.
@@ -615,47 +627,6 @@ public class StatsresGUI extends JFrame {
         else { filter = new FileNameExtensionFilter("Statsres Output File (.sro)", "sro"); }
         fileDialog.setFileFilter(filter);
         int returnVal = fileDialog.showOpenDialog(this);
-        //Check if the user submitted a file.
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-            //Return the path of the file selected.
-            return fileDialog.getSelectedFile().getPath();
-        }
-        //Return blank if user didn't select file.
-        return "";
-    }
-    
-    /**
-     * Method to save either input or output file into the interface.
-     * @param location a <code>String</code> with the last opened file.
-     * @param isInput a <code>Boolean</code> indicating whether it is input (true) or output (false).
-     * @return a <code>String</code> containing the name of the saved file.
-     */
-    public String saveInputOutputFile ( String location, boolean isInput ) {
-        //Determine location of last file as user may wish to choose another file from that directory.
-        JFileChooser fileDialog;
-        if ( !location.equalsIgnoreCase("") ) {
-            String[] locSplit = location.split("\\\\");
-            String folderLocation = "";
-            for ( int i = 0; i < locSplit.length-1; i++ ) {
-                folderLocation += locSplit[i] + "\\";
-            }
-            //Create results file open dialog box.
-            fileDialog = new JFileChooser(folderLocation);
-        }
-        else {
-            //Create results file open dialog box.
-            fileDialog = new JFileChooser();
-        }
-        if (isInput) { fileDialog.setDialogTitle("Save Settings File"); }
-        else { fileDialog.setDialogTitle("Save Output File"); }
-        //Set file selection mode to files only.
-        fileDialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        //Only display relevant extension.
-        FileNameExtensionFilter filter;
-        if (isInput) { filter = new FileNameExtensionFilter("Statsres Settings File (.srs)", "srs"); }
-        else { filter = new FileNameExtensionFilter("Statsres Output File (.sro)", "sro"); }
-        fileDialog.setFileFilter(filter);
-        int returnVal = fileDialog.showSaveDialog(this);
         //Check if the user submitted a file.
         if(returnVal == JFileChooser.APPROVE_OPTION) {
             //Return the path of the file selected.
