@@ -1,7 +1,6 @@
 package statsres.main;
 //Import java io package.
 import java.io.*;
-
 //Import java.util package.
 import java.util.*;
 
@@ -13,22 +12,23 @@ import javax.swing.*;
  * @author David Lee.
  * @version 1.0.
  */
-public class ReadWriteFile {
+public final class ReadWriteFile {
     
     /**
      * Default Constructor - do nothing.
      */
-    public ReadWriteFile() {
+    private ReadWriteFile() {
     }
     
     /*
      * Performs the tasks of a readFile method.
      * Creates a buffered reader and reads the file line by line.
      * @param location a <code>String</code> representation of the location of the file to be read.
+     * @param readOnlyFirstLine a <code>boolean</code> which is true iff the first line should be read exclusively!
      * @return a <code>String</code> linked list of the contents of the file.
      */
-    public LinkedList<String> readFile(String location) {
-        LinkedList<String> theLinkedList = new LinkedList<String>();
+    public static List<String> readFile(final String location, final boolean readOnlyFirstLine) {
+        List<String> theLinkedList = new ArrayList<String>();
         //Commencing reading of the file.
         try{
             //Create a new buffered reader object and a new string called line.
@@ -42,7 +42,7 @@ public class ReadWriteFile {
                 theLinkedList.add(line);
             }
             //Until the end of the file is reached.
-            while(line!=null);
+            while(line!=null && !readOnlyFirstLine);
             theReader.close();
         }
         // If any exception then show error message and return null;
@@ -55,36 +55,15 @@ public class ReadWriteFile {
     }
     
     /*
-     * Creates a buffered reader and reads the first line of the specified file.
-     * @param location a <code>String</code> representation of the location of the file to be read.
-     * @return a <code>String</code> with contents of first line of the file.
-     */
-    public String readFileFirstLine(String location) {
-    	String firstLine = ""; BufferedReader theReader;
-        //Commencing reading of the file.
-        try{
-            //Create a new buffered reader object and a new string called line.
-            theReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(location))));
-            firstLine = theReader.readLine();
-            theReader.close();
-        }
-        // If any exception then show error message and return null;
-        catch (IOException e){
-            return null;
-        }
-        return firstLine;
-    }
-    
-    /*
      * Takes a String array and a File to write to.
      * Performs the basic tasks of a writeFile method.
      * Creates a BufferedWriter and writes the String array to the file.
-     * @param phrase a <code>String</code> linked list containing the phrases to be written to the file.
+     * @param phrase a <code>String</code> list containing the phrases to be written to the file.
      * @param theFile a <code>File</code> object containing the file that the phrase should be written to.
      * @param append a <code>boolean</code> indicating whether or not the data should be appended to the end of the file.
      * @return a <code>boolean</code> value indicating whether the file writing was successful.
      */
-    public boolean writeFile(LinkedList<String> phrase, File theFile, boolean append ){
+    public static boolean writeFile(final List<String> phrase, final File theFile, final boolean append ){
         try{
             //Create the file.
             theFile.createNewFile();

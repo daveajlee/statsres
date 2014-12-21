@@ -328,8 +328,7 @@ public class StatsresGUI extends JFrame {
             }
             //Load contents of file and whole of first line, colon-separated gives content.
             if ( fileList.size() > 0 ) {
-                ReadWriteFile fo = new ReadWriteFile();
-                String firstLine = fo.readFileFirstLine(fileList.get(0));
+                String firstLine = ReadWriteFile.readFile(fileList.get(0), true).get(0);
                 if ( firstLine != null ) {
                     if ( firstLine.contains(",") ) {
                         boolean addElement = true;

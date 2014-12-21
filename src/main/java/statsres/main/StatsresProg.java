@@ -12,7 +12,6 @@ import java.io.*;
 public class StatsresProg extends Thread {
     
     private LinkedList<String> fileData;
-    private ReadWriteFile theFileProcessor;
     
     //Variables to remember files, columns and outputs to allow run method in Thread class with no parameters to be executed as calculate tasks.
     private LinkedList<String> theFiles;
@@ -25,7 +24,6 @@ public class StatsresProg extends Thread {
     /** Default constructor. */
     public StatsresProg() {
         fileData = new LinkedList<String>();
-        theFileProcessor = new ReadWriteFile();
     }
     
     /**
@@ -53,8 +51,7 @@ public class StatsresProg extends Thread {
             //Ensure fileData is blank.
             fileData = new LinkedList<String>();
             //Open results file.
-            ReadWriteFile resultsFile = new ReadWriteFile();
-            LinkedList<String> resultsFileContents = resultsFile.readFile(theFiles.get(g));
+            List<String> resultsFileContents = ReadWriteFile.readFile(theFiles.get(g), false);
             //Look through first row of data file to determine which positions in the array we need to look through.
             int[] columnPositions = new int[theColumns.size()];
             for ( int i = 0; i < columnPositions.length; i++ ) {
@@ -103,12 +100,10 @@ public class StatsresProg extends Thread {
         //Reset the output variable.
         String output = "Statistical Results for column " + columnHeading + ":";
         //Convert data into numerical data to perform calculations.
-        double[] numericalData = new double[data.size()]; double numericalTotal = 0;
+        double[] numericalData = new double[data.size()];
         try {
             for ( int i = 0; i < numericalData.length; i++ ) {
                 numericalData[i] = Double.parseDouble(data.get(i));
-                //Prudent at this point to remember to count variables!
-                numericalTotal += numericalData[i];
             }
         }
         catch ( Exception e ) {
@@ -120,74 +115,47 @@ public class StatsresProg extends Thread {
         try {
             //Mean.
             if ( outputs.get(0) || outputs.get(8) ) {
-                mean = numericalTotal/numericalData.length;
+            	mean = StatisticalFunctions.MEAN.calculate(numericalData);
                 if (outputs.get(0)) { output += "\nMean: " + removeZeros("" + mean); }
             }
-            //Now sort array elements.
-            Arrays.sort(numericalData);
             //Min.
             if ( outputs.get(1) ) {
-                double min = numericalData[0];
+                double min = StatisticalFunctions.MIN.calculate(numericalData);
                 output += "\nMinimum Value: " + removeZeros("" + min);
             }
             //Max.
             if ( outputs.get(2) ) {
-                double max = numericalData[numericalData.length-1];
+                double max = StatisticalFunctions.MAX.calculate(numericalData);
                 output += "\nMaximum Value: " + removeZeros("" + max);
             }
             //Median.
             if ( outputs.get(3) ) {
-                int medianPos = Math.round(data.size()/2); double median = -1;
-                Double diff = new Double((double) numericalData.length / (double) 2);
-                if ( diff.toString().split(".").length > 1 || numericalData.length ==1 ) {
-                    median = numericalData[medianPos];
-                }
-                else {
-                    median = ((numericalData[medianPos] - numericalData[medianPos-1])/2) + numericalData[medianPos-1];
-                }
+                double median = StatisticalFunctions.MEDIAN.calculate(numericalData);
                 output += "\nMedian: " + removeZeros("" + median); 
             }
             //Count.
             if ( outputs.get(4) ) {
-                double count = numericalData.length;
+                double count = StatisticalFunctions.COUNT.calculate(numericalData);
                 output += "\nNumber of Data Values: " + removeZeros("" + count);
             }   
             //1st Quartile.
             if ( outputs.get(5) || outputs.get(7) ) {
-                int oneQuartilePos = Math.round(data.size()/4); oneQuartile = -1;
-                Double diff = new Double((double) numericalData.length / (double) 4);
-                if ( diff.toString().split(".").length > 1 || numericalData.length ==1 ) {
-                    oneQuartile = numericalData[oneQuartilePos];
-                }
-                else {
-                    oneQuartile = ((numericalData[oneQuartilePos] - numericalData[oneQuartilePos-1])/2) + numericalData[oneQuartilePos-1];
-                }
+                oneQuartile = StatisticalFunctions.QUARTILE_FIRST.calculate(numericalData);
                 if (outputs.get(5) ) { output += "\n1st Quartile: " + removeZeros("" + oneQuartile); }
             }
             //3rd Quartile.
             if ( outputs.get(6) || outputs.get(7) ) {
-                int threeQuartilePos = Math.round(data.size()/4) * 3; threeQuartile = -1;
-                Double diff = new Double((double) numericalData.length / (double) 4);
-                if ( diff.toString().split(".").length > 1 || numericalData.length ==1 ) {
-                    threeQuartile = numericalData[threeQuartilePos];
-                }
-                else {
-                    threeQuartile = ((numericalData[threeQuartilePos] - numericalData[threeQuartilePos-1])/2) + numericalData[threeQuartilePos-1];
-                }
+                threeQuartile = StatisticalFunctions.QUARTILE_THIRD.calculate(numericalData);
                 if (outputs.get(6)) { output += "\n3rd Quartile: " + removeZeros("" + threeQuartile); }
             }
             //IQR.
             if ( outputs.get(7) ) {
-                double iqr = threeQuartile - oneQuartile;
+                double iqr = StatisticalFunctions.INTER_QUARTILE_RANGE.calculate(numericalData);
                 output += "\nInterquartile Range: " + removeZeros("" + iqr);
             }
             //Standard Deviation.
             if ( outputs.get(8) ) {
-                long variance = 0;
-                for ( int i = 0; i < numericalData.length; i++ ) {
-                    variance += Math.pow(numericalData[i]-mean, 2.0);
-                }
-                double stDev = Math.sqrt(variance/(numericalData.length-1));
+            	double stDev = StatisticalFunctions.STANDARD_DEVIATION.calculate(numericalData);
                 output += "\nStandard Deviation: " + removeZeros("" + stDev);
             }
         } catch ( Exception e ) {
@@ -323,7 +291,7 @@ public class StatsresProg extends Thread {
         //Then write file.
         LinkedList<String> out = new LinkedList<String>();
         out.add(output);
-        return theFileProcessor.writeFile(out, new File(location), false);
+        return ReadWriteFile.writeFile(out, new File(location), false);
     }
     
     /**
@@ -339,7 +307,7 @@ public class StatsresProg extends Thread {
         //Now read in file.
         else {
             String outputText = "";
-            LinkedList<String> output = theFileProcessor.readFile(location);
+            List<String> output = ReadWriteFile.readFile(location, false);
             //Process file into single string with new line characters.
             for ( int i = 0; i < output.size(); i++ ) {
                 outputText += output.get(i) + "\n";
@@ -361,7 +329,7 @@ public class StatsresProg extends Thread {
             location += ".srs";
         }
         //Then write file.
-        return theFileProcessor.writeFile(settings, new File(location), false);
+        return ReadWriteFile.writeFile(settings, new File(location), false);
     }
     
     /**
@@ -379,7 +347,7 @@ public class StatsresProg extends Thread {
             //Create options listing.
             String[] settings = new String[12];
             //Read in file.
-            LinkedList<String> output = theFileProcessor.readFile(location);
+            List<String> output = ReadWriteFile.readFile(location, false);
             //Error checking - all settings must be present.
             if ( output.size() != settings.length ) { return null; }
             //Split string - second part goes into settings array.
@@ -397,9 +365,7 @@ public class StatsresProg extends Thread {
      * @return a <code>String</code> array of files in that location.
      */
      private String[] getSubFiles ( String file ) {
-        File f = new File ( file );
-        //System.out.println("Running list on " + f.toString());
-        return f.list();
+        return new File ( file ).list();
      }
 
      /** 
