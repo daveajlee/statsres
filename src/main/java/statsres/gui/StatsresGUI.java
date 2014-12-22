@@ -469,14 +469,36 @@ public class StatsresGUI extends JFrame {
                     //Set isProcessRunning variable to true.
                     theInterface.setProcessRunning(true);
                     //Make list of boolean options.
-                    LinkedList<Boolean> statsOptions = new LinkedList<Boolean>();
-                    statsOptions.add(theMeanBox.isSelected()); statsOptions.add(theMinBox.isSelected());
-                    statsOptions.add(theMaxBox.isSelected()); statsOptions.add(theMedianBox.isSelected());
-                    statsOptions.add(theCountBox.isSelected()); statsOptions.add(the1QBox.isSelected());
-                    statsOptions.add(the3QBox.isSelected()); statsOptions.add(theIQRBox.isSelected());
-                    statsOptions.add(theStDevBox.isSelected());
+                    java.util.List<StatisticalFunctions> statisticalFunctions = new ArrayList<StatisticalFunctions>();
+                    if ( theMeanBox.isSelected() ) {
+                    	statisticalFunctions.add(StatisticalFunctions.MEAN);
+                    } 
+                    if ( theMinBox.isSelected() ) {
+                    	statisticalFunctions.add(StatisticalFunctions.MIN);
+                    }
+                    if ( theMaxBox.isSelected() ) {
+                    	statisticalFunctions.add(StatisticalFunctions.MAX);
+                    }
+                    if ( theMedianBox.isSelected() ) {
+                    	statisticalFunctions.add(StatisticalFunctions.MEDIAN);
+                    }
+                    if ( theCountBox.isSelected() ) {
+                    	statisticalFunctions.add(StatisticalFunctions.COUNT);
+                    }
+                    if ( the1QBox.isSelected() ) {
+                    	statisticalFunctions.add(StatisticalFunctions.QUARTILE_FIRST);
+                    }
+                    if ( the3QBox.isSelected() ) {
+                    	statisticalFunctions.add(StatisticalFunctions.QUARTILE_THIRD);
+                    }
+                    if ( theIQRBox.isSelected() ) {
+                    	statisticalFunctions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
+                    }
+                    if ( theStDevBox.isSelected() ) {
+                    	statisticalFunctions.add(StatisticalFunctions.STANDARD_DEVIATION);
+                    }
                     //Do all other work in another thread to improve performance.
-                    ProcessRunner pr = new ProcessRunner(theInterface, theResultsFileField.getText(), statsOptions, theColumnHeadings, theOutputArea, theIncludeSubFoldersBox.isSelected(), StatsresGUI.this );
+                    ProcessRunner pr = new ProcessRunner(theInterface, theResultsFileField.getText(), statisticalFunctions, theColumnHeadings, theOutputArea, theIncludeSubFoldersBox.isSelected(), StatsresGUI.this );
                     new Thread(pr).start();
                 }
             }

@@ -1,118 +1,157 @@
 package statsres.main;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public enum StatisticalFunctions {
 	
 	MEAN {
 	
-		public double calculate(final double[] numericalData ) {
+		public double calculate(final List<Double> numericalData ) {
 			double numericalTotal = 0.0;
-			for ( int i = 0; i < numericalData.length; i++ ) {
-				numericalTotal += numericalData[i];
+			for ( int i = 0; i < numericalData.size(); i++ ) {
+				numericalTotal += numericalData.get(i);
 			}
-			return numericalTotal/numericalData.length;
+			return numericalTotal/numericalData.size();
+		}
+		
+		public String getDisplayName() {
+			return "Mean";
 		}
 		
 	},
 	
 	MIN {
-		public double calculate(final double[] numericalData ) {
-			double[] numericalSortedData = Arrays.copyOf(numericalData, numericalData.length);
-			Arrays.sort(numericalSortedData);
-			return numericalSortedData[0];
+		public double calculate(final List<Double> numericalData ) {
+			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
+			Collections.sort(numericalSortedData);
+			return numericalSortedData.get(0);
+		}
+		
+		public String getDisplayName() {
+			return "Minimum Value";
 		}
 	},
 	
 	MAX {
-		public double calculate(final double[] numericalData ) {
-			double[] numericalSortedData = Arrays.copyOf(numericalData, numericalData.length);
-			Arrays.sort(numericalSortedData);
-			return numericalSortedData[numericalSortedData.length-1];
+		public double calculate(final List<Double> numericalData ) {
+			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
+			Collections.sort(numericalSortedData);
+			return numericalSortedData.get(numericalSortedData.size()-1);
+		}
+		
+		public String getDisplayName() {
+			return "Maximum Value";
 		}
 	},
 	
 	MEDIAN {
-		public double calculate(final double[] numericalData ) {
-			double[] numericalSortedData = Arrays.copyOf(numericalData, numericalData.length);
-			Arrays.sort(numericalSortedData);
-			int medianPos = Math.round(numericalSortedData.length/2); double median = -1;
-            Double diff = new Double((double) numericalSortedData.length / (double) 2);
-            if ( diff.toString().split(".").length > 1 || numericalSortedData.length ==1 ) {
-                median = numericalSortedData[medianPos];
+		public double calculate(final List<Double> numericalData ) {
+			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
+			Collections.sort(numericalSortedData);
+			int medianPos = Math.round(numericalSortedData.size()/2); double median = -1;
+            Double diff = new Double((double) numericalSortedData.size() / (double) 2);
+            if ( diff.toString().split(".").length > 1 || numericalSortedData.size() ==1 ) {
+                median = numericalSortedData.get(medianPos);
             }
             else {
-                median = ((numericalSortedData[medianPos] - numericalSortedData[medianPos-1])/2) + numericalSortedData[medianPos-1];
+                median = ((numericalSortedData.get(medianPos) - numericalSortedData.get(medianPos-1))/2) + numericalSortedData.get(medianPos-1);
             }
             return median;
+		}
+		
+		public String getDisplayName() {
+			return "Median";
 		}
 	},
 	
 	COUNT {
 		
-		public double calculate(final double[] numericalData ) {
-			return numericalData.length;
+		public double calculate(final List<Double> numericalData ) {
+			return numericalData.size();
 		}
 		
+		public String getDisplayName() {
+			return "Number of Data Values";
+		}
 	},
 	
 	QUARTILE_FIRST {
 		
-		public double calculate(final double[] numericalData ) {
-			double[] numericalSortedData = Arrays.copyOf(numericalData, numericalData.length);
-			Arrays.sort(numericalSortedData);
-			int oneQuartilePos = Math.round(numericalSortedData.length/4); double oneQuartile = -1;
-            Double diff = new Double((double) numericalSortedData.length / (double) 4);
-            if ( diff.toString().split(".").length > 1 || numericalSortedData.length ==1 ) {
-                oneQuartile = numericalSortedData[oneQuartilePos];
+		public double calculate(final List<Double> numericalData ) {
+			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
+			Collections.sort(numericalSortedData);
+			int oneQuartilePos = Math.round(numericalSortedData.size()/4); double oneQuartile = -1;
+            Double diff = new Double((double) numericalSortedData.size() / (double) 4);
+            if ( diff.toString().split(".").length > 1 || numericalSortedData.size() ==1 ) {
+                oneQuartile = numericalSortedData.get(oneQuartilePos);
             }
             else {
-                oneQuartile = ((numericalSortedData[oneQuartilePos] - numericalSortedData[oneQuartilePos-1])/2) + numericalSortedData[oneQuartilePos-1];
+                oneQuartile = ((numericalSortedData.get(oneQuartilePos) - numericalSortedData.get(oneQuartilePos-1))/2) + numericalSortedData.get(oneQuartilePos-1);
             }
             return oneQuartile;
+		}
+		
+		public String getDisplayName() {
+			return "1st Quartile";
 		}
 		
 	},
 	
 	QUARTILE_THIRD {
 		
-		public double calculate(final double[] numericalData ) {
-			double[] numericalSortedData = Arrays.copyOf(numericalData, numericalData.length);
-			Arrays.sort(numericalSortedData);
-			int threeQuartilePos = Math.round(numericalSortedData.length/4) * 3; double threeQuartile = -1;
-            Double diff = new Double((double) numericalSortedData.length / (double) 4);
-            if ( diff.toString().split(".").length > 1 || numericalSortedData.length ==1 ) {
-                threeQuartile = numericalSortedData[threeQuartilePos];
+		public double calculate(final List<Double> numericalData ) {
+			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
+			Collections.sort(numericalSortedData);
+			int threeQuartilePos = Math.round(numericalSortedData.size()/4) * 3; double threeQuartile = -1;
+            Double diff = new Double((double) numericalSortedData.size() / (double) 4);
+            if ( diff.toString().split(".").length > 1 || numericalSortedData.size() ==1 ) {
+                threeQuartile = numericalSortedData.get(threeQuartilePos);
             }
             else {
-                threeQuartile = ((numericalSortedData[threeQuartilePos] - numericalSortedData[threeQuartilePos-1])/2) + numericalSortedData[threeQuartilePos-1];
+                threeQuartile = ((numericalSortedData.get(threeQuartilePos) - numericalSortedData.get(threeQuartilePos-1))/2) + numericalSortedData.get(threeQuartilePos-1);
             }
             return threeQuartile;
+		}
+		
+		public String getDisplayName() {
+			return "3rd Quartile";
 		}
 		
 	},
 	
 	INTER_QUARTILE_RANGE {
 		
-		public double calculate(final double[] numericalData ) {
+		public double calculate(final List<Double> numericalData ) {
 			double quartileOne = StatisticalFunctions.QUARTILE_FIRST.calculate(numericalData);
 			double quartileThree = StatisticalFunctions.QUARTILE_THIRD.calculate(numericalData);
 			return quartileThree - quartileOne;
+		}
+		
+		public String getDisplayName() {
+			return "Interquartile Range";
 		}
 		
 	},
 	
 	STANDARD_DEVIATION {
 		
-		public double calculate(final double[] numericalData ) {
+		public double calculate(final List<Double> numericalData ) {
 			long variance = 0;
-            for ( int i = 0; i < numericalData.length; i++ ) {
-                variance += Math.pow(numericalData[i]-StatisticalFunctions.MEAN.calculate(numericalData), 2.0);
+            for ( int i = 0; i < numericalData.size(); i++ ) {
+                variance += Math.pow(numericalData.get(i)-StatisticalFunctions.MEAN.calculate(numericalData), 2.0);
             }
-            return Math.sqrt(variance/(numericalData.length-1));
+            return Math.sqrt(variance/(numericalData.size()-1));
+		}
+		
+		public String getDisplayName() {
+			return "Standard Deviation";
 		}
 	};
 	
-	public abstract double calculate(final double[] numericalData);
+	public abstract double calculate(final List<Double> numericalData);
+	
+	public abstract String getDisplayName();
 
 }

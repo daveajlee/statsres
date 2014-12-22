@@ -18,16 +18,16 @@ public class ProcessRunner extends Thread {
 
     private String theResultsFileFolder;
     private JList<String> theColumnHeadings;
-    private LinkedList<Boolean> theStatsOptions;
+    private List<StatisticalFunctions> statisticalFunctions;
     private JTextArea theOutputArea;
     private boolean isFolders;
     private UserInterface theInterface;
     private JFrame theGUI;
     
-    public ProcessRunner ( UserInterface ui, String resFileFolder, LinkedList<Boolean> so, JList<String> ch, JTextArea oa, boolean folders, JFrame gui ) {
+    public ProcessRunner ( UserInterface ui, String resFileFolder, List<StatisticalFunctions> functions, JList<String> ch, JTextArea oa, boolean folders, JFrame gui ) {
         theInterface = ui;
         theResultsFileFolder = resFileFolder;
-        theStatsOptions = so;
+        statisticalFunctions = functions;
         theColumnHeadings = ch;
         theOutputArea = oa;
         isFolders = folders;
@@ -40,11 +40,7 @@ public class ProcessRunner extends Thread {
             //Next, error checking - is at least one column heading selected.
             if ( theColumnHeadings.getSelectedValuesList().size() != 0 ) {
                 //Final, error checking - are some stats options selected.
-                int booleanCount = 0;
-                for ( int i = 0; i < theStatsOptions.size(); i++ ) {
-                    if ( theStatsOptions.get(i) == true ) { booleanCount++; }
-                }
-                if ( booleanCount != 0 ) {
+                if ( statisticalFunctions.size() > 0 ) {
                     //Run program.
                     theOutputArea.setText("");
                     StatsresProg sp = new StatsresProg();
@@ -57,7 +53,7 @@ public class ProcessRunner extends Thread {
                     else {
                         fileList.add(theResultsFileFolder);
                     }
-                    sp.setCalcParameters(fileList, theColumnHeadings.getSelectedValuesList(), theStatsOptions);
+                    sp.setCalcParameters(fileList, theColumnHeadings.getSelectedValuesList(), statisticalFunctions);
                     //theInterface.getCurrentFrame().dispose();
                     WaitingScreen ws = new WaitingScreen(sp);
                     sp.start();

@@ -11,19 +11,19 @@ import java.io.*;
  */
 public class StatsresProg extends Thread {
     
-    private LinkedList<String> fileData;
+    private List<Double> fileData;
     
-    //Variables to remember files, columns and outputs to allow run method in Thread class with no parameters to be executed as calculate tasks.
+    //Variables to remember files, columns and functions to allow run method in Thread class with no parameters to be executed as calculate tasks.
     private LinkedList<String> theFiles;
     private List<String> theColumns;
-    private LinkedList<Boolean> theOutputs;
+    private List<StatisticalFunctions> statisticalFunctions;
     //Variable to display output and boolean variable indicating whether finished or not.
     private String theOutput;
     private boolean isProcessing = false;
     
     /** Default constructor. */
     public StatsresProg() {
-        fileData = new LinkedList<String>();
+        fileData = new ArrayList<Double>();
     }
     
     /**
@@ -31,12 +31,12 @@ public class StatsresProg extends Thread {
      * Added in version 1.1 to enable better threading support.
      * @param files a <code>String</code> linkedlist containing the results file to process.
      * @param columns a <code>String</code> List containing the columns of the results file to process.
-     * @param outputs a <code>boolean</code> linked list containing the statistical measurements required by user.
+     * @param outputs a <code>StatisticalFunctions List</code> containing the statistical measurements required by user.
      */
-    public void setCalcParameters ( LinkedList<String> files, List<String> columns, LinkedList<Boolean> outputs ) {
+    public void setCalcParameters ( LinkedList<String> files, List<String> columns, List<StatisticalFunctions> functions ) {
         theFiles = files;
         theColumns = columns;
-        theOutputs = outputs;
+        statisticalFunctions = functions;
         //Set isProcessing to true - indicates processing about to start.
         isProcessing = true;
     } 
@@ -49,7 +49,7 @@ public class StatsresProg extends Thread {
         //Repeat for all files,
         for ( int g = 0; g < theFiles.size(); g++ ) {
             //Ensure fileData is blank.
-            fileData = new LinkedList<String>();
+            fileData = new ArrayList<Double>();
             //Open results file.
             List<String> resultsFileContents = ReadWriteFile.readFile(theFiles.get(g), false);
             //Look through first row of data file to determine which positions in the array we need to look through.
@@ -73,16 +73,20 @@ public class StatsresProg extends Thread {
             //Now for each column position,
             for ( int h = 0; h < columnPositions.length; h++ ) {
                 //Ensure fileData is blank.
-                fileData = new LinkedList<String>();
+                fileData = new ArrayList<Double>();
                 //Now go through rest of file contents and add data in the columnPosition of the row.
-                for ( int i = 1; i < resultsFileContents.size(); i++ ) {
-                    String[] thisRow = resultsFileContents.get(i).split(",");
-                    fileData.add(thisRow[columnPositions[h]]);
-                    if ( !isProcessing ) { return; }
+                try {
+                	for ( int i = 1; i < resultsFileContents.size(); i++ ) {
+                		String[] thisRow = resultsFileContents.get(i).split(",");
+                		fileData.add(Double.parseDouble(thisRow[columnPositions[h]]));
+                		if ( !isProcessing ) { return; }
+                	}
+                	//Now call performCalculations method on the String LinkedList.
+                	if (h == 0) { theOutput += "\n" + performCalculations ( fileData, theColumns.get(h), statisticalFunctions); }
+                	else { theOutput += "\n\n" + performCalculations ( fileData, theColumns.get(h), statisticalFunctions); }
+                } catch ( Exception e ) {
+                    theOutput += "ERROR: Non-numerical data was present. Please ensure only numerical data is included except for column headings.";
                 }
-                //Now call performCalculations method on the String LinkedList.
-                if (h == 0) { theOutput += "\n" + performCalculations ( fileData, theColumns.get(h), theOutputs); }
-                else { theOutput += "\n\n" + performCalculations ( fileData, theColumns.get(h), theOutputs); }
             }
         }
         //Finished so set isProcessing to false.
@@ -91,73 +95,19 @@ public class StatsresProg extends Thread {
     
     /**
      * Method to perform all statistical calculations.
-     * @param data a <code>LinkedList</code> containing the data to be used in calculations.
+     * @param data a <code>List</code> containing the data to be used in calculations.
      * @param columnHeading a <code>String</code> containing the column heading currently being processed.
-     * @param outputs a <code>boolean</code> array containing the statistical measurements to calculate.
+     * @param outputs a <code>StatisticalFunctions List</code> containing the statistical measurements to calculate.
      * @return a <code>String</code> with the results to be presented in text area.
      */
-    private String performCalculations ( LinkedList<String> data, String columnHeading, LinkedList<Boolean> outputs ) {
+    private String performCalculations ( List<Double> data, String columnHeading, List<StatisticalFunctions> functions ) {
         //Reset the output variable.
         String output = "Statistical Results for column " + columnHeading + ":";
-        //Convert data into numerical data to perform calculations.
-        double[] numericalData = new double[data.size()];
-        try {
-            for ( int i = 0; i < numericalData.length; i++ ) {
-                numericalData[i] = Double.parseDouble(data.get(i));
-            }
-        }
-        catch ( Exception e ) {
-            return ("ERROR: Non-numerical data was present. Please ensure only numerical data is included except for column headings.");
-        }
-        //Now process statistical outputs.
-        double oneQuartile = -1; double threeQuartile = -1; double mean = -1;
         //Try all of the following - printing out an arithmetic error if an error occurs.
         try {
-            //Mean.
-            if ( outputs.get(0) || outputs.get(8) ) {
-            	mean = StatisticalFunctions.MEAN.calculate(numericalData);
-                if (outputs.get(0)) { output += "\nMean: " + removeZeros("" + mean); }
-            }
-            //Min.
-            if ( outputs.get(1) ) {
-                double min = StatisticalFunctions.MIN.calculate(numericalData);
-                output += "\nMinimum Value: " + removeZeros("" + min);
-            }
-            //Max.
-            if ( outputs.get(2) ) {
-                double max = StatisticalFunctions.MAX.calculate(numericalData);
-                output += "\nMaximum Value: " + removeZeros("" + max);
-            }
-            //Median.
-            if ( outputs.get(3) ) {
-                double median = StatisticalFunctions.MEDIAN.calculate(numericalData);
-                output += "\nMedian: " + removeZeros("" + median); 
-            }
-            //Count.
-            if ( outputs.get(4) ) {
-                double count = StatisticalFunctions.COUNT.calculate(numericalData);
-                output += "\nNumber of Data Values: " + removeZeros("" + count);
-            }   
-            //1st Quartile.
-            if ( outputs.get(5) || outputs.get(7) ) {
-                oneQuartile = StatisticalFunctions.QUARTILE_FIRST.calculate(numericalData);
-                if (outputs.get(5) ) { output += "\n1st Quartile: " + removeZeros("" + oneQuartile); }
-            }
-            //3rd Quartile.
-            if ( outputs.get(6) || outputs.get(7) ) {
-                threeQuartile = StatisticalFunctions.QUARTILE_THIRD.calculate(numericalData);
-                if (outputs.get(6)) { output += "\n3rd Quartile: " + removeZeros("" + threeQuartile); }
-            }
-            //IQR.
-            if ( outputs.get(7) ) {
-                double iqr = StatisticalFunctions.INTER_QUARTILE_RANGE.calculate(numericalData);
-                output += "\nInterquartile Range: " + removeZeros("" + iqr);
-            }
-            //Standard Deviation.
-            if ( outputs.get(8) ) {
-            	double stDev = StatisticalFunctions.STANDARD_DEVIATION.calculate(numericalData);
-                output += "\nStandard Deviation: " + removeZeros("" + stDev);
-            }
+        	for ( int i = 0; i < functions.size(); i++ ) {
+        		output += "\n" + functions.get(i).getDisplayName() + ": " + removeZeros("" + functions.get(i).calculate(data));
+        	} 
         } catch ( Exception e ) {
             output += "\nERROR: An arithmetic error has occurred. Cannot calculate remaining results";
             return output;
