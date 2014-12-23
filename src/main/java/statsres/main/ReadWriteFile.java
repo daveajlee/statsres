@@ -14,12 +14,6 @@ import javax.swing.*;
  */
 public final class ReadWriteFile {
     
-    /**
-     * Default Constructor - do nothing.
-     */
-    private ReadWriteFile() {
-    }
-    
     /*
      * Performs the tasks of a readFile method.
      * Creates a buffered reader and reads the file line by line.

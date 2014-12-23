@@ -1,9 +1,12 @@
 package statsres.gui;
 //Import the required java classes.
 import statsres.main.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
+
 import javax.swing.*;
 //Import file extension package.
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -79,8 +82,8 @@ public class StatsresGUI extends JFrame {
     public StatsresGUI ( UserInterface ui, String fileName, boolean isMultipleFiles, String[] settings ) {
         
         //Set image icon.
-        Image img = Toolkit.getDefaultToolkit().getImage(StatsresGUI.class.getResource("/logosmall.png"));
-        setIconImage(img);
+        /*Image img = Toolkit.getDefaultToolkit().getImage(StatsresGUI.class.getResource("/logosmall.png"));
+        setIconImage(img);*/
         
         //Create ProgramOperations object and store it.
         theOperations = new StatsresProg();
@@ -153,7 +156,7 @@ public class StatsresGUI extends JFrame {
             public void actionPerformed( ActionEvent e ) {
                 String fileName = loadSaveInputOutputFile("", true, false);
                 if ( !fileName.equalsIgnoreCase("") ) {
-                    if ( theOperations.saveSettingsFile(getCurrentSettings(), fileName ) ) {
+                    if ( theOperations.saveContent(getCurrentSettings(), fileName, ".srs" ) ) {
                         JOptionPane.showMessageDialog(StatsresGUI.this, "Current settings were successfully saved to the selected file!", "Settings Saved Successfully", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
@@ -165,7 +168,9 @@ public class StatsresGUI extends JFrame {
             public void actionPerformed( ActionEvent e ) {
                 String fileName = loadSaveInputOutputFile("", false, false);
                 if ( !fileName.equalsIgnoreCase("") ) {
-                    if ( theOperations.saveOutputFile(theOutputArea.getText(), fileName ) ) {
+                	List<String> output = new ArrayList<String>();
+                	output.add(theOutputArea.getText());
+                    if ( theOperations.saveContent(output, fileName, ".sro" ) ) {
                         JOptionPane.showMessageDialog(StatsresGUI.this, "Output was successfully saved to the selected file!", "Output Saved Successfully", JOptionPane.INFORMATION_MESSAGE);
                     } 
                 }
@@ -317,7 +322,7 @@ public class StatsresGUI extends JFrame {
         }
         else if ( !theResultsFileField.getText().equalsIgnoreCase("") ) { 
             //If folder selected then get list of files.
-            LinkedList<String> fileList = new LinkedList<String>();
+            List<String> fileList = new LinkedList<String>();
             if ( theIncludeSubFoldersBox.isSelected() ) {
                 StatsresProg sp = new StatsresProg();
                 //System.out.println("Running on file list...");

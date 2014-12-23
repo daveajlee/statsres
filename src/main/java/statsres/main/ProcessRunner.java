@@ -45,7 +45,7 @@ public class ProcessRunner extends Thread {
                     theOutputArea.setText("");
                     StatsresProg sp = new StatsresProg();
                     //Create file input variable.
-                    LinkedList<String> fileList = new LinkedList<String>();
+                    List<String> fileList = new LinkedList<String>();
                     //If multiple files,
                     if ( isFolders ) {
                         fileList = sp.getAllFiles(theResultsFileFolder);

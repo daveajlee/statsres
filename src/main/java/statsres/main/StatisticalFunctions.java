@@ -51,8 +51,7 @@ public enum StatisticalFunctions {
 			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
 			Collections.sort(numericalSortedData);
 			int medianPos = Math.round(numericalSortedData.size()/2); double median = -1;
-            Double diff = new Double((double) numericalSortedData.size() / (double) 2);
-            if ( diff.toString().split(".").length > 1 || numericalSortedData.size() ==1 ) {
+            if ( numericalSortedData.size() ==1 ) {
                 median = numericalSortedData.get(medianPos);
             }
             else {
@@ -83,8 +82,7 @@ public enum StatisticalFunctions {
 			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
 			Collections.sort(numericalSortedData);
 			int oneQuartilePos = Math.round(numericalSortedData.size()/4); double oneQuartile = -1;
-            Double diff = new Double((double) numericalSortedData.size() / (double) 4);
-            if ( diff.toString().split(".").length > 1 || numericalSortedData.size() ==1 ) {
+            if ( numericalSortedData.size() ==1 || oneQuartilePos == 0 ) {
                 oneQuartile = numericalSortedData.get(oneQuartilePos);
             }
             else {
@@ -105,8 +103,7 @@ public enum StatisticalFunctions {
 			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
 			Collections.sort(numericalSortedData);
 			int threeQuartilePos = Math.round(numericalSortedData.size()/4) * 3; double threeQuartile = -1;
-            Double diff = new Double((double) numericalSortedData.size() / (double) 4);
-            if ( diff.toString().split(".").length > 1 || numericalSortedData.size() ==1 ) {
+            if ( numericalSortedData.size() ==1 || threeQuartilePos == 0 ) {
                 threeQuartile = numericalSortedData.get(threeQuartilePos);
             }
             else {

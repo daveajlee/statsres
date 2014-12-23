@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,13 @@ public class ReadWriteFileTest {
 		URL url = this.getClass().getResource("/readfiletestfake.txt");
 		List<String> completeFile = ReadWriteFile.readFile(url.getFile(), false);
 		assertNull(completeFile);
+	}
+	
+	@Test
+	public void testEmptyFile ( ) {
+		URL url = this.getClass().getResource("/readfileempty.txt");
+		List<String> completeFile = ReadWriteFile.readFile(url.getFile(), false);
+		assertEquals(completeFile.size(), 0);
 	}
 	
 	@Test

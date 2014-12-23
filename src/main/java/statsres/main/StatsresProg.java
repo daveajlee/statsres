@@ -14,12 +14,12 @@ public class StatsresProg extends Thread {
     private List<Double> fileData;
     
     //Variables to remember files, columns and functions to allow run method in Thread class with no parameters to be executed as calculate tasks.
-    private LinkedList<String> theFiles;
-    private List<String> theColumns;
+    private List<String> files;
+    private List<String> columns;
     private List<StatisticalFunctions> statisticalFunctions;
     //Variable to display output and boolean variable indicating whether finished or not.
-    private String theOutput;
-    private boolean isProcessing = false;
+    private String output = "";
+    private boolean stillRunning = false;
     
     /** Default constructor. */
     public StatsresProg() {
@@ -33,43 +33,38 @@ public class StatsresProg extends Thread {
      * @param columns a <code>String</code> List containing the columns of the results file to process.
      * @param outputs a <code>StatisticalFunctions List</code> containing the statistical measurements required by user.
      */
-    public void setCalcParameters ( LinkedList<String> files, List<String> columns, List<StatisticalFunctions> functions ) {
-        theFiles = files;
-        theColumns = columns;
-        statisticalFunctions = functions;
-        //Set isProcessing to true - indicates processing about to start.
-        isProcessing = true;
+    public void setCalcParameters ( final List<String> files, final List<String> columns, final List<StatisticalFunctions> functions ) {
+        this.files = files;
+        this.columns = columns;
+        statisticalFunctions = functions;        
     } 
     
     /**
      * Process file into linked list which can be used to calculate the desired statistical measurements.
      */
     public void run (  ) {
-        theOutput = ""; //Initialise output.
+    	stillRunning = true;
+        output = ""; //Initialise output.
         //Repeat for all files,
-        for ( int g = 0; g < theFiles.size(); g++ ) {
+        for ( int g = 0; g < files.size(); g++ ) {
             //Ensure fileData is blank.
             fileData = new ArrayList<Double>();
             //Open results file.
-            List<String> resultsFileContents = ReadWriteFile.readFile(theFiles.get(g), false);
+            List<String> resultsFileContents = ReadWriteFile.readFile(files.get(g), false);
             //Look through first row of data file to determine which positions in the array we need to look through.
-            int[] columnPositions = new int[theColumns.size()];
-            for ( int i = 0; i < columnPositions.length; i++ ) {
-                columnPositions[i] = 0;
-                if ( !isProcessing ) { return; }
-            }
+            int[] columnPositions = new int[columns.size()];
             String[] firstRow = resultsFileContents.get(0).split(",");
             for ( int i = 0; i < firstRow.length; i++ ) {
                 //Check if this row is included in any of the columns.
-                for ( int j = 0; j < theColumns.size(); j++ ) {
+                for ( int j = 0; j < columns.size(); j++ ) {
                     //For the moment, only support one column, so break when find first one.
-                    if ( firstRow[i].equalsIgnoreCase(theColumns.get(j)) ) { columnPositions[j] = i; }
-                    if ( !isProcessing ) { return; }
+                    if ( firstRow[i].equalsIgnoreCase(columns.get(j)) ) { columnPositions[j] = i; }
+                    if ( !stillRunning ) { return; }
                 }
             }
             //Append file name.
-            if ( g == 0 ) { theOutput = "File: " + theFiles.get(0); }
-            else { theOutput += "\n\n\nFile: " + theFiles.get(g); }
+            if ( g != 0 ) { output += "\n\n\n"; }
+            output += "File: " + files.get(g);
             //Now for each column position,
             for ( int h = 0; h < columnPositions.length; h++ ) {
                 //Ensure fileData is blank.
@@ -79,18 +74,18 @@ public class StatsresProg extends Thread {
                 	for ( int i = 1; i < resultsFileContents.size(); i++ ) {
                 		String[] thisRow = resultsFileContents.get(i).split(",");
                 		fileData.add(Double.parseDouble(thisRow[columnPositions[h]]));
-                		if ( !isProcessing ) { return; }
+                		if ( !stillRunning ) { return; }
                 	}
                 	//Now call performCalculations method on the String LinkedList.
-                	if (h == 0) { theOutput += "\n" + performCalculations ( fileData, theColumns.get(h), statisticalFunctions); }
-                	else { theOutput += "\n\n" + performCalculations ( fileData, theColumns.get(h), statisticalFunctions); }
+                	if (h != 0) { output += "\n"; }
+                	output += "\n" + performCalculations ( fileData, columns.get(h), statisticalFunctions);
                 } catch ( Exception e ) {
-                    theOutput += "ERROR: Non-numerical data was present. Please ensure only numerical data is included except for column headings.";
+                    output += "ERROR: Non-numerical data was present. Please ensure only numerical data is included except for column headings.";
                 }
             }
         }
-        //Finished so set isProcessing to false.
-        isProcessing = false;
+        //Finished so set stillRunning to false.
+        stillRunning = false;
     }
     
     /**
@@ -110,7 +105,6 @@ public class StatsresProg extends Thread {
         	} 
         } catch ( Exception e ) {
             output += "\nERROR: An arithmetic error has occurred. Cannot calculate remaining results";
-            return output;
         }
         //Finished so return output variable.
         return output;
@@ -121,7 +115,7 @@ public class StatsresProg extends Thread {
      * @return a <code>String</code> containing the output.
      */
     public String getOutput () {
-        return theOutput;
+        return output;
     }
     
     /**
@@ -129,119 +123,60 @@ public class StatsresProg extends Thread {
      * @return a <code>boolean</code> which is true iff processing is still running.
      */
     public boolean isStillRunning () {
-        return isProcessing;
+        return stillRunning;
     }
     
     /**
      * Method to stop processing and add message to output saying that processing was interrupted.
      */
     public void stopProcessing () {
-        isProcessing = false;
-        theOutput += "\nWARNING: Processing was interrupted!";
+        stillRunning = false;
+        output += "\nWARNING: Processing was interrupted!";
+    }
+    
+    private boolean fileAlreadyAdded ( final String fileToCheck, final List<String> currentFileList) {
+    	boolean alreadyExists = false;
+        for ( int i = 0; i < currentFileList.size(); i++ ) {
+            if ( currentFileList.get(i).equalsIgnoreCase(fileToCheck) ) {
+                alreadyExists = true; break;
+            }
+        }
+        return alreadyExists;
     }
     
     /**
      * Method to return all files with the extension .csv in subfolders
      * of the folder supplied by the user.
-     * @param file a <code>String</code> with the folder of which subfolders should be searched.
+     * @param directory a <code>String</code> with the folder of which subfolders should be searched.
      */
-    public LinkedList<String> getAllFiles ( String file ) {
-        LinkedList<String> filesToProcess = new LinkedList<String>();
-        boolean areMoreFiles = true; String currentFile = file; int fileCounter = 0; boolean setFileCounter = false;
-        while ( areMoreFiles ) {
-            String[] files = getSubFiles(currentFile);
-            if ( currentFile.endsWith(".csv") ) {
-                boolean dontadd = false;
-                for ( int i = 0; i < filesToProcess.size(); i++ ) {
-                    String one = currentFile;
-                    String two = filesToProcess.get(i);
-                    if ( one.equalsIgnoreCase(two) ) {
-                        dontadd = true; break;
-                    }
-                }
-                if (!dontadd) { filesToProcess.add(currentFile); }
-            }
-            if ( files != null ) {
-                for ( int i = 0; i < files.length; i++ ) {
-                    if ( files[i].endsWith(".csv") ) {
-                        boolean dontadd = false;
-                        for ( int j = 0; j < filesToProcess.size(); j++ ) {
-                            String one = currentFile.replace("\\", "") + files[i].replace("\\", "");
-                            String two = filesToProcess.get(j).replace("\\", "");
-                            if ( one.equalsIgnoreCase(two) ) {
-                                dontadd = true; break;
-                            }
-                        }
-                        if (!dontadd) { filesToProcess.add(currentFile + "\\" + files[i]); }
-                    }
-                }
-                if ( !setFileCounter ) { fileCounter = 0; }
-                if ( fileCounter < files.length ) {
-                    if ( !currentFile.endsWith("\\") ) {
-                        currentFile += "\\" + files[fileCounter];
-                    }
-                    else {
-                        currentFile += files[fileCounter] + "\\";
-                    }
-                    setFileCounter = false;
-                }
-                else {
-                    String[] fileSplit = currentFile.split("\\\\"); currentFile = "";
-                    for ( int i = 0; i < fileSplit.length-1; i++ ) {
-                        if ( !fileSplit[i].equalsIgnoreCase("") ) {
-                            currentFile += fileSplit[i] + "\\";
-                        }
-                    }
-                    //Find location of previous file in array to start from there.
-                    String[] aboveFiles = getSubFiles(currentFile);
-                    fileCounter = -1;
-                    for ( int j = 0; j < aboveFiles.length; j++ ) {
-                        if ( aboveFiles[j].equalsIgnoreCase(fileSplit[fileSplit.length-1]) ) {
-                            fileCounter = (j+1); setFileCounter = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            else {
-                String[] fileSplit = currentFile.split("\\\\"); currentFile = "";
-                for ( int i = 0; i < fileSplit.length-1; i++ ) {
-                     if ( !fileSplit[i].equalsIgnoreCase("") ) {
-                        currentFile += fileSplit[i] + "\\";
-                     }
-                }
-                fileCounter++; setFileCounter = true;
-            }
-            String checkFile2 = "";
-            String[] fileSplit2 = file.split("\\\\");
-            for ( int i = 0; i < fileSplit2.length-1; i++ ) {
-                if ( !fileSplit2[i].equalsIgnoreCase("") ) {
-                    checkFile2 += fileSplit2[i] + "\\";
-                }
-            }
-            if ( currentFile.equalsIgnoreCase(checkFile2) ) {
-                areMoreFiles = false;
-            }
-        }
-        //Return fileToProcess list.
-        return filesToProcess;
+    public List<String> getAllFiles ( final String directory ) {
+    	return getFilesInDirectory(directory);
     }
     
     /**
-     * Method to save current output to a text file.
-     * @param output a <code>String</code> containing the currently displayed output.
-     * @param location a <code>String</code> containing the file to save to.
-     * @return a <code>boolean</code> indicating success of file writing.
+     * Private heler method to return all files for a specified directory.
+     * @param directory a <code>String</code> with the folder to be searched.
+     * @return a <code>String</code> List with all files.
      */
-    public boolean saveOutputFile ( String output, String location ) {
-        //First check if need to add extension.
-        if ( !location.endsWith(".sro") ) {
-            location += ".sro";
+    private List<String> getFilesInDirectory ( final String directory ) {
+    	List<String> filesToProcess = new ArrayList<String>();
+    	//Obtain a list for this directory of subfolders on the next level and files in this folder.
+        String[] files = new File(directory).list();
+        if ( files != null ) {
+        	//Go through all files or subdirectories in this directory
+        	for ( int i = 0; i < files.length; i++ ) {
+        		//It is a csv file - great we add it to the list if we don't have it.
+        		if ( files[i].endsWith(".csv") ) {
+        			if (!fileAlreadyAdded(files[i], filesToProcess)) { 
+        				filesToProcess.add(directory + files[i]);
+        			}
+                } else if (!files[i].contains(".")){
+                	//It must be a directory.
+                	filesToProcess.addAll(getFilesInDirectory(directory + files[i] + "/"));
+                }
+            }
         }
-        //Then write file.
-        LinkedList<String> out = new LinkedList<String>();
-        out.add(output);
-        return ReadWriteFile.writeFile(out, new File(location), false);
+        return filesToProcess;
     }
     
     /**
@@ -268,18 +203,19 @@ public class StatsresProg extends Thread {
     }
     
     /**
-     * Method to save current settings to a text file.
-     * @param settings a <code>String</code> linked list containing the current settings.
+     * Method to save content to a text file.
+     * @param content a <code>String</code> list containing the content.
      * @param location a <code>String</code> containing the file to save to.
+     * @param fileExtension a <code>String</code> with the desired file extension.
      * @return a <code>boolean</code> indicating success of file writing.
      */
-    public boolean saveSettingsFile ( LinkedList<String> settings, String location ) {
+    public boolean saveContent ( final List<String> content, String location, final String fileExtension ) {
         //First check if need to add extension.
-        if ( !location.endsWith(".srs") ) {
-            location += ".srs";
+        if ( !location.endsWith(fileExtension) ) {
+            location += fileExtension;
         }
         //Then write file.
-        return ReadWriteFile.writeFile(settings, new File(location), false);
+        return ReadWriteFile.writeFile(content, new File(location), false);
     }
     
     /**
@@ -308,15 +244,6 @@ public class StatsresProg extends Thread {
             return settings;
         }
     }
-    
-    /**
-     * Private helper method to determine if there are more files below this one.
-     * @param file a <code>String</code> with the current location.
-     * @return a <code>String</code> array of files in that location.
-     */
-     private String[] getSubFiles ( String file ) {
-        return new File ( file ).list();
-     }
 
      /** 
      * Private helper method to remove zeros from strings where they are not required.

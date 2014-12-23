@@ -57,6 +57,14 @@ public class StatisticalFunctionsTest {
 		numericalData2.add(2.0); numericalData2.add(1.0); numericalData2.add(3.0);
 		double median2 = StatisticalFunctions.MEDIAN.calculate(numericalData2);
 		assertEquals(median2, 1.5, 0.1);
+		List<Double> numericalData3 = new ArrayList<Double>();
+		numericalData3.add(2.0);
+		double median3 = StatisticalFunctions.MEDIAN.calculate(numericalData3);
+		assertEquals(median3, 2.0, 0.1);
+		List<Double> numericalData4 = new ArrayList<Double>();
+		numericalData4.add(1.55557); numericalData4.add(2.68437);
+		double median4 = StatisticalFunctions.MEDIAN.calculate(numericalData4);
+		assertEquals(median4, 2.11997, 0.0001);
 		assertEquals(StatisticalFunctions.MEDIAN.getDisplayName(), "Median");
 	}
 	
@@ -79,6 +87,14 @@ public class StatisticalFunctionsTest {
 		numericalData2.add(2.0); numericalData2.add(1.0); numericalData2.add(3.0); numericalData2.add(2.5);
 		double quartile12 = StatisticalFunctions.QUARTILE_FIRST.calculate(numericalData2);
 		assertEquals(quartile12, 1.5, 0.1);
+		List<Double> numericalData3 = new ArrayList<Double>();
+		numericalData3.add(2.0);
+		double quartile13 = StatisticalFunctions.QUARTILE_FIRST.calculate(numericalData3);
+		assertEquals(quartile13, 2.0, 0.1);
+		List<Double> numericalData4 = new ArrayList<Double>();
+		numericalData4.add(1.55557); numericalData4.add(2.68437);
+		double quartile14 = StatisticalFunctions.QUARTILE_FIRST.calculate(numericalData4);
+		assertEquals(quartile14, 1.55557, 0.0001);
 		assertEquals(StatisticalFunctions.QUARTILE_FIRST.getDisplayName(), "1st Quartile");
 	}
 	
@@ -93,6 +109,14 @@ public class StatisticalFunctionsTest {
 		numericalData2.add(2.0); numericalData2.add(1.0); numericalData2.add(3.0); numericalData2.add(2.5);
 		double quartile32 = StatisticalFunctions.QUARTILE_THIRD.calculate(numericalData2);
 		assertEquals(quartile32, 2.75, 0.1);
+		List<Double> numericalData3 = new ArrayList<Double>();
+		numericalData3.add(2.0);
+		double quartile13 = StatisticalFunctions.QUARTILE_THIRD.calculate(numericalData3);
+		assertEquals(quartile13, 2.0, 0.1);
+		List<Double> numericalData4 = new ArrayList<Double>();
+		numericalData4.add(1.55557); numericalData4.add(2.68437);
+		double quartile14 = StatisticalFunctions.QUARTILE_THIRD.calculate(numericalData4);
+		assertEquals(quartile14, 1.55557, 0.0001);
 		assertEquals(StatisticalFunctions.QUARTILE_THIRD.getDisplayName(), "3rd Quartile");
 	}
 	
