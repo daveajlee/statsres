@@ -19,7 +19,6 @@ public class SplashWindow extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -2481626829536427543L;
-	private ImageScreen theStatsresLogo;
     private JLabel theTitleLabel;
     private JLabel theLoadingLabel;
     private JLabel theVersionLabel;
@@ -59,10 +58,9 @@ public class SplashWindow extends JFrame {
         //Construct logo panel to add to the centre panel.
         JPanel logoPanel = new JPanel();
         logoPanel.setBackground(Color.WHITE);
-        theStatsresLogo = new ImageScreen(SplashWindow.class.getResource("/logo.png"),75,0,SplashWindow.this);
-        theStatsresLogo.setSize(274,118);
-        theStatsresLogo.setBackground(Color.WHITE);
-        logoPanel.add(theStatsresLogo);
+        ImageIcon image = new ImageIcon(SplashWindow.class.getResource("/logo.png"));
+        JLabel label = new JLabel("", image, JLabel.CENTER);
+        logoPanel.add(label);
         centrePanel.add(logoPanel);
         
         //Construct title panel to add to the centre panel.

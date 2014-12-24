@@ -156,7 +156,7 @@ public class StatsresGUI extends JFrame {
             public void actionPerformed( ActionEvent e ) {
                 String fileName = loadSaveInputOutputFile("", true, false);
                 if ( !fileName.equalsIgnoreCase("") ) {
-                    if ( theOperations.saveContent(getCurrentSettings(), fileName, ".srs" ) ) {
+                    if ( theOperations.saveContent(saveCurrentSettings().saveAsV1File(), fileName, ".srs" ) ) {
                         JOptionPane.showMessageDialog(StatsresGUI.this, "Current settings were successfully saved to the selected file!", "Settings Saved Successfully", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
@@ -679,31 +679,45 @@ public class StatsresGUI extends JFrame {
      * Private method to save current settings to a text file.
      * @return a <code>String</code> linked list containing current settings.
      */
-    private LinkedList<String> getCurrentSettings () {
-        //Create list to return.
-        LinkedList<String> settingsList = new LinkedList<String>();
-        //Add file.
-        settingsList.add("File=" + theResultsFileField.getText());
-        //Add checkbox.
-        settingsList.add("File Checkbox=" + theIncludeSubFoldersBox.isSelected());
-        //Add column data stuff.
-        String columnData = "Column Data=";
-        for ( int i = 0; i < theColumnData.getSize(); i++) {
-            columnData += theColumnData.get(i) + ",";
-        }
-        settingsList.add(columnData);
-        //Now add each checkbox.
-        settingsList.add("Mean=" + theMeanBox.isSelected());
-        settingsList.add("Min=" + theMinBox.isSelected());
-        settingsList.add("Max=" + theMaxBox.isSelected());
-        settingsList.add("Median=" + theMedianBox.isSelected());
-        settingsList.add("Count=" + theCountBox.isSelected());
-        settingsList.add("IQR=" + theIQRBox.isSelected());
-        settingsList.add("1Q=" + the1QBox.isSelected());
-        settingsList.add("3Q=" + the3QBox.isSelected());
-        settingsList.add("StDev=" + theStDevBox.isSelected());
-        //Return linked list.
-        return settingsList;
+    private StatsresSettings saveCurrentSettings () {
+    	StatsresSettings settings = new StatsresSettings();
+    	settings.setFile(theResultsFileField.getText());
+    	settings.setIncludeSubfolders(theIncludeSubFoldersBox.isSelected());
+    	//Convert DefaultListModel to proper List.
+    	List<String> columnDataStr = new ArrayList<String>();
+    	Enumeration<String> columnDataEnum = theColumnData.elements();
+    	while (columnDataEnum.hasMoreElements()) {
+    		columnDataStr.add(columnDataEnum.nextElement());
+    	}
+    	settings.setColumnData(columnDataStr);
+    	//Convert checkboxes to list.
+    	List<StatisticalFunctions> statisticalFunctions = new ArrayList<StatisticalFunctions>();
+    	if ( theMeanBox.isSelected() ) {
+    		statisticalFunctions.add(StatisticalFunctions.MEAN);
+    	}
+    	if ( theMaxBox.isSelected() ) {
+    		statisticalFunctions.add(StatisticalFunctions.MIN);
+    	}
+    	if ( theMedianBox.isSelected() ) {
+    		statisticalFunctions.add(StatisticalFunctions.MEDIAN);
+    	}
+    	if ( theCountBox.isSelected() ) {
+    		statisticalFunctions.add(StatisticalFunctions.COUNT);
+    	}
+    	if ( theIQRBox.isSelected() ) {
+    		statisticalFunctions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
+    	}
+    	if ( the1QBox.isSelected() ) {
+    		statisticalFunctions.add(StatisticalFunctions.QUARTILE_FIRST);
+    	}
+    	if ( the3QBox.isSelected() ) {
+    		statisticalFunctions.add(StatisticalFunctions.QUARTILE_THIRD);
+    	}
+    	if ( theStDevBox.isSelected() ) {
+    		statisticalFunctions.add(StatisticalFunctions.STANDARD_DEVIATION);
+    	}
+        //Return settings.
+        return settings;
     }
     
 }
