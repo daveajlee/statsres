@@ -25,6 +25,13 @@ public class SplashWindow extends JFrame {
     private JLabel theCopyrightLabel;
     private UserInterface theInterface;
     
+    private static final String VERSION_NUMBER = "1.1";
+    
+    //Test Constructor.
+    public SplashWindow ( ) {
+    	
+    }
+    
     /**
      * Default constructor to display the splash screen to the user.
      * @param isAboutScreen a <code>boolean</code> which is true if we are to display about screen.
@@ -32,9 +39,44 @@ public class SplashWindow extends JFrame {
      */
     public SplashWindow ( boolean isAboutScreen, UserInterface ui ) {
         
-        //Initialise user interface and set this as current frame.
+    	//Initialise user interface and set this as current frame.
         theInterface = ui;
         theInterface.setCurrentFrame(this);
+        
+        addHeaderInfo();
+        
+        //Get a container to add things to.
+        Container c = this.getContentPane();
+        
+        c.add(createCenterPanel(isAboutScreen), BorderLayout.CENTER);
+        
+        //Mouse listener if this is the about screen.
+        if ( isAboutScreen ) {
+            c.addMouseListener ( new MouseListener () {
+                public void mouseClicked(MouseEvent e) {
+                    dispose();
+                }
+                public void mousePressed(MouseEvent e) {}
+                public void mouseReleased(MouseEvent e) {}
+                public void mouseEntered(MouseEvent e) {}
+                public void mouseExited(MouseEvent e) {}
+            });
+        }
+        
+        //Position the screen at the center of the screen.
+        Toolkit tools = Toolkit.getDefaultToolkit();
+        Dimension screenDim = tools.getScreenSize();
+        Dimension displayDim = getPreferredSize();
+        this.setLocation ( (int) (screenDim.width/2)-(displayDim.width/2), (int) (screenDim.height/2)-(displayDim.height/2));
+        
+        //Display the front screen to the user.
+        this.pack ();
+        this.setVisible (true);
+        this.setSize ( getPreferredSize() );
+        
+    }
+    
+    public void addHeaderInfo ( ) {
         
         //Set image icon.
         Image img = Toolkit.getDefaultToolkit().getImage(SplashWindow.class.getResource("/logosmall.png"));
@@ -44,11 +86,10 @@ public class SplashWindow extends JFrame {
         this.setTitle ("Statsres");
         this.setResizable (true);
         this.setUndecorated(true);
-        
-        //Get a container to add things to.
-        Container c = this.getContentPane();
-        
-        //Construct centre panel with box layout to display all components.
+    }
+    
+    public JPanel createCenterPanel ( boolean isAboutScreen ) {
+    	//Construct centre panel with box layout to display all components.
         JPanel centrePanel = new JPanel();
         centrePanel.setLayout ( new BoxLayout ( centrePanel, BoxLayout.PAGE_AXIS ) );
         centrePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black,1), BorderFactory.createEmptyBorder(5,5,5,5)));
@@ -86,7 +127,7 @@ public class SplashWindow extends JFrame {
             //Construct version panel to add to the centre panel.
             JPanel versionPanel = new JPanel();
             versionPanel.setBackground(Color.WHITE);
-            theVersionLabel = new JLabel("Version " + theInterface.getVersion());
+            theVersionLabel = new JLabel("Version " + VERSION_NUMBER);
             theVersionLabel.setFont(new Font("Arial", Font.BOLD+Font.ITALIC, 16));
             versionPanel.add(theVersionLabel);
             centrePanel.add(versionPanel);
@@ -99,33 +140,7 @@ public class SplashWindow extends JFrame {
         theCopyrightLabel.setFont(new Font("Arial", Font.ITALIC, 10) );
         copyrightPanel.add(theCopyrightLabel);
         centrePanel.add(copyrightPanel);
-        
-        c.add(centrePanel, BorderLayout.CENTER);
-        
-        //Mouse listener if this is the about screen.
-        if ( isAboutScreen ) {
-            c.addMouseListener ( new MouseListener () {
-                public void mouseClicked(MouseEvent e) {
-                    dispose();
-                }
-                public void mousePressed(MouseEvent e) {}
-                public void mouseReleased(MouseEvent e) {}
-                public void mouseEntered(MouseEvent e) {}
-                public void mouseExited(MouseEvent e) {}
-            });
-        }
-        
-        //Position the screen at the center of the screen.
-        Toolkit tools = Toolkit.getDefaultToolkit();
-        Dimension screenDim = tools.getScreenSize();
-        Dimension displayDim = getPreferredSize();
-        this.setLocation ( (int) (screenDim.width/2)-(displayDim.width/2), (int) (screenDim.height/2)-(displayDim.height/2));
-        
-        //Display the front screen to the user.
-        this.pack ();
-        this.setVisible (true);
-        this.setSize ( getPreferredSize() );
-        
+        return centrePanel;
     }
     
 }

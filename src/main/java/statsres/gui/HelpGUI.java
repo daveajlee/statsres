@@ -32,21 +32,62 @@ public class HelpGUI extends JFrame {
     private HashMap<String, String> contentUrls;
     
     /**
+     * Test contructor to allow testing!
+     * @param testConstructor
+     */
+    public HelpGUI ( boolean testConstructor ) {
+    	
+    }
+    
+    /**
      * Default constructor for HelpGUI which creates the help screen interface and displays it to the user.
      */
     public HelpGUI ( ) {
     	
-    	contentUrls = new HashMap<String, String>();
-    	contentUrls.put("Welcome", "/intro.html");
-    	contentUrls.put("Getting Started", "/gettingstarted.html");
-    	contentUrls.put("Input Options", "/inputoptions.html");
-    	contentUrls.put("Output", "/output.html");
-    	contentUrls.put("Load Settings", "/loadsettings.html");
-    	contentUrls.put("Save Settings", "/savesettings.html");
-    	contentUrls.put("Load Output", "/loadoutput.html");
-    	contentUrls.put("Save Output", "/saveoutput.html");
+    	initialiseContent();
         
-        //Set image icon.
+        addHeaderInfos();
+        
+        //Get a container to add things to.
+        Container c = this.getContentPane();
+        
+        //Create a panel to display components.
+        JPanel dialogPanel = new JPanel();
+        dialogPanel.setLayout( new BoxLayout ( dialogPanel, BoxLayout.PAGE_AXIS ) );
+        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
+        
+        //Create grid layout - 2 to 1.
+        JPanel helpPanel = new JPanel(new GridLayout(1,2,5,5));
+        
+        //Add left panel to help panel.
+        helpPanel.add(createLeftPanel());
+        
+        //Add right panel to help panel.
+        helpPanel.add(createRightPanel());
+        
+        helpPanel.setMaximumSize(new Dimension(450,390));
+        //Add help panel to dialog panel.
+        dialogPanel.add(helpPanel);
+        dialogPanel.setMaximumSize(new Dimension(450,390));
+        
+         //Add the panel to the container.
+        c.add ( dialogPanel );
+        
+        //Display the dialog box to the user.
+        //this.pack ();
+        this.setVisible (true);
+        this.setSize ( new Dimension(500,450) );
+        
+        // Set the window's bounds, centering the window
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (screen.width - this.getWidth()) / 2;
+        int y = (screen.height - this.getHeight()) / 2;
+        setBounds(x, y, this.getWidth(), this.getHeight());
+        
+    }
+    
+    public void addHeaderInfos ( ) {
+    	//Set image icon.
         Image img = Toolkit.getDefaultToolkit().getImage(HelpGUI.class.getResource("/logosmall.png"));
         setIconImage(img);
         
@@ -61,19 +102,26 @@ public class HelpGUI extends JFrame {
         this.setTitle ( "Statsres Help" );
         this.setResizable (false);
         this.setDefaultCloseOperation (DO_NOTHING_ON_CLOSE);
-        
-        //Get a container to add things to.
-        Container c = this.getContentPane();
-        
-        //Create a panel to display components.
-        JPanel dialogPanel = new JPanel();
-        dialogPanel.setLayout( new BoxLayout ( dialogPanel, BoxLayout.PAGE_AXIS ) );
-        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
-        
-        //Create grid layout - 2 to 1.
-        JPanel helpPanel = new JPanel(new GridLayout(1,2,5,5));
-        
-        //Create left hand panel.
+    }
+    
+    public void initialiseContent ( ) {
+    	contentUrls = new HashMap<String, String>();
+    	contentUrls.put("Welcome", "/intro.html");
+    	contentUrls.put("Getting Started", "/gettingstarted.html");
+    	contentUrls.put("Input Options", "/inputoptions.html");
+    	contentUrls.put("Output", "/output.html");
+    	contentUrls.put("Load Settings", "/loadsettings.html");
+    	contentUrls.put("Save Settings", "/savesettings.html");
+    	contentUrls.put("Load Output", "/loadoutput.html");
+    	contentUrls.put("Save Output", "/saveoutput.html");
+    }
+    
+    public HashMap<String, String> getContentUrls() {
+		return contentUrls;
+	}
+    
+    public JPanel createLeftPanel ( ) {
+    	//Create left hand panel.
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout( new BoxLayout ( leftPanel, BoxLayout.PAGE_AXIS ) );
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
@@ -126,11 +174,11 @@ public class HelpGUI extends JFrame {
         leftPanel.add(topicsPane);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         leftPanel.setMaximumSize(new Dimension(450,200));
-        
-        //Add left panel to help panel.
-        helpPanel.add(leftPanel);
-        
-        //Create right pane.
+        return leftPanel;
+    }
+    
+    public JPanel createRightPanel ( ) {
+    	//Create right pane.
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout( new BoxLayout ( rightPanel, BoxLayout.PAGE_AXIS ) );
         rightPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer
@@ -148,29 +196,10 @@ public class HelpGUI extends JFrame {
         rightPanel.add(displayScroll);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         rightPanel.setMaximumSize(new Dimension(450,390));
-        helpPanel.add(rightPanel);
-        helpPanel.setMaximumSize(new Dimension(450,390));
-        //Add help panel to dialog panel.
-        dialogPanel.add(helpPanel);
-        dialogPanel.setMaximumSize(new Dimension(450,390));
-        
-         //Add the panel to the container.
-        c.add ( dialogPanel );
-        
-        //Display the dialog box to the user.
-        //this.pack ();
-        this.setVisible (true);
-        this.setSize ( new Dimension(500,450) );
-        
-        // Set the window's bounds, centering the window
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (screen.width - this.getWidth()) / 2;
-        int y = (screen.height - this.getHeight()) / 2;
-        setBounds(x, y, this.getWidth(), this.getHeight());
-        
+        return rightPanel;
     }
-    
-    /**
+
+	/**
      * This method updates the topic lists according to the search text entered by the user.
      * @param text a <code>String</code> containing the text entered by the user in the search text box.
      */
@@ -202,12 +231,7 @@ public class HelpGUI extends JFrame {
      * @return a <code>boolean</code> which is true if and only if text in model should be included based on user's text.
      */
     public boolean includeString ( String strToCheck, String strCheckAgainst ) {
-        for ( int i = 0; i < strToCheck.length(); i++ ) {
-            if ( !strToCheck.substring(i, (i+1)).equalsIgnoreCase(strCheckAgainst.substring(i, (i+1))) ) {
-                return false;
-            }
-        }
-        return true;
+    	return strCheckAgainst.contains(strToCheck);
     }
     
 }

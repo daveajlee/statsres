@@ -14,7 +14,6 @@ import statsres.gui.*;
 public class UserInterface {
 
     private JFrame theCurrentFrame;
-    private String theVersion;
     private boolean processRunning = false;
     
     /**
@@ -22,7 +21,6 @@ public class UserInterface {
      */
     public UserInterface ( ) {
         theCurrentFrame = new JFrame();
-        theVersion = "1.1";
     }
     
     /**
@@ -39,14 +37,6 @@ public class UserInterface {
      */
     public JFrame getCurrentFrame ( ) {
         return theCurrentFrame;
-    }
-    
-    /**
-     * Method to return the current version number as a String for about screen.
-     * @return a <code>String</code> containing the current version number.
-     */
-    public String getVersion ( ) {
-        return theVersion;
     }
     
     /**

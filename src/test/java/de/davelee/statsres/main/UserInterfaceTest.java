@@ -15,12 +15,6 @@ import statsres.main.UserInterface;
 public class UserInterfaceTest {
 	
 	@Test
-	public void testVersion() {
-		UserInterface userInterface = new UserInterface();
-		assertEquals(userInterface.getVersion(), "1.1");
-	}
-	
-	@Test
 	public void testCurrentFrame() {
 		UserInterface userInterface = new UserInterface();
 		assertNotNull(userInterface.getCurrentFrame());
