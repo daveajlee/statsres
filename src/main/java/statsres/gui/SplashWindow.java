@@ -37,7 +37,7 @@ public class SplashWindow extends JFrame {
      * @param isAboutScreen a <code>boolean</code> which is true if we are to display about screen.
      * @param ui a <code>UserInterface</code> object which controls interface processing in Statsres.
      */
-    public SplashWindow ( boolean isAboutScreen, UserInterface ui ) {
+    public SplashWindow ( boolean isAboutScreen, UserInterface ui, boolean testMode ) {
         
     	//Initialise user interface and set this as current frame.
         theInterface = ui;
@@ -50,29 +50,16 @@ public class SplashWindow extends JFrame {
         
         c.add(createCenterPanel(isAboutScreen), BorderLayout.CENTER);
         
-        //Mouse listener if this is the about screen.
-        if ( isAboutScreen ) {
-            c.addMouseListener ( new MouseListener () {
-                public void mouseClicked(MouseEvent e) {
-                    dispose();
-                }
-                public void mousePressed(MouseEvent e) {}
-                public void mouseReleased(MouseEvent e) {}
-                public void mouseEntered(MouseEvent e) {}
-                public void mouseExited(MouseEvent e) {}
-            });
-        }
+        c.addMouseListener(createMouseListener(isAboutScreen));
         
-        //Position the screen at the center of the screen.
-        Toolkit tools = Toolkit.getDefaultToolkit();
-        Dimension screenDim = tools.getScreenSize();
-        Dimension displayDim = getPreferredSize();
-        this.setLocation ( (int) (screenDim.width/2)-(displayDim.width/2), (int) (screenDim.height/2)-(displayDim.height/2));
-        
+        setLocationBounds();
+       
         //Display the front screen to the user.
-        this.pack ();
-        this.setVisible (true);
-        this.setSize ( getPreferredSize() );
+        if ( !testMode ) {
+        	this.pack ();
+        	this.setVisible (true);
+        	this.setSize ( getPreferredSize() );
+        }
         
     }
     
@@ -141,6 +128,30 @@ public class SplashWindow extends JFrame {
         copyrightPanel.add(theCopyrightLabel);
         centrePanel.add(copyrightPanel);
         return centrePanel;
+    }
+    
+    public MouseListener createMouseListener ( boolean isAboutScreen ) {
+    	//Mouse listener if this is the about screen.
+        if ( isAboutScreen ) {
+            return new MouseListener () {
+                public void mouseClicked(MouseEvent e) {
+                    dispose();
+                }
+                public void mousePressed(MouseEvent e) {}
+                public void mouseReleased(MouseEvent e) {}
+                public void mouseEntered(MouseEvent e) {}
+                public void mouseExited(MouseEvent e) {}
+            };
+        }
+        return null;
+    }
+    
+    public void setLocationBounds ( ) {
+    	//Position the screen at the center of the screen.
+        Toolkit tools = Toolkit.getDefaultToolkit();
+        Dimension screenDim = tools.getScreenSize();
+        Dimension displayDim = getPreferredSize();
+        this.setLocation ( (int) (screenDim.width/2)-(displayDim.width/2), (int) (screenDim.height/2)-(displayDim.height/2));
     }
     
 }

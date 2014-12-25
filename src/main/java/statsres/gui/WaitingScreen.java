@@ -22,6 +22,11 @@ public class WaitingScreen extends JFrame {
     private JButton theCancelButton;
     private StatsresProg theProg;
     
+    //Test constructor.
+    public WaitingScreen ( ) {
+    	
+    }
+    
     /**
      * Default constructor to display the waiting screen to the user.
      * @param ui a <code>UserInterface</code> object which controls interface processing in Statsres.
@@ -31,7 +36,21 @@ public class WaitingScreen extends JFrame {
         //Initialise user interface and program variables.
         theProg = sp;
         
-        //Set image icon.
+        
+        
+        //Get a container to add things to.
+        Container c = this.getContentPane();
+        c.add(createCenterPanel(), BorderLayout.CENTER);
+        
+        //Display the front screen to the user.
+        this.pack ();
+        this.setVisible (true);
+        this.setSize ( getPreferredSize() );
+        
+    }
+    
+    public void addHeaderInfo ( ) {
+    	//Set image icon.
         Image img = Toolkit.getDefaultToolkit().getImage(WaitingScreen.class.getResource("/logosmall.png"));
         setIconImage(img);
         
@@ -39,11 +58,10 @@ public class WaitingScreen extends JFrame {
         this.setTitle ("Statsres - Please Wait!");
         this.setResizable (false);
         this.setUndecorated(false);
-        
-        //Get a container to add things to.
-        Container c = this.getContentPane();
-        
-        //Construct centre panel with box layout to display all components.
+    }
+    
+    public JPanel createCenterPanel ( ) {
+    	//Construct centre panel with box layout to display all components.
         JPanel centrePanel = new JPanel();
         centrePanel.setLayout ( new BoxLayout ( centrePanel, BoxLayout.PAGE_AXIS ) );
         centrePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black,1), BorderFactory.createEmptyBorder(5,5,5,5)));
@@ -69,20 +87,15 @@ public class WaitingScreen extends JFrame {
         });
         buttonPanel.add(theCancelButton);
         centrePanel.add(buttonPanel);
-        
-        c.add(centrePanel, BorderLayout.CENTER);
-        
-        //Position the screen at the center of the screen.
+        return centrePanel;
+    }
+    
+    public void setLocation ( ) {
+    	//Position the screen at the center of the screen.
         Toolkit tools = Toolkit.getDefaultToolkit();
         Dimension screenDim = tools.getScreenSize();
         Dimension displayDim = getPreferredSize();
         this.setLocation ( (int) (screenDim.width/2)-(displayDim.width/2), (int) (screenDim.height/2)-(displayDim.height/2));
-        
-        //Display the front screen to the user.
-        this.pack ();
-        this.setVisible (true);
-        this.setSize ( getPreferredSize() );
-        
     }
     
 }

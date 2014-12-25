@@ -74,9 +74,9 @@ public class UserInterface {
     public static void main (String[] args) {
         //Display splash screen for two seconds then load Statsres.
         try {
-            SplashWindow ss = new SplashWindow(false, new UserInterface());
+            SplashWindow ss = new SplashWindow(false, new UserInterface(), false);
             Thread.sleep(2000);
-            new StatsresGUI(new UserInterface(), "", false,null);
+            new StatsresGUI(new UserInterface(), "", false,null, false);
             ss.dispose();
         }
         catch ( InterruptedException ie) {

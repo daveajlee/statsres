@@ -1,6 +1,8 @@
 package de.davelee.statsres.main;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import org.junit.Test;
 
 import statsres.main.StatisticalFunctions;
 import statsres.main.StatsresProg;
+import statsres.main.StatsresSettings;
 
 public class StatsresProgTest {
 	
@@ -41,6 +44,31 @@ public class StatsresProgTest {
 		statsresProg.stopProcessing();
 		assertEquals(statsresProg.getOutput(), "\nWARNING: Processing was interrupted!");
 		assertEquals(statsresProg.isStillRunning(), false);
+	}
+	
+	@Test
+	public void testSaveFile() {
+		StatsresProg statsresProg = new StatsresProg();
+		StatsresSettings settings = new StatsresSettings();
+		settings.setColumnData(new ArrayList<String>());
+		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
+		functions.add(StatisticalFunctions.MEAN);
+		settings.setStatisticalFunctions(functions);
+		URL filePath = this.getClass().getResource("/settings.srs");
+		assertTrue(statsresProg.saveContent(settings.saveAsV1File(), filePath.getFile(), ".srs"));
+	}
+	
+	@Test
+	public void testLoadOutput() {
+		StatsresProg statsresProg = new StatsresProg();
+		URL filePath = this.getClass().getResource("/readfiletest.txt");
+		String text = statsresProg.loadOutputFile(filePath.getFile());
+		assertNotNull(text);
+		assertEquals("", text);
+		URL filePath2 = this.getClass().getResource("/readfiletest.sro");
+		String text2 = statsresProg.loadOutputFile(filePath2.getFile());
+		assertNotNull(text2);
+		assertEquals("Hello\nThis is a test file\n", text2);
 	}
 
 }

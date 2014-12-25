@@ -52,26 +52,16 @@ public class StatsresGUI extends JFrame {
     
     private JLabel theOutputLabel;
     private JTextArea theOutputArea;
-            
-    private JMenuBar theMenuBar;
-    private JMenu theFileMenu;
-    private JMenu theLoadMenu;
-    private JMenu theSaveMenu;
-    private JMenu theHelpMenu;
-    
-    private JMenuItem theNewMenu;
-    private JMenuItem theLoadSettingsMenu;
-    private JMenuItem theLoadOutputMenu;
-    private JMenuItem theSaveSettingsMenu;
-    private JMenuItem theSaveOutputMenu;
-    private JMenuItem theContentMenu;
-    private JMenuItem theAboutMenu;
-    private JMenuItem theExitMenu;
     
     private StatsresProg theOperations;
     private UserInterface theInterface;
-    private String[] theCurrentSettings;
+    private StatsresSettings theCurrentSettings;
 
+    //Test Constructor.
+    public StatsresGUI ( ) {
+    	
+    }
+    
     /**
      * Default constructor. Create all of the user interface components and display them to the user.
      * @param ui a <code>UserInterface</code> object containing the current control user interface object.
@@ -79,19 +69,112 @@ public class StatsresGUI extends JFrame {
      * @param isMultipleFiles a <code>boolean</code> indicating whether it is folder or file selection.
      * @param settings a <code>String</code> array of settings for the interface - null equals a new session.
      */
-    public StatsresGUI ( UserInterface ui, String fileName, boolean isMultipleFiles, String[] settings ) {
+    public StatsresGUI ( UserInterface ui, String fileName, boolean isMultipleFiles, StatsresSettings settings, boolean testMode ) {
         
-        //Set image icon.
-        /*Image img = Toolkit.getDefaultToolkit().getImage(StatsresGUI.class.getResource("/logosmall.png"));
-        setIconImage(img);*/
-        
-        //Create ProgramOperations object and store it.
+    	//Create ProgramOperations object and store it.
         theOperations = new StatsresProg();
         theInterface = ui;
         theCurrentSettings = settings;
         
         //Set this as the current frame.
         theInterface.setCurrentFrame(this);
+    	
+        //Get a container to add things to.
+        Container c = this.getContentPane();
+        
+        //Add the panel to the container.
+        c.add ( createDialogPanel(fileName, isMultipleFiles, testMode) );
+        
+        //Display the dialog box to the user.
+        //this.pack ();
+        if (!testMode) {
+        	this.setVisible (true);
+        	this.setSize ( getPreferredSize() );
+        }
+        
+        setLocationBounds();        
+    }
+    
+    public JPanel createDialogPanel ( final String fileName, final boolean isMultipleFiles, final boolean testMode ) {
+    	//Create a panel to display components.
+        JPanel dialogPanel = new JPanel();
+        dialogPanel.setLayout( new BoxLayout ( dialogPanel, BoxLayout.PAGE_AXIS ) );
+        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
+        
+        //Add results file panel to dialogPanel.
+        dialogPanel.add(createFileOptionsPanel(fileName, isMultipleFiles, testMode));
+        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
+       
+        //Add results selection panel to dialog panel.
+        dialogPanel.add(createResultsSelectionPanel());
+        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
+        
+        //Add statsOptionPanel to dialog panel.
+        dialogPanel.add(createStatsOptionPanel());
+        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
+        
+        //Add button panel to dialog panel.
+        dialogPanel.add(createButtonPanel());
+        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
+        
+        //Add outputTextPanel to dialog panel.
+        dialogPanel.add(createOutputTextPanel());
+        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
+        
+        //Add outputPane to dialog panel.
+        dialogPanel.add(createOutputPane());
+        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
+        
+        return dialogPanel;
+    }
+      
+    /**
+     * Method to load results file into the interface.
+     * @param location a <code>String</code> with the last opened file.
+     * @param allowDirs a <code>Boolean</code> indicating whether user can select directories or files.
+     * @return a <code>String</code> containing the name of the file to load.
+     */
+    public String loadResultsFile ( String location, boolean allowDirs ) {
+        //Determine location of last file as user may wish to choose another file from that directory.
+        JFileChooser fileDialog;
+        if ( !location.equalsIgnoreCase("") ) {
+            String[] locSplit = location.split("\\\\");
+            String folderLocation = "";
+            for ( int i = 0; i < locSplit.length-1; i++ ) {
+                folderLocation += locSplit[i] + "\\";
+            }
+            //Create results file open dialog box.
+            fileDialog = new JFileChooser(folderLocation);
+        }
+        else {
+            //Create results file open dialog box.
+            fileDialog = new JFileChooser();
+        }
+        fileDialog.setDialogTitle("Load Results File");
+        //Determine what user can select.
+        if ( allowDirs ) {
+            fileDialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        }
+        else {
+            fileDialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        }
+        //Only display .csv files.
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Comma Separated Values File (.csv)", "csv");
+        fileDialog.setFileFilter(filter);
+        int returnVal = fileDialog.showOpenDialog(this);
+        //Check if the user submitted a file.
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            //Return the path of the file selected.
+            return fileDialog.getSelectedFile().getPath();
+        }
+        //Return blank if user didn't select file.
+        return "";
+    }
+    
+    public void addHeaderInfo ( final boolean testMode ) {
+    	//Set image icon.
+        Image img = Toolkit.getDefaultToolkit().getImage(StatsresGUI.class.getResource("/logosmall.png"));
+        setIconImage(img);
         
         //Call the Exit method in the UserInterface class if the user hits exit.
         this.addWindowListener ( new WindowAdapter() {
@@ -100,29 +183,37 @@ public class StatsresGUI extends JFrame {
             }
         });
         
-        //Create menu bar and menu items.
-        theMenuBar = new JMenuBar();
+        //Initialise GUI with title and close attributes.
+        this.setTitle ( "Statsres" );
+        this.setResizable (false);
+        this.setDefaultCloseOperation (DO_NOTHING_ON_CLOSE);
+        this.setJMenuBar(createMenuBar(testMode));
+    }
+    
+    public JMenuBar createMenuBar ( final boolean testMode ) {
+    	//Create menu bar and menu items.
+        JMenuBar menuBar = new JMenuBar();
         //File menu.
-        theFileMenu = new JMenu("File");
-        theFileMenu.setMnemonic('F');
-        theMenuBar.add(theFileMenu);
-        theNewMenu = new JMenuItem("New Session");
-        theNewMenu.addActionListener ( new ActionListener() {
+        JMenu fileMenu = new JMenu("File");
+        fileMenu.setMnemonic('F');
+        menuBar.add(fileMenu);
+        JMenuItem newMenuItem = new JMenuItem("New Session");
+        newMenuItem.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
                 clearFields();
             }
         });
-        theFileMenu.add(theNewMenu);
-        theFileMenu.addSeparator();
-        theLoadMenu = new JMenu("Load");
-        theLoadSettingsMenu = new JMenuItem("Settings");
-        theLoadSettingsMenu.addActionListener( new ActionListener() {
+        fileMenu.add(newMenuItem);
+        fileMenu.addSeparator();
+        JMenu loadMenu = new JMenu("Load");
+        JMenuItem loadSettingsMenuItem = new JMenuItem("Settings");
+        loadSettingsMenuItem.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
                 String fileName = loadSaveInputOutputFile("", true, true);
                 if ( !fileName.equalsIgnoreCase("") ) {
-                    String[] settings = theOperations.loadSettingsFile(fileName);
+                    StatsresSettings settings = theOperations.loadSettingsFile(fileName);
                     if ( settings != null ) {
-                        new StatsresGUI(theInterface, "", false, settings);
+                        new StatsresGUI(theInterface, "", false, settings, testMode);
                         dispose();
                     }
                     else {
@@ -131,9 +222,9 @@ public class StatsresGUI extends JFrame {
                 }
             }
         });
-        theLoadMenu.add(theLoadSettingsMenu);
-        theLoadOutputMenu = new JMenuItem("Output");
-        theLoadOutputMenu.addActionListener( new ActionListener() {
+        loadMenu.add(loadSettingsMenuItem);
+        JMenuItem loadOutputMenuItem = new JMenuItem("Output");
+        loadOutputMenuItem.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
                 String fileName = loadSaveInputOutputFile("", false, true);
                 if ( !fileName.equalsIgnoreCase("") ) {
@@ -147,12 +238,12 @@ public class StatsresGUI extends JFrame {
                 }
             }
         });
-        theLoadMenu.add(theLoadOutputMenu);
-        theFileMenu.add(theLoadMenu);
-        theFileMenu.addSeparator();
-        theSaveMenu = new JMenu("Save");
-        theSaveSettingsMenu = new JMenuItem("Settings");
-        theSaveSettingsMenu.addActionListener( new ActionListener() {
+        loadMenu.add(loadOutputMenuItem);
+        fileMenu.add(loadMenu);
+        fileMenu.addSeparator();
+        JMenu saveMenu = new JMenu("Save");
+        JMenuItem saveSettingsMenuItem = new JMenuItem("Settings");
+        saveSettingsMenuItem.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
                 String fileName = loadSaveInputOutputFile("", true, false);
                 if ( !fileName.equalsIgnoreCase("") ) {
@@ -162,9 +253,9 @@ public class StatsresGUI extends JFrame {
                 }
             }
         });
-        theSaveMenu.add(theSaveSettingsMenu);
-        theSaveOutputMenu = new JMenuItem("Output");
-        theSaveOutputMenu.addActionListener( new ActionListener() {
+        saveMenu.add(saveSettingsMenuItem);
+        JMenuItem saveOutputMenuItem = new JMenuItem("Output");
+        saveOutputMenuItem.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
                 String fileName = loadSaveInputOutputFile("", false, false);
                 if ( !fileName.equalsIgnoreCase("") ) {
@@ -176,50 +267,39 @@ public class StatsresGUI extends JFrame {
                 }
             }
         });
-        theSaveMenu.add(theSaveOutputMenu);
-        theFileMenu.add(theSaveMenu);
-        theFileMenu.addSeparator();
-        theExitMenu = new JMenuItem("Exit");
-        theExitMenu.addActionListener ( new ActionListener() {
+        saveMenu.add(saveOutputMenuItem);
+        fileMenu.add(saveMenu);
+        fileMenu.addSeparator();
+        JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
                 theInterface.exit();
             }
         });
-        theFileMenu.add(theExitMenu);
-        theHelpMenu = new JMenu("Help");
-        theHelpMenu.setMnemonic('H');
-        theMenuBar.add(theHelpMenu);
-        theContentMenu = new JMenuItem("Contents");
-        theContentMenu.addActionListener ( new ActionListener() {
+        fileMenu.add(exitMenuItem);
+        JMenu helpMenu = new JMenu("Help");
+        helpMenu.setMnemonic('H');
+        menuBar.add(helpMenu);
+        JMenuItem contentMenuItem = new JMenuItem("Contents");
+        contentMenuItem.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                new HelpGUI();
+                new HelpGUI(false);
             }
         });
-        theHelpMenu.add(theContentMenu);
-        theHelpMenu.addSeparator();
-        theAboutMenu = new JMenuItem("About");
-        theAboutMenu.addActionListener ( new ActionListener() {
+        helpMenu.add(contentMenuItem);
+        helpMenu.addSeparator();
+        JMenuItem aboutMenuItem = new JMenuItem("About");
+        aboutMenuItem.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                new SplashWindow(true, theInterface);
+                new SplashWindow(true, theInterface, false);
             }
         });
-        theHelpMenu.add(theAboutMenu);
-        
-        //Initialise GUI with title and close attributes.
-        this.setTitle ( "Statsres" );
-        this.setResizable (false);
-        this.setDefaultCloseOperation (DO_NOTHING_ON_CLOSE);
-        this.setJMenuBar(theMenuBar);
-        
-        //Get a container to add things to.
-        Container c = this.getContentPane();
-        
-        //Create a panel to display components.
-        JPanel dialogPanel = new JPanel();
-        dialogPanel.setLayout( new BoxLayout ( dialogPanel, BoxLayout.PAGE_AXIS ) );
-        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
-        
-        //Create fileOptions panel with border layout.
+        helpMenu.add(aboutMenuItem);
+        return menuBar;
+    }
+    
+    public JPanel createFileOptionsPanel ( final String fileName, boolean isMultipleFiles, final boolean testMode ) {
+    	//Create fileOptions panel with border layout.
         JPanel fileOptionsPanel = new JPanel();
         fileOptionsPanel.setLayout( new BoxLayout ( fileOptionsPanel, BoxLayout.PAGE_AXIS ) );
         fileOptionsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -238,7 +318,7 @@ public class StatsresGUI extends JFrame {
         resultsFilePanel.add(theResultsFileLabel);
         //Results File Field.
         if ( theCurrentSettings != null ) {
-            theResultsFileField = new JTextField(theCurrentSettings[0]);
+            theResultsFileField = new JTextField(theCurrentSettings.getFile());
         }
         else {
             theResultsFileField = new JTextField(fileName);
@@ -251,7 +331,7 @@ public class StatsresGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String file = loadResultsFile(theResultsFileField.getText(), theIncludeSubFoldersBox.isSelected());
                 if ( !file.equalsIgnoreCase("") ) {
-                    new StatsresGUI(theInterface, file, theIncludeSubFoldersBox.isSelected(),theCurrentSettings);
+                    new StatsresGUI(theInterface, file, theIncludeSubFoldersBox.isSelected(),theCurrentSettings, testMode);
                     dispose();
                 }
             }
@@ -266,7 +346,7 @@ public class StatsresGUI extends JFrame {
         JPanel subfolderPanel = new JPanel ( new FlowLayout() );
         //Include SubFolders JCheckBox.
         if ( theCurrentSettings != null ) {
-            isMultipleFiles = Boolean.parseBoolean(theCurrentSettings[1]);
+            isMultipleFiles = theCurrentSettings.isIncludeSubfolders();
         }
         if ( isMultipleFiles ) {
             theIncludeSubFoldersBox = new JCheckBox("Include Input Files in Subfolders", true);
@@ -289,12 +369,11 @@ public class StatsresGUI extends JFrame {
         //Add subfolder panel to dialog panel.
         fileOptionsPanel.add(subfolderPanel);
         fileOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
-        
-        //Add results file panel to dialogPanel.
-        dialogPanel.add(fileOptionsPanel);
-        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
-        
-        //Create results selection panel to contain column panel and selection buttons.
+        return fileOptionsPanel;
+    }
+    
+    public JPanel createResultsSelectionPanel ( ) {
+    	//Create results selection panel to contain column panel and selection buttons.
         JPanel resultsSelectionPanel = new JPanel();
         resultsSelectionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         resultsSelectionPanel.setLayout( new BoxLayout ( resultsSelectionPanel, BoxLayout.PAGE_AXIS ) );
@@ -315,9 +394,9 @@ public class StatsresGUI extends JFrame {
         theColumnData = new DefaultListModel<String>();
         //Only process contents of file if current settings is not null or a file was selected!
         if ( theCurrentSettings != null ) {
-            String[] columns = theCurrentSettings[2].split(",");
-            for ( int i = 0; i < columns.length; i++ ) {
-                theColumnData.addElement(columns[i]);
+            List<String> columns = theCurrentSettings.getColumnData();
+            for ( int i = 0; i < columns.size(); i++ ) {
+                theColumnData.addElement(columns.get(i));
             }
         }
         else if ( !theResultsFileField.getText().equalsIgnoreCase("") ) { 
@@ -391,12 +470,11 @@ public class StatsresGUI extends JFrame {
         //Add selectButtonPanel to results selection panel.
         resultsSelectionPanel.add(selectButtonPanel);
         resultsSelectionPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
-        
-        //Add results selection panel to dialog panel.
-        dialogPanel.add(resultsSelectionPanel);
-        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
-        
-        //Create statsOptionPanel with box layout.
+        return resultsSelectionPanel;
+    }
+    
+    public JPanel createStatsOptionPanel ( ) {
+    	//Create statsOptionPanel with box layout.
         JPanel statsOptionsPanel = new JPanel();
         statsOptionsPanel.setLayout( new BoxLayout ( statsOptionsPanel, BoxLayout.PAGE_AXIS ) );
         statsOptionsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -411,23 +489,23 @@ public class StatsresGUI extends JFrame {
         //Create panel for checkable options - grid layout 5 to 1.
         JPanel checkableFirstPanel = new JPanel(new GridLayout(1,5,5,5));
         //Mean value.
-        if ( theCurrentSettings != null ) { theMeanBox = new JCheckBox("Mean", Boolean.parseBoolean(theCurrentSettings[3])); }
+        if ( theCurrentSettings != null ) { theMeanBox = new JCheckBox("Mean", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MEAN)); }
         else { theMeanBox = new JCheckBox("Mean", true); }
         checkableFirstPanel.add(theMeanBox);
         //Min value.
-        if ( theCurrentSettings != null ) { theMinBox = new JCheckBox("Minimum", Boolean.parseBoolean(theCurrentSettings[4])); }
+        if ( theCurrentSettings != null ) { theMinBox = new JCheckBox("Minimum", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MIN)); }
         else { theMinBox = new JCheckBox("Minimum", true); }
         checkableFirstPanel.add(theMinBox);
         //Max value.
-        if ( theCurrentSettings != null ) { theMaxBox = new JCheckBox("Maximum", Boolean.parseBoolean(theCurrentSettings[5])); }
+        if ( theCurrentSettings != null ) { theMaxBox = new JCheckBox("Maximum", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MAX)); }
         else { theMaxBox = new JCheckBox("Maximum", true); }
         checkableFirstPanel.add(theMaxBox);
         //Median value.
-        if ( theCurrentSettings != null ) { theMedianBox = new JCheckBox("Median", Boolean.parseBoolean(theCurrentSettings[6])); }
+        if ( theCurrentSettings != null ) { theMedianBox = new JCheckBox("Median", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MEDIAN)); }
         else { theMedianBox = new JCheckBox("Median", true); }
         checkableFirstPanel.add(theMedianBox);
         //Count value.
-        if ( theCurrentSettings != null ) { theCountBox = new JCheckBox("Count", Boolean.parseBoolean(theCurrentSettings[7])); }
+        if ( theCurrentSettings != null ) { theCountBox = new JCheckBox("Count", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.COUNT)); }
         else { theCountBox = new JCheckBox("Count", true); }
         checkableFirstPanel.add(theCountBox);
         //Add checkable first panel to statsOption panel.
@@ -437,30 +515,29 @@ public class StatsresGUI extends JFrame {
         //Create panel for second checkable options - grid layout 4 to 1.
         JPanel checkableSecondPanel = new JPanel(new GridLayout(1,5,5,5));
         //IQR value.
-        if ( theCurrentSettings != null ) { theIQRBox = new JCheckBox("IQR", Boolean.parseBoolean(theCurrentSettings[8])); }
+        if ( theCurrentSettings != null ) { theIQRBox = new JCheckBox("IQR", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.INTER_QUARTILE_RANGE)); }
         else { theIQRBox = new JCheckBox("IQR", true); }
         checkableSecondPanel.add(theIQRBox);
         //1st Quartile value.
-        if ( theCurrentSettings != null ) { the1QBox = new JCheckBox("1st Quartile", Boolean.parseBoolean(theCurrentSettings[9])); }
+        if ( theCurrentSettings != null ) { the1QBox = new JCheckBox("1st Quartile", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.QUARTILE_FIRST)); }
         else { the1QBox = new JCheckBox("1st Quartile", true); }
         checkableSecondPanel.add(the1QBox);
         //3rd Quartile value.
-        if ( theCurrentSettings != null ) { the3QBox = new JCheckBox("3rd Quartile", Boolean.parseBoolean(theCurrentSettings[10])); }
+        if ( theCurrentSettings != null ) { the3QBox = new JCheckBox("3rd Quartile", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.QUARTILE_THIRD)); }
         else { the3QBox = new JCheckBox("3rd Quartile", true); }
         checkableSecondPanel.add(the3QBox);
         //Standard Deviation value.
-        if ( theCurrentSettings != null ) { theStDevBox = new JCheckBox("Standard Deviation", Boolean.parseBoolean(theCurrentSettings[11])); }
+        if ( theCurrentSettings != null ) { theStDevBox = new JCheckBox("Standard Deviation", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.STANDARD_DEVIATION)); }
         theStDevBox = new JCheckBox("Standard Deviation", true);
         checkableSecondPanel.add(theStDevBox);
         //Add checkable second panel to statsOption panel.
         statsOptionsPanel.add(checkableSecondPanel);
         statsOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
-        
-        //Add statsOptionPanel to dialog panel.
-        dialogPanel.add(statsOptionsPanel);
-        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
-        
-        //Create button panel.
+        return statsOptionsPanel;
+    }
+    
+    public JPanel createButtonPanel ( ) {
+    	//Create button panel.
         JPanel buttonPanel = new JPanel(new FlowLayout());
         //Create the Process Button.
         theProcessButton = new JButton ( "Process Results" );
@@ -528,85 +605,35 @@ public class StatsresGUI extends JFrame {
         });
         theExitButton.setMaximumSize(new Dimension(50, 25));
         buttonPanel.add ( theExitButton );
-        //Add Create and Exit buttons to the dialog.
-        dialogPanel.add( buttonPanel );
-        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
-        
-        //Create output area with label and then output area.
+        return buttonPanel;
+    }
+    
+    public JPanel createOutputTextPanel ( ) {
+    	//Create output area with label and then output area.
         JPanel outputTextPanel = new JPanel();
         theOutputLabel = new JLabel("Output:");
         theOutputLabel.setFont(new Font("Arial", Font.BOLD+Font.ITALIC, 16));
         outputTextPanel.add(theOutputLabel);
-        dialogPanel.add(outputTextPanel);
-        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
-        
-        theOutputArea = new JTextArea(8,10);
+        return outputTextPanel;
+    }
+    
+    public JScrollPane createOutputPane ( ) {
+    	theOutputArea = new JTextArea(8,10);
         theOutputArea.setEditable(false);
         theOutputArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         theOutputArea.setText("No output available!");
-        JScrollPane theOutputPane = new JScrollPane(theOutputArea);
-        theOutputPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        theOutputPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        dialogPanel.add(theOutputPane);
-        dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
-        
-        //Add the panel to the container.
-        c.add ( dialogPanel );
-        
-        //Display the dialog box to the user.
-        //this.pack ();
-        this.setVisible (true);
-        this.setSize ( getPreferredSize() );
-        
-        // Set the window's bounds, centering the window
+        JScrollPane outputPane = new JScrollPane(theOutputArea);
+        outputPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        outputPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        return outputPane;
+    }
+    
+    public void setLocationBounds ( ) {
+    	// Set the window's bounds, centering the window
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screen.width - this.getWidth()) / 2;
         int y = (screen.height - this.getHeight()) / 2;
         setBounds(x, y, this.getWidth(), this.getHeight());
-        
-    }
-      
-    /**
-     * Method to load results file into the interface.
-     * @param location a <code>String</code> with the last opened file.
-     * @param allowDirs a <code>Boolean</code> indicating whether user can select directories or files.
-     * @return a <code>String</code> containing the name of the file to load.
-     */
-    public String loadResultsFile ( String location, boolean allowDirs ) {
-        //Determine location of last file as user may wish to choose another file from that directory.
-        JFileChooser fileDialog;
-        if ( !location.equalsIgnoreCase("") ) {
-            String[] locSplit = location.split("\\\\");
-            String folderLocation = "";
-            for ( int i = 0; i < locSplit.length-1; i++ ) {
-                folderLocation += locSplit[i] + "\\";
-            }
-            //Create results file open dialog box.
-            fileDialog = new JFileChooser(folderLocation);
-        }
-        else {
-            //Create results file open dialog box.
-            fileDialog = new JFileChooser();
-        }
-        fileDialog.setDialogTitle("Load Results File");
-        //Determine what user can select.
-        if ( allowDirs ) {
-            fileDialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        }
-        else {
-            fileDialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        }
-        //Only display .csv files.
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Comma Separated Values File (.csv)", "csv");
-        fileDialog.setFileFilter(filter);
-        int returnVal = fileDialog.showOpenDialog(this);
-        //Check if the user submitted a file.
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-            //Return the path of the file selected.
-            return fileDialog.getSelectedFile().getPath();
-        }
-        //Return blank if user didn't select file.
-        return "";
     }
     
     /**
@@ -665,7 +692,7 @@ public class StatsresGUI extends JFrame {
     /**
      * Private method to clear all the fields of the interface.
      */
-    private void clearFields () {
+    public void clearFields () {
         theResultsFileField.setText(""); theIncludeSubFoldersBox.setSelected(false);
         theColumnData.clear();
         the1QBox.setSelected(true); the3QBox.setSelected(true);
@@ -679,7 +706,7 @@ public class StatsresGUI extends JFrame {
      * Private method to save current settings to a text file.
      * @return a <code>String</code> linked list containing current settings.
      */
-    private StatsresSettings saveCurrentSettings () {
+    public StatsresSettings saveCurrentSettings () {
     	StatsresSettings settings = new StatsresSettings();
     	settings.setFile(theResultsFileField.getText());
     	settings.setIncludeSubfolders(theIncludeSubFoldersBox.isSelected());

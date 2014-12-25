@@ -215,7 +215,7 @@ public class StatsresProg extends Thread {
             location += fileExtension;
         }
         //Then write file.
-        return ReadWriteFile.writeFile(content, new File(location), false);
+        return ReadWriteFile.writeFile(content, new File(location), true);
     }
     
     /**
@@ -223,7 +223,7 @@ public class StatsresProg extends Thread {
      * @param location a <code>String</code> containing the file to be read.
      * @return a <code>String</code> array containing the settings to be used.
      */
-    public String[] loadSettingsFile ( String location ) {
+    public StatsresSettings loadSettingsFile ( String location ) {
         //Check for valid extension.
         if ( !location.endsWith(".srs") ) {
             return null;
@@ -240,8 +240,7 @@ public class StatsresProg extends Thread {
             for ( int i = 0; i < output.size(); i++ ) {
                 settings[i] = output.get(i).split("=")[1];
             }
-            //Return settings array.
-            return settings;
+            return StatsresSettings.loadV1File(settings);
         }
     }
 

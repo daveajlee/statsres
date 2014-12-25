@@ -32,17 +32,9 @@ public class HelpGUI extends JFrame {
     private HashMap<String, String> contentUrls;
     
     /**
-     * Test contructor to allow testing!
-     * @param testConstructor
-     */
-    public HelpGUI ( boolean testConstructor ) {
-    	
-    }
-    
-    /**
      * Default constructor for HelpGUI which creates the help screen interface and displays it to the user.
      */
-    public HelpGUI ( ) {
+    public HelpGUI ( final boolean testMode ) {
     	
     	initialiseContent();
         
@@ -75,8 +67,10 @@ public class HelpGUI extends JFrame {
         
         //Display the dialog box to the user.
         //this.pack ();
-        this.setVisible (true);
-        this.setSize ( new Dimension(500,450) );
+        if ( !testMode ) {
+        	this.setVisible (true);
+        	this.setSize ( new Dimension(500,450) );
+        }
         
         // Set the window's bounds, centering the window
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
