@@ -83,32 +83,32 @@ public class StatsresSettings {
 	
 	public static StatsresSettings loadV1File ( String[] settings ) {
 		StatsresSettings mySettings = new StatsresSettings();
-		mySettings.setFile(settings[0].split("=")[1]);
-		mySettings.setIncludeSubfolders(Boolean.parseBoolean(settings[1].split("=")[1]));
-		String[] content = settings[2].split("=")[1].split(",");
+		mySettings.setFile(settings[0]);
+		mySettings.setIncludeSubfolders(Boolean.parseBoolean(settings[1]));
+		String[] content = settings[2].split(",");
 		List<String> columnData = new ArrayList<String>();
 		for ( String contentStr : content ) {
 			columnData.add(contentStr);
 		}
 		mySettings.setColumnData(columnData);
 		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
-		if ( settings[3].split("=")[1].equalsIgnoreCase("true") ) {
+		if ( settings[3].equalsIgnoreCase("true") ) {
 			functions.add(StatisticalFunctions.MEAN);
-		} if ( settings[4].split("=")[1].equalsIgnoreCase("true") ) {
+		} if ( settings[4].equalsIgnoreCase("true") ) {
 			functions.add(StatisticalFunctions.MIN);
-		} if ( settings[5].split("=")[1].equalsIgnoreCase("true") ) {
+		} if ( settings[5].equalsIgnoreCase("true") ) {
 			functions.add(StatisticalFunctions.MAX);
-		} if ( settings[6].split("=")[1].equalsIgnoreCase("true") ) {
+		} if ( settings[6].equalsIgnoreCase("true") ) {
 			functions.add(StatisticalFunctions.MEDIAN);
-		} if ( settings[7].split("=")[1].equalsIgnoreCase("true") ) {
+		} if ( settings[7].equalsIgnoreCase("true") ) {
 			functions.add(StatisticalFunctions.COUNT);
-		} if ( settings[8].split("=")[1].equalsIgnoreCase("true") ) {
+		} if ( settings[8].equalsIgnoreCase("true") ) {
 			functions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
-		} if ( settings[9].split("=")[1].equalsIgnoreCase("true") ) {
+		} if ( settings[9].equalsIgnoreCase("true") ) {
 			functions.add(StatisticalFunctions.QUARTILE_FIRST);
-		} if ( settings[10].split("=")[1].equalsIgnoreCase("true") ) {
+		} if ( settings[10].equalsIgnoreCase("true") ) {
 			functions.add(StatisticalFunctions.QUARTILE_THIRD);
-		} if ( settings[11].split("=")[1].equalsIgnoreCase("true") ) {
+		} if ( settings[11].equalsIgnoreCase("true") ) {
 			functions.add(StatisticalFunctions.STANDARD_DEVIATION);
 		}
 		mySettings.setStatisticalFunctions(functions);

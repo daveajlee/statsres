@@ -1,0 +1,12 @@
+file=test.txt
+includeSubFolders=true
+columnHeadings=TestColumn
+mean=true
+min=true
+max=false
+median=false
+count=false
+iqr=true
+quartile1=true
+quartile3=true
+standardDeviation=false

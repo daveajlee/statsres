@@ -249,15 +249,14 @@ public class StatsresProg extends Thread {
      * @param doubleStr a <code>String</code> with zeros to be removed.
      * @return a <code>String</code> with/without zeros as appropriate.
      */
-     private String removeZeros ( String doubleStr ) {
-        int startPos = doubleStr.indexOf("."); boolean removeZeros = true;
-        for ( int j = (startPos+1); j < doubleStr.length(); j++ ) {
+     public String removeZeros ( String doubleStr ) {
+        int startRemovePos = doubleStr.indexOf(".");
+        for ( int j = (startRemovePos+1); j < doubleStr.length(); j++ ) {
             if ( !doubleStr.substring(j, j+1).equalsIgnoreCase("0") ) {
-                removeZeros = false;
+                startRemovePos = (j+1);
             }
         }
-        if ( removeZeros ) { doubleStr = doubleStr.substring(0, startPos); }
-        return doubleStr;
+        return doubleStr.substring(0, startRemovePos);
      }
      
 }

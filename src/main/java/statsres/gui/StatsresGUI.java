@@ -580,7 +580,7 @@ public class StatsresGUI extends JFrame {
                     	statisticalFunctions.add(StatisticalFunctions.STANDARD_DEVIATION);
                     }
                     //Do all other work in another thread to improve performance.
-                    ProcessRunner pr = new ProcessRunner(theInterface, theResultsFileField.getText(), statisticalFunctions, theColumnHeadings, theOutputArea, theIncludeSubFoldersBox.isSelected(), StatsresGUI.this );
+                    ProcessRunner pr = new ProcessRunner(theInterface, theResultsFileField.getText(), statisticalFunctions, theColumnHeadings.getSelectedValuesList(), theOutputArea, theIncludeSubFoldersBox.isSelected());
                     new Thread(pr).start();
                 }
             }
