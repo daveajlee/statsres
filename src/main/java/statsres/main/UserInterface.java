@@ -78,8 +78,7 @@ public class UserInterface {
             Thread.sleep(2000);
             new StatsresGUI(new UserInterface(), "", false,null, false);
             ss.dispose();
-        }
-        catch ( InterruptedException ie) {
+        } catch ( InterruptedException ie) {
             System.exit(0);
         }
     }

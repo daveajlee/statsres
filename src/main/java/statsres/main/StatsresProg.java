@@ -4,6 +4,9 @@ import java.util.*;
 //Import Java IO package.
 import java.io.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * StatsresProg.java is the central processing class for Statsres.
  * @author David Lee.
@@ -20,6 +23,8 @@ public class StatsresProg extends Thread {
     //Variable to display output and boolean variable indicating whether finished or not.
     private String output = "";
     private boolean stillRunning = false;
+    
+    private static final Logger LOG = LoggerFactory.getLogger(StatsresProg.class);
     
     /** Default constructor. */
     public StatsresProg() {
@@ -58,12 +63,18 @@ public class StatsresProg extends Thread {
                 //Check if this row is included in any of the columns.
                 for ( int j = 0; j < columns.size(); j++ ) {
                     //For the moment, only support one column, so break when find first one.
-                    if ( firstRow[i].equalsIgnoreCase(columns.get(j)) ) { columnPositions[j] = i; }
-                    if ( !stillRunning ) { return; }
+                    if ( firstRow[i].equalsIgnoreCase(columns.get(j)) ) { 
+                    	columnPositions[j] = i;
+                    }
+                    if ( !stillRunning ) { 
+                    	return;
+                    }
                 }
             }
             //Append file name.
-            if ( g != 0 ) { output += "\n\n\n"; }
+            if ( g != 0 ) { 
+            	output += "\n\n\n";
+            }
             output += "File: " + files.get(g);
             //Now for each column position,
             for ( int h = 0; h < columnPositions.length; h++ ) {
@@ -74,12 +85,17 @@ public class StatsresProg extends Thread {
                 	for ( int i = 1; i < resultsFileContents.size(); i++ ) {
                 		String[] thisRow = resultsFileContents.get(i).split(",");
                 		fileData.add(Double.parseDouble(thisRow[columnPositions[h]]));
-                		if ( !stillRunning ) { return; }
+                		if ( !stillRunning ) { 
+                			return;
+                		}
                 	}
                 	//Now call performCalculations method on the String LinkedList.
-                	if (h != 0) { output += "\n"; }
+                	if (h != 0) { 
+                		output += "\n";
+                	}
                 	output += "\n" + performCalculations ( fileData, columns.get(h), statisticalFunctions);
                 } catch ( Exception e ) {
+                	LOG.error("Error mit non-numerical data", e);
                     output += "ERROR: Non-numerical data was present. Please ensure only numerical data is included except for column headings.";
                 }
             }
@@ -97,17 +113,18 @@ public class StatsresProg extends Thread {
      */
     private String performCalculations ( List<Double> data, String columnHeading, List<StatisticalFunctions> functions ) {
         //Reset the output variable.
-        String output = "Statistical Results for column " + columnHeading + ":";
+        String outputStr = "Statistical Results for column " + columnHeading + ":";
         //Try all of the following - printing out an arithmetic error if an error occurs.
         try {
         	for ( int i = 0; i < functions.size(); i++ ) {
-        		output += "\n" + functions.get(i).getDisplayName() + ": " + removeZeros("" + functions.get(i).calculate(data));
+        		outputStr += "\n" + functions.get(i).getDisplayName() + ": " + removeZeros("" + functions.get(i).calculate(data));
         	} 
         } catch ( Exception e ) {
-            output += "\nERROR: An arithmetic error has occurred. Cannot calculate remaining results";
+        	LOG.error("Arithmetic error", e);
+            outputStr += "\nERROR: An arithmetic error has occurred. Cannot calculate remaining results";
         }
         //Finished so return output variable.
-        return output;
+        return outputStr;
     }
     
     /**
@@ -138,7 +155,8 @@ public class StatsresProg extends Thread {
     	boolean alreadyExists = false;
         for ( int i = 0; i < currentFileList.size(); i++ ) {
             if ( currentFileList.get(i).equalsIgnoreCase(fileToCheck) ) {
-                alreadyExists = true; break;
+                alreadyExists = true; 
+                break;
             }
         }
         return alreadyExists;
@@ -161,18 +179,18 @@ public class StatsresProg extends Thread {
     private List<String> getFilesInDirectory ( final String directory ) {
     	List<String> filesToProcess = new ArrayList<String>();
     	//Obtain a list for this directory of subfolders on the next level and files in this folder.
-        String[] files = new File(directory).list();
-        if ( files != null ) {
+        String[] directoryFiles = new File(directory).list();
+        if ( directoryFiles != null ) {
         	//Go through all files or subdirectories in this directory
-        	for ( int i = 0; i < files.length; i++ ) {
+        	for ( int i = 0; i < directoryFiles.length; i++ ) {
         		//It is a csv file - great we add it to the list if we don't have it.
-        		if ( files[i].endsWith(".csv") ) {
-        			if (!fileAlreadyAdded(files[i], filesToProcess)) { 
-        				filesToProcess.add(directory + files[i]);
+        		if ( directoryFiles[i].endsWith(".csv") ) {
+        			if (!fileAlreadyAdded(directoryFiles[i], filesToProcess)) { 
+        				filesToProcess.add(directory + directoryFiles[i]);
         			}
-                } else if (!files[i].contains(".")){
+                } else if (!directoryFiles[i].contains(".")){
                 	//It must be a directory.
-                	filesToProcess.addAll(getFilesInDirectory(directory + files[i] + "/"));
+                	filesToProcess.addAll(getFilesInDirectory(directory + directoryFiles[i] + "/"));
                 }
             }
         }
@@ -188,14 +206,12 @@ public class StatsresProg extends Thread {
         //Check for valid extension.
         if ( !location.endsWith(".sro") ) {
             return "";
-        }
-        //Now read in file.
-        else {
+        } else {
             String outputText = "";
-            List<String> output = ReadWriteFile.readFile(location, false);
+            List<String> outputList = ReadWriteFile.readFile(location, false);
             //Process file into single string with new line characters.
-            for ( int i = 0; i < output.size(); i++ ) {
-                outputText += output.get(i) + "\n";
+            for ( int i = 0; i < outputList.size(); i++ ) {
+                outputText += outputList.get(i) + "\n";
             }
             //Return output text.
             return outputText;
@@ -209,13 +225,14 @@ public class StatsresProg extends Thread {
      * @param fileExtension a <code>String</code> with the desired file extension.
      * @return a <code>boolean</code> indicating success of file writing.
      */
-    public boolean saveContent ( final List<String> content, String location, final String fileExtension ) {
-        //First check if need to add extension.
-        if ( !location.endsWith(fileExtension) ) {
-            location += fileExtension;
+    public boolean saveContent ( final List<String> content, final String location, final String fileExtension ) {
+        String editedLocation = location;
+    	//First check if need to add extension.
+        if ( !editedLocation.endsWith(fileExtension) ) {
+            editedLocation += fileExtension;
         }
         //Then write file.
-        return ReadWriteFile.writeFile(content, new File(location), true);
+        return ReadWriteFile.writeFile(content, new File(editedLocation), true);
     }
     
     /**
@@ -227,18 +244,18 @@ public class StatsresProg extends Thread {
         //Check for valid extension.
         if ( !location.endsWith(".srs") ) {
             return null;
-        }
-        //Now read in file.
-        else {
+        } else {
             //Create options listing.
             String[] settings = new String[12];
             //Read in file.
-            List<String> output = ReadWriteFile.readFile(location, false);
+            List<String> outputList = ReadWriteFile.readFile(location, false);
             //Error checking - all settings must be present.
-            if ( output.size() != settings.length ) { return null; }
+            if ( outputList.size() != settings.length ) { 
+            	return null;
+            }
             //Split string - second part goes into settings array.
-            for ( int i = 0; i < output.size(); i++ ) {
-                settings[i] = output.get(i).split("=")[1];
+            for ( int i = 0; i < outputList.size(); i++ ) {
+                settings[i] = outputList.get(i).split("=")[1];
             }
             return StatsresSettings.loadV1File(settings);
         }
@@ -251,8 +268,8 @@ public class StatsresProg extends Thread {
      */
      public String removeZeros ( String doubleStr ) {
         int startRemovePos = doubleStr.indexOf(".");
-        for ( int j = (startRemovePos+1); j < doubleStr.length(); j++ ) {
-            if ( !doubleStr.substring(j, j+1).equalsIgnoreCase("0") ) {
+        for ( int j = startRemovePos+1; j < doubleStr.length(); j++ ) {
+            if ( !"0".equalsIgnoreCase(doubleStr.substring(j, j+1)) ) {
                 startRemovePos = (j+1);
             }
         }

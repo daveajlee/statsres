@@ -50,11 +50,11 @@ public enum StatisticalFunctions {
 		public double calculate(final List<Double> numericalData ) {
 			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
 			Collections.sort(numericalSortedData);
-			int medianPos = Math.round(numericalSortedData.size()/2); double median = -1;
+			int medianPos = Math.round(numericalSortedData.size()/2); 
+			double median = -1;
             if ( numericalSortedData.size() ==1 ) {
                 median = numericalSortedData.get(medianPos);
-            }
-            else {
+            } else {
                 median = ((numericalSortedData.get(medianPos) - numericalSortedData.get(medianPos-1))/2) + numericalSortedData.get(medianPos-1);
             }
             return median;
@@ -81,11 +81,11 @@ public enum StatisticalFunctions {
 		public double calculate(final List<Double> numericalData ) {
 			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
 			Collections.sort(numericalSortedData);
-			int oneQuartilePos = Math.round(numericalSortedData.size()/4); double oneQuartile = -1;
+			int oneQuartilePos = Math.round(numericalSortedData.size()/4); 
+			double oneQuartile = -1;
             if ( numericalSortedData.size() ==1 || oneQuartilePos == 0 ) {
                 oneQuartile = numericalSortedData.get(oneQuartilePos);
-            }
-            else {
+            } else {
                 oneQuartile = ((numericalSortedData.get(oneQuartilePos) - numericalSortedData.get(oneQuartilePos-1))/2) + numericalSortedData.get(oneQuartilePos-1);
             }
             return oneQuartile;
@@ -102,11 +102,11 @@ public enum StatisticalFunctions {
 		public double calculate(final List<Double> numericalData ) {
 			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
 			Collections.sort(numericalSortedData);
-			int threeQuartilePos = Math.round(numericalSortedData.size()/4) * 3; double threeQuartile = -1;
+			int threeQuartilePos = Math.round(numericalSortedData.size()/4) * 3; 
+			double threeQuartile = -1;
             if ( numericalSortedData.size() ==1 || threeQuartilePos == 0 ) {
                 threeQuartile = numericalSortedData.get(threeQuartilePos);
-            }
-            else {
+            } else {
                 threeQuartile = ((numericalSortedData.get(threeQuartilePos) - numericalSortedData.get(threeQuartilePos-1))/2) + numericalSortedData.get(threeQuartilePos-1);
             }
             return threeQuartile;

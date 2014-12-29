@@ -36,9 +36,9 @@ public class ProcessRunner extends Thread {
         //First, error checking - does selected file/directory exist.
         if ( new File(theResultsFileFolder).exists() ) {
             //Next, error checking - is at least one column heading selected.
-            if ( theColumnHeadings.size() != 0 ) {
+            if ( !theColumnHeadings.isEmpty() ) {
                 //Final, error checking - are some stats options selected.
-                if ( statisticalFunctions.size() > 0 ) {
+                if ( !statisticalFunctions.isEmpty() ) {
                     //Run program.
                     theOutputArea.setText("");
                     StatsresProg sp = new StatsresProg();
@@ -47,12 +47,10 @@ public class ProcessRunner extends Thread {
                     //If multiple files,
                     if ( isFolders ) {
                         fileList = sp.getAllFiles(theResultsFileFolder);
-                    }
-                    else {
+                    } else {
                         fileList.add(theResultsFileFolder);
                     }
                     sp.setCalcParameters(fileList, theColumnHeadings, statisticalFunctions);
-                    //theInterface.getCurrentFrame().dispose();
                     WaitingScreen ws = new WaitingScreen(sp);
                     sp.start();
                     while ( sp.isStillRunning() ) {
@@ -60,16 +58,13 @@ public class ProcessRunner extends Thread {
                     }
                     ws.dispose();
                     theOutputArea.setText(sp.getOutput());
-                }
-                else {
+                } else {
                     theOutputArea.setText("No statistical output was selected. Please select some statistical measurements and try again.");
                 }
-            }
-            else {
+            } else {
                 theOutputArea.setText("No data columns were selected. Please select a data column from the column list.");
             }
-        }
-        else {
+        } else {
             theOutputArea.setText("An invalid file or directory was selected. Please select another file or directory.");
         }
         theInterface.setProcessRunning(false);

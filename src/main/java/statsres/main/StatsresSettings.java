@@ -92,23 +92,23 @@ public class StatsresSettings {
 		}
 		mySettings.setColumnData(columnData);
 		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
-		if ( settings[3].equalsIgnoreCase("true") ) {
+		if ( "true".equalsIgnoreCase(settings[3]) ) {
 			functions.add(StatisticalFunctions.MEAN);
-		} if ( settings[4].equalsIgnoreCase("true") ) {
+		} if ( "true".equalsIgnoreCase(settings[4]) ) {
 			functions.add(StatisticalFunctions.MIN);
-		} if ( settings[5].equalsIgnoreCase("true") ) {
+		} if ( "true".equalsIgnoreCase(settings[5]) ) {
 			functions.add(StatisticalFunctions.MAX);
-		} if ( settings[6].equalsIgnoreCase("true") ) {
+		} if ( "true".equalsIgnoreCase(settings[6]) ) {
 			functions.add(StatisticalFunctions.MEDIAN);
-		} if ( settings[7].equalsIgnoreCase("true") ) {
+		} if ( "true".equalsIgnoreCase(settings[7]) ) {
 			functions.add(StatisticalFunctions.COUNT);
-		} if ( settings[8].equalsIgnoreCase("true") ) {
+		} if ( "true".equalsIgnoreCase(settings[8]) ) {
 			functions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
-		} if ( settings[9].equalsIgnoreCase("true") ) {
+		} if ( "true".equalsIgnoreCase(settings[9]) ) {
 			functions.add(StatisticalFunctions.QUARTILE_FIRST);
-		} if ( settings[10].equalsIgnoreCase("true") ) {
+		} if ( "true".equalsIgnoreCase(settings[10]) ) {
 			functions.add(StatisticalFunctions.QUARTILE_THIRD);
-		} if ( settings[11].equalsIgnoreCase("true") ) {
+		} if ( "true".equalsIgnoreCase(settings[11]) ) {
 			functions.add(StatisticalFunctions.STANDARD_DEVIATION);
 		}
 		mySettings.setStatisticalFunctions(functions);

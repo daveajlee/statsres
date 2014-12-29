@@ -7,12 +7,21 @@ import java.util.*;
 //Import swing packages.
 import javax.swing.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /*
  * Class for writing and reading result files.
  * @author David Lee.
  * @version 1.0.
  */
 public final class ReadWriteFile {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(ReadWriteFile.class);
+	
+	private ReadWriteFile ( ) {
+		
+	}
     
     /*
      * Performs the tasks of a readFile method.
@@ -32,17 +41,18 @@ public final class ReadWriteFile {
             do{
                 line = theReader.readLine();
                 //Additional check to make sure that the line is not null.
-                if(line==null) { break; }
+                if(line==null) { 
+                	break;
+                }
                 theLinkedList.add(line);
             }
             //Until the end of the file is reached.
             while(line!=null && !readOnlyFirstLine);
             theReader.close();
-        }
-        // If any exception then show error message and return null;
-        catch (IOException e){
+        } catch (IOException e){
+        	LOG.error("Could not read specified file", e);
             JOptionPane.showMessageDialog(null,"This program could not read the specified file. Please ensure that the correct file was selected.","Error: Reading file",JOptionPane.ERROR_MESSAGE);
-            return null;
+            return Collections.emptyList();
         }
         //Return the linked list.
         return theLinkedList;
@@ -71,12 +81,9 @@ public final class ReadWriteFile {
             //Close the writer.
             theWriter.close();
             return true; //Operations were successful.
-        }
-        //If any exception then show error message and exit.
-        catch(IOException e){
-            JOptionPane.showMessageDialog(null,"An error has occurred while writing this file. The program will now exit.","Error: Writing file",JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-            System.exit(0);        
+        } catch(IOException e){
+        	LOG.error("Error while writing file", e);
+            JOptionPane.showMessageDialog(null,"An error has occurred while writing this file.","Error: Writing file",JOptionPane.ERROR_MESSAGE);
             return false; //Operations weren't successful.
         }
     } 

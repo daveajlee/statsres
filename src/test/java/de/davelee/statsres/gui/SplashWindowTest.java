@@ -1,7 +1,6 @@
 package de.davelee.statsres.gui;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -37,8 +36,7 @@ public class SplashWindowTest {
 	@Test
 	public void testCreateMouseListener() {
 		SplashWindow splashWindow = new SplashWindow();
-		assertNotNull(splashWindow.createMouseListener(true));
-		assertNull(splashWindow.createMouseListener(false));
+		assertNotNull(splashWindow.createMouseListener());
 	}
 	
 	@Test

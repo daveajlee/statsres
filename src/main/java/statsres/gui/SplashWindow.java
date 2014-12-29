@@ -50,7 +50,9 @@ public class SplashWindow extends JFrame {
         
         c.add(createCenterPanel(isAboutScreen), BorderLayout.CENTER);
         
-        c.addMouseListener(createMouseListener(isAboutScreen));
+        if ( isAboutScreen ) {
+        	c.addMouseListener(createMouseListener());
+        }
         
         setLocationBounds();
        
@@ -108,10 +110,8 @@ public class SplashWindow extends JFrame {
             theLoadingLabel.setFont(new Font("Arial", Font.BOLD+Font.ITALIC, 16));
             loadingPanel.add(theLoadingLabel);
             centrePanel.add(loadingPanel);
-        }
-        //This presents "Version + version number" if using this as about screen.
-        else {
-            //Construct version panel to add to the centre panel.
+        } else {
+            //Construct version panel to add to the centre panel. This presents "Version" if about screen.
             JPanel versionPanel = new JPanel();
             versionPanel.setBackground(Color.WHITE);
             theVersionLabel = new JLabel("Version " + VERSION_NUMBER);
@@ -130,20 +130,25 @@ public class SplashWindow extends JFrame {
         return centrePanel;
     }
     
-    public MouseListener createMouseListener ( boolean isAboutScreen ) {
-    	//Mouse listener if this is the about screen.
-        if ( isAboutScreen ) {
-            return new MouseListener () {
-                public void mouseClicked(MouseEvent e) {
-                    dispose();
-                }
-                public void mousePressed(MouseEvent e) {}
-                public void mouseReleased(MouseEvent e) {}
-                public void mouseEntered(MouseEvent e) {}
-                public void mouseExited(MouseEvent e) {}
-            };
-        }
-        return null;
+    public MouseListener createMouseListener ( ) {
+        return new MouseListener () {
+        	public void mouseClicked(MouseEvent e) {
+        		dispose();
+            }
+            
+        	public void mousePressed(MouseEvent e) {
+        		throw new UnsupportedOperationException();
+            }
+        	public void mouseReleased(MouseEvent e) {
+        		throw new UnsupportedOperationException();
+            }
+            public void mouseEntered(MouseEvent e) {
+            	throw new UnsupportedOperationException();
+            }
+            public void mouseExited(MouseEvent e) {
+            	throw new UnsupportedOperationException();
+            }
+     	};
     }
     
     public void setLocationBounds ( ) {

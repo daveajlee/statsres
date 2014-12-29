@@ -6,12 +6,17 @@ import java.awt.event.*;
 //Import java io and util packages.
 import java.io.*;
 import java.util.HashMap;
-
 import java.util.Iterator;
+
+
+import java.util.Map;
 
 //Import java swing packages.
 import javax.swing.*;
 import javax.swing.event.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * HelpGUI.java is the screen to display the help screen for Statsres.
@@ -29,7 +34,9 @@ public class HelpGUI extends JFrame {
     private DefaultListModel<String> theTopicsModel;
     private JEditorPane theDisplayPane;
     
-    private HashMap<String, String> contentUrls;
+    private Map<String, String> contentUrls;
+    
+    private static final Logger LOG = LoggerFactory.getLogger(HelpGUI.class);
     
     /**
      * Default constructor for HelpGUI which creates the help screen interface and displays it to the user.
@@ -66,7 +73,6 @@ public class HelpGUI extends JFrame {
         c.add ( dialogPanel );
         
         //Display the dialog box to the user.
-        //this.pack ();
         if ( !testMode ) {
         	this.setVisible (true);
         	this.setSize ( new Dimension(500,450) );
@@ -110,7 +116,7 @@ public class HelpGUI extends JFrame {
     	contentUrls.put("Save Output", "/saveoutput.html");
     }
     
-    public HashMap<String, String> getContentUrls() {
+    public Map<String, String> getContentUrls() {
 		return contentUrls;
 	}
     
@@ -149,17 +155,16 @@ public class HelpGUI extends JFrame {
                 String selectedItem;
                 try {
                     selectedItem = theTopicsList.getSelectedValue().toString();
-                }
-                catch ( NullPointerException npe ) {
+                } catch ( NullPointerException npe ) {
+                	LOG.warn("Selected Item was null - retrieving automatically the first element as selected element", npe);
                     selectedItem = theTopicsList.getModel().getElementAt(0).toString();
                     theTopicsList.setSelectedValue(selectedItem, true);
                 }
                 //If loading content fails, then stack trace and dispose.
                 try {
                     theDisplayPane.setPage(HelpGUI.class.getResource(contentUrls.get(selectedItem)));
-                }
-                catch ( IOException e ) {
-                    e.printStackTrace();
+                } catch ( IOException e ) {
+                	LOG.error("Could not load HTML file, exiting ", e);
                     dispose();
                 }
             }
@@ -180,9 +185,8 @@ public class HelpGUI extends JFrame {
         try {
             theDisplayPane = new JEditorPane(HelpGUI.class.getResource("/intro.html")); 
             theDisplayPane.setMaximumSize(new Dimension(450,390));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            LOG.error("Could not load HTML file, exiting...", e);
             dispose();
         }
         JScrollPane displayScroll = new JScrollPane(theDisplayPane);
@@ -200,12 +204,10 @@ public class HelpGUI extends JFrame {
     public void updateList ( String text ) {
         //Create temp model.
         DefaultListModel<String> tempModel = new DefaultListModel<String>();
-        //If text is blank then set tempModel to fullModel.
-        if ( text.equalsIgnoreCase("") ) {
+        //If text is blank then set tempModel to fullModel. Otherwise, add those which have this prefix.
+        if ( "".equalsIgnoreCase(text) ) {
             tempModel = theTopicsModel;
-        }
-        //Otherwise, add those which have this prefix.
-        else {
+        } else {
             for ( int i = 0; i < theTopicsModel.size(); i++ ) {
                 if ( includeString(text, theTopicsModel.get(i).toString()) ) {
                     tempModel.addElement(theTopicsModel.get(i).toString());
