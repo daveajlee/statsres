@@ -21,6 +21,10 @@ public class ProcessRunnerTest {
 		functions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
 		ProcessRunner runner = new ProcessRunner ( new UserInterface(), "/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder.csv", functions, columns, new JTextArea(), true);
 		runner.run();
+		ProcessRunner runner2 = new ProcessRunner ( new UserInterface(), "/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder2.csv", functions, columns, new JTextArea(), true);
+		runner2.run();
+		ProcessRunner runner3 = new ProcessRunner ( new UserInterface(), "/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder.csv", new ArrayList<StatisticalFunctions>(), columns, new JTextArea(), true);
+		runner3.run();
 	}
 
 }

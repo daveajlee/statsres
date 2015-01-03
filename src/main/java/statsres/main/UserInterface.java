@@ -3,6 +3,9 @@ package statsres.main;
 //Import java swing package.
 import javax.swing.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //Import Statsres gui package.
 import statsres.gui.*;
 
@@ -15,6 +18,8 @@ public class UserInterface {
 
     private JFrame theCurrentFrame;
     private boolean processRunning = false;
+    
+    private static final Logger LOG = LoggerFactory.getLogger(UserInterface.class);
     
     /**
      * Default constructor - initialise variables.
@@ -58,13 +63,40 @@ public class UserInterface {
     /**
      * Method to exit the program. Print warning dialog to user first.
      */
-    public void exit ( ) {
+    public void exit ( final String title, final String dialogText ) {
         //Confirm user meant to exit.
-        int result = JOptionPane.showOptionDialog(theCurrentFrame,"Are you sure you wish to exit 'Statsres'?","Please Confirm",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,new String[] { "Yes", "No" },"No");
+        int result = showYesNoDialog(title, dialogText);
         if ( result == JOptionPane.YES_OPTION ) {
             //If yes, then exit.
-            System.exit(0);
+            doExit();
         }
+    }
+    
+    /**
+     * Method to display a yes/no dialog with supplied text and then return result.
+     * @return
+     */
+    public int showYesNoDialog ( final String title, final String dialogText ) {
+    	return JOptionPane.showOptionDialog(theCurrentFrame,dialogText,title,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,new String[] { "Yes", "No" },"No");
+    }
+    
+    /**
+     * Method to perform the actual exit.
+     */
+    public void doExit() {
+    	System.exit(0);
+    }
+    
+    public void doSleep() {
+    	try {
+    		threadSleep();
+    	} catch ( InterruptedException ie) {
+            LOG.info("Sleep interrupted - moving to start screen");
+        }
+    }
+    
+    public void threadSleep() throws InterruptedException {
+    	Thread.sleep(2000);
     }
     
     /**
@@ -73,14 +105,11 @@ public class UserInterface {
      */
     public static void main (String[] args) {
         //Display splash screen for two seconds then load Statsres.
-        try {
-            SplashWindow ss = new SplashWindow(false, new UserInterface(), false);
-            Thread.sleep(2000);
-            new StatsresGUI(new UserInterface(), "", false,null, false);
-            ss.dispose();
-        } catch ( InterruptedException ie) {
-            System.exit(0);
-        }
+    	UserInterface userInterface = new UserInterface();
+        SplashWindow ss = new SplashWindow(false, userInterface, false);
+        userInterface.doSleep();
+        new StatsresGUI(userInterface, "", false,null, false);
+        ss.dispose();
     }
     
 }

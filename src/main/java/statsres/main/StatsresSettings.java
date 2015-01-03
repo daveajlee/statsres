@@ -1,6 +1,7 @@
 package statsres.main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StatsresSettings {
@@ -85,12 +86,7 @@ public class StatsresSettings {
 		StatsresSettings mySettings = new StatsresSettings();
 		mySettings.setFile(settings[0]);
 		mySettings.setIncludeSubfolders(Boolean.parseBoolean(settings[1]));
-		String[] content = settings[2].split(",");
-		List<String> columnData = new ArrayList<String>();
-		for ( String contentStr : content ) {
-			columnData.add(contentStr);
-		}
-		mySettings.setColumnData(columnData);
+		mySettings.setColumnData(new ArrayList<String>(Arrays.asList(settings[2].split(","))));
 		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
 		if ( "true".equalsIgnoreCase(settings[3]) ) {
 			functions.add(StatisticalFunctions.MEAN);

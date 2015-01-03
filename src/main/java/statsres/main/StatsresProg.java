@@ -77,31 +77,38 @@ public class StatsresProg extends Thread {
             }
             output += "File: " + files.get(g);
             //Now for each column position,
-            for ( int h = 0; h < columnPositions.length; h++ ) {
-                //Ensure fileData is blank.
-                fileData = new ArrayList<Double>();
-                //Now go through rest of file contents and add data in the columnPosition of the row.
-                try {
-                	for ( int i = 1; i < resultsFileContents.size(); i++ ) {
-                		String[] thisRow = resultsFileContents.get(i).split(",");
-                		fileData.add(Double.parseDouble(thisRow[columnPositions[h]]));
-                		if ( !stillRunning ) { 
-                			return;
-                		}
-                	}
-                	//Now call performCalculations method on the String LinkedList.
-                	if (h != 0) { 
-                		output += "\n";
-                	}
-                	output += "\n" + performCalculations ( fileData, columns.get(h), statisticalFunctions);
-                } catch ( Exception e ) {
-                	LOG.error("Error mit non-numerical data", e);
-                    output += "ERROR: Non-numerical data was present. Please ensure only numerical data is included except for column headings.";
-                }
-            }
+            performCalculationsOnColumns(columnPositions, resultsFileContents);
         }
         //Finished so set stillRunning to false.
         stillRunning = false;
+    }
+    
+    /**
+     * Perform calculations on each of the columns.
+     */
+    public void performCalculationsOnColumns ( final int[] columnPositions, final List<String> resultsFileContents ) {
+    	for ( int h = 0; h < columnPositions.length; h++ ) {
+            //Ensure fileData is blank.
+            fileData = new ArrayList<Double>();
+            //Now go through rest of file contents and add data in the columnPosition of the row.
+            try {
+            	for ( int i = 1; i < resultsFileContents.size(); i++ ) {
+            		String[] thisRow = resultsFileContents.get(i).split(",");
+            		fileData.add(Double.parseDouble(thisRow[columnPositions[h]]));
+            		if ( !stillRunning ) { 
+            			return;
+            		}
+            	}
+            	//Now call performCalculations method on the String LinkedList.
+            	if (h != 0) { 
+            		output += "\n";
+            	}
+            	output += "\n" + performCalculations ( fileData, columns.get(h), statisticalFunctions);
+            } catch ( Exception e ) {
+            	LOG.error("Error mit non-numerical data", e);
+                output += "ERROR: Non-numerical data was present. Please ensure only numerical data is included except for column headings.";
+            }
+        }
     }
     
     /**

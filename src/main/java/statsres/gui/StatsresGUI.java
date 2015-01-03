@@ -176,7 +176,7 @@ public class StatsresGUI extends JFrame {
         //Call the Exit method in the UserInterface class if the user hits exit.
         this.addWindowListener ( new WindowAdapter() {
             public void windowClosing ( WindowEvent e ) {
-                theInterface.exit();
+                theInterface.exit("Please Confirm","Are you sure you wish to exit 'Statsres'?");
             }
         });
         
@@ -282,7 +282,7 @@ public class StatsresGUI extends JFrame {
         JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                theInterface.exit();
+                theInterface.exit("Please Confirm","Are you sure you wish to exit 'Statsres'?");
             }
         });
         fileMenu.add(exitMenuItem);
@@ -410,35 +410,7 @@ public class StatsresGUI extends JFrame {
             } else {
                 fileList.add(theResultsFileField.getText());
             }
-            //Load contents of file and whole of first line, colon-separated gives content.
-            if ( !fileList.isEmpty() ) {
-                String firstLine = ReadWriteFile.readFile(fileList.get(0), true).get(0);
-                if ( firstLine != null ) {
-                    if ( firstLine.contains(",") ) {
-                        boolean addElement = true;
-                        for ( int j = 0; j < firstLine.length(); j++ ) {
-                            if ( !Character.isLetterOrDigit(firstLine.charAt(j)) && firstLine.charAt(j)!=',' ) {
-                                addElement = false;
-                            }
-                        }
-                        if ( addElement ) {
-                            String[] contents = firstLine.split(",");
-                            for ( int i = 0; i < contents.length; i++ ) {
-                                theColumnData.addElement(contents[i]);
-                            }
-                        } else {
-                            theResultsFileField.setText("");
-                            JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
-                        }   
-                    } else {
-                        theResultsFileField.setText("");
-                        JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            } else {
-                theResultsFileField.setText("");
-                JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
-            }
+            loadFileGUI(fileList);
         }
         theColumnHeadings = new JList<String>(theColumnData);
         theColumnHeadings.setVisibleRowCount(3);
@@ -469,6 +441,38 @@ public class StatsresGUI extends JFrame {
         resultsSelectionPanel.add(selectButtonPanel);
         resultsSelectionPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         return resultsSelectionPanel;
+    }
+    
+    public void loadFileGUI ( final List<String> fileList) {
+    	//Load contents of file and whole of first line, colon-separated gives content.
+        if ( !fileList.isEmpty() ) {
+            String firstLine = ReadWriteFile.readFile(fileList.get(0), true).get(0);
+            if ( firstLine != null ) {
+                if ( firstLine.contains(",") ) {
+                    boolean addElement = true;
+                    for ( int j = 0; j < firstLine.length(); j++ ) {
+                        if ( !Character.isLetterOrDigit(firstLine.charAt(j)) && firstLine.charAt(j)!=',' ) {
+                            addElement = false;
+                        }
+                    }
+                    if ( addElement ) {
+                        String[] contents = firstLine.split(",");
+                        for ( int i = 0; i < contents.length; i++ ) {
+                            theColumnData.addElement(contents[i]);
+                        }
+                    } else {
+                        theResultsFileField.setText("");
+                        JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
+                    }   
+                } else {
+                    theResultsFileField.setText("");
+                    JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            theResultsFileField.setText("");
+            JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     public JPanel createStatsOptionPanel ( ) {
@@ -627,7 +631,7 @@ public class StatsresGUI extends JFrame {
         theExitButton = new JButton ( "Exit" );
         theExitButton.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                theInterface.exit();
+                theInterface.exit("Please Confirm","Are you sure you wish to exit 'Statsres'?");
             }
         });
         theExitButton.setMaximumSize(new Dimension(50, 25));

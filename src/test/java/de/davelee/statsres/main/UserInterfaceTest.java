@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.junit.Test;
 
@@ -31,6 +32,26 @@ public class UserInterfaceTest {
 		assertFalse(userInterface.getProcessRunning());
 		userInterface.setProcessRunning(true);
 		assertTrue(userInterface.getProcessRunning());
+	}
+	
+	@Test
+	public void testExit() {
+		UserInterface userInterface = new UserInterfaceMock();
+		userInterface.exit("Please Confirm","Are you sure you wish to exit 'Statsres'?");
+		userInterface.exit("NoDialog", "NoDialog");
+	}
+	
+	@Test
+	public void testYesNoDialog() {
+		UserInterface userInterface = new UserInterfaceMock();
+		assertEquals(userInterface.showYesNoDialog("NoDialog", "NoDialog"), JOptionPane.NO_OPTION);
+		assertEquals(userInterface.showYesNoDialog("YesDialog", "YesDialog"), JOptionPane.YES_OPTION);
+	}
+	
+	@Test
+	public void testSleep() {
+		UserInterface userInterface = new UserInterfaceMock();
+		userInterface.doSleep();
 	}
 
 }
