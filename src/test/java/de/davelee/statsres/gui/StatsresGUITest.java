@@ -21,6 +21,8 @@ public class StatsresGUITest {
 		StatsresGUI gui = new StatsresGUI();
 		assertNotNull(gui.createFileOptionsPanel("", true, true));
 		assertNotNull(gui.createFileOptionsPanel("", false, true));
+		assertNotNull(gui.createFileOptionsPanel(this.getClass().getResource("/subfolder/subsubfolder/subsubfolder.csv").getFile(), false, true));
+		assertNotNull(gui.createFileOptionsPanel(this.getClass().getResource("/subfolder").getFile(), true, true));
 	}
 	
 	@Test

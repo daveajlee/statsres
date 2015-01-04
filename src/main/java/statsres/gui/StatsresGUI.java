@@ -135,19 +135,7 @@ public class StatsresGUI extends JFrame {
      */
     public String loadResultsFile ( String location, boolean allowDirs ) {
         //Determine location of last file as user may wish to choose another file from that directory.
-        JFileChooser fileDialog;
-        if ( !"".equalsIgnoreCase(location) ) {
-            String[] locSplit = location.split("\\\\");
-            String folderLocation = "";
-            for ( int i = 0; i < locSplit.length-1; i++ ) {
-                folderLocation += locSplit[i] + "\\";
-            }
-            //Create results file open dialog box.
-            fileDialog = new JFileChooser(folderLocation);
-        } else {
-            //Create results file open dialog box.
-            fileDialog = new JFileChooser();
-        }
+        JFileChooser fileDialog = new JFileChooser(location);
         fileDialog.setDialogTitle("Load Results File");
         //Determine what user can select.
         if ( allowDirs ) {
@@ -188,27 +176,21 @@ public class StatsresGUI extends JFrame {
     }
     
     private void loadSettingsMenu ( boolean testMode ) {
-    	String fileName = loadSaveInputOutputFile("", true, true);
-        if ( !"".equalsIgnoreCase(fileName) ) {
-            StatsresSettings settings = theOperations.loadSettingsFile(fileName);
-            if ( settings != null ) {
-                new StatsresGUI(theInterface, "", false, settings, testMode);
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid settings file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
-            }
+    	StatsresSettings settings = theOperations.loadSettingsFile(loadSaveInputOutputFile("", true, true));
+        if ( settings != null ) {
+        	new StatsresGUI(theInterface, "", false, settings, testMode);
+            dispose();
+        } else {
+        	JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid settings file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
         }
     }
     
     private void loadOutputMenu ( ) {
-    	String fileName = loadSaveInputOutputFile("", false, true);
-        if ( !"".equalsIgnoreCase(fileName) ) {
-            String result = theOperations.loadOutputFile(fileName);
-            if ( !"".equalsIgnoreCase(result) ) {
-                theOutputArea.setText(result);
-            } else {
-                JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid output file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
-            }
+    	String result = theOperations.loadOutputFile(loadSaveInputOutputFile("", false, true));
+        if ( !"".equalsIgnoreCase(result) ) {
+        	theOutputArea.setText(result);
+        } else {
+        	JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid output file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -676,19 +658,7 @@ public class StatsresGUI extends JFrame {
      */
     public String loadSaveInputOutputFile ( String location, boolean isInput, boolean load ) {
         //Determine location of last file as user may wish to choose another file from that directory.
-        JFileChooser fileDialog;
-        if ( !"".equalsIgnoreCase(location) ) {
-            String[] locSplit = location.split("\\\\");
-            String folderLocation = "";
-            for ( int i = 0; i < locSplit.length-1; i++ ) {
-                folderLocation += locSplit[i] + "\\";
-            }
-            //Create results file open dialog box.
-            fileDialog = new JFileChooser(folderLocation);
-        } else {
-            //Create results file open dialog box.
-            fileDialog = new JFileChooser();
-        }
+        JFileChooser fileDialog = new JFileChooser(location);
         if (isInput) { 
         	if (load) { 
         		fileDialog.setDialogTitle("Load Settings File"); 
@@ -756,31 +726,8 @@ public class StatsresGUI extends JFrame {
     	}
     	settings.setColumnData(columnDataStr);
     	//Convert checkboxes to list.
-    	List<StatisticalFunctions> statisticalFunctions = new ArrayList<StatisticalFunctions>();
-    	if ( theMeanBox.isSelected() ) {
-    		statisticalFunctions.add(StatisticalFunctions.MEAN);
-    	}
-    	if ( theMaxBox.isSelected() ) {
-    		statisticalFunctions.add(StatisticalFunctions.MIN);
-    	}
-    	if ( theMedianBox.isSelected() ) {
-    		statisticalFunctions.add(StatisticalFunctions.MEDIAN);
-    	}
-    	if ( theCountBox.isSelected() ) {
-    		statisticalFunctions.add(StatisticalFunctions.COUNT);
-    	}
-    	if ( theIQRBox.isSelected() ) {
-    		statisticalFunctions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
-    	}
-    	if ( the1QBox.isSelected() ) {
-    		statisticalFunctions.add(StatisticalFunctions.QUARTILE_FIRST);
-    	}
-    	if ( the3QBox.isSelected() ) {
-    		statisticalFunctions.add(StatisticalFunctions.QUARTILE_THIRD);
-    	}
-    	if ( theStDevBox.isSelected() ) {
-    		statisticalFunctions.add(StatisticalFunctions.STANDARD_DEVIATION);
-    	}
+    	List<StatisticalFunctions> statisticalFunctions = processListOptions();
+    	settings.setStatisticalFunctions(statisticalFunctions);
         //Return settings.
         return settings;
     }
