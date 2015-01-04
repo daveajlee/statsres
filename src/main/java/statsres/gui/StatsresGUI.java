@@ -59,7 +59,7 @@ public class StatsresGUI extends JFrame {
 
     //Test Constructor.
     public StatsresGUI ( ) {
-    	
+    	theCurrentSettings = StatsresSettings.createDefaultSettings("");
     }
     
     /**
@@ -74,7 +74,12 @@ public class StatsresGUI extends JFrame {
     	//Create ProgramOperations object and store it.
         theOperations = new StatsresProg();
         theInterface = ui;
-        theCurrentSettings = settings;
+        
+        if ( settings == null ) {
+        	theCurrentSettings = StatsresSettings.createDefaultSettings(fileName);
+        } else {
+        	theCurrentSettings = settings;
+        }
         
         //Set this as the current frame.
         theInterface.setCurrentFrame(this);
@@ -176,7 +181,7 @@ public class StatsresGUI extends JFrame {
     }
     
     private void loadSettingsMenu ( boolean testMode ) {
-    	StatsresSettings settings = theOperations.loadSettingsFile(loadSaveInputOutputFile("", true, true));
+    	StatsresSettings settings = theOperations.loadSettingsFile(loadSaveInputOutputFile("", "Load Settings File"));
         if ( settings != null ) {
         	new StatsresGUI(theInterface, "", false, settings, testMode);
             dispose();
@@ -186,7 +191,7 @@ public class StatsresGUI extends JFrame {
     }
     
     private void loadOutputMenu ( ) {
-    	String result = theOperations.loadOutputFile(loadSaveInputOutputFile("", false, true));
+    	String result = theOperations.loadOutputFile(loadSaveInputOutputFile("", "Load Output File"));
         if ( !"".equalsIgnoreCase(result) ) {
         	theOutputArea.setText(result);
         } else {
@@ -195,14 +200,14 @@ public class StatsresGUI extends JFrame {
     }
     
     private void saveSettingsMenu ( ) {
-    	String fileName = loadSaveInputOutputFile("", true, false);
+    	String fileName = loadSaveInputOutputFile("", "Save Settings File");
         if ( !"".equalsIgnoreCase(fileName) && theOperations.saveContent(saveCurrentSettings().saveAsV1File(), fileName, ".srs" ) ) {
         	JOptionPane.showMessageDialog(StatsresGUI.this, "Current settings were successfully saved to the selected file!", "Settings Saved Successfully", JOptionPane.INFORMATION_MESSAGE);
         }
     }
     
     private void saveOutputMenu ( ) {
-    	String fileName = loadSaveInputOutputFile("", false, false);
+    	String fileName = loadSaveInputOutputFile("", "Load Settings File");
         if ( !"".equalsIgnoreCase(fileName) ) {
         	List<String> output = new ArrayList<String>();
         	output.add(theOutputArea.getText());
@@ -308,11 +313,7 @@ public class StatsresGUI extends JFrame {
         theResultsFileLabel = new JLabel("Input File:");
         resultsFilePanel.add(theResultsFileLabel);
         //Results File Field.
-        if ( theCurrentSettings != null ) {
-            theResultsFileField = new JTextField(theCurrentSettings.getFile());
-        } else {
-            theResultsFileField = new JTextField(fileName);
-        }
+        theResultsFileField = new JTextField(theCurrentSettings.getFile());
         theResultsFileField.setColumns(30);
         resultsFilePanel.add(theResultsFileField);
         //Results File Button.
@@ -335,11 +336,8 @@ public class StatsresGUI extends JFrame {
         //Create subfolder panel containing options about whether subfolders are included.
         JPanel subfolderPanel = new JPanel ( new FlowLayout() );
         //Include SubFolders JCheckBox.
-        if ( isMultipleFiles || (theCurrentSettings != null && theCurrentSettings.isIncludeSubfolders() ) ) {
-            theIncludeSubFoldersBox = new JCheckBox("Include Input Files in Subfolders", true);
-        } else {
-            theIncludeSubFoldersBox = new JCheckBox("Include Input Files in Subfolders", false);
-        }
+        theIncludeSubFoldersBox = new JCheckBox("Include Input Files in Subfolders", 
+            		isMultipleFiles || theCurrentSettings.isIncludeSubfolders());
         theIncludeSubFoldersBox.addActionListener ( new ActionListener ( ) {
             public void actionPerformed ( ActionEvent e ) {
                 if ( theIncludeSubFoldersBox.isSelected() ) {
@@ -378,12 +376,11 @@ public class StatsresGUI extends JFrame {
         //JList for column headings.
         theColumnData = new DefaultListModel<String>();
         //Only process contents of file if current settings is not null or a file was selected!
-        if ( theCurrentSettings != null ) {
-            List<String> columns = theCurrentSettings.getColumnData();
-            for ( int i = 0; i < columns.size(); i++ ) {
-                theColumnData.addElement(columns.get(i));
-            }
-        } else if ( !"".equalsIgnoreCase(theResultsFileField.getText()) ) { 
+        List<String> columns = theCurrentSettings.getColumnData();
+        for ( int i = 0; i < columns.size(); i++ ) {
+        	theColumnData.addElement(columns.get(i));
+        }
+        if ( !"".equalsIgnoreCase(theResultsFileField.getText()) ) { 
             //If folder selected then get list of files.
             List<String> fileList = new LinkedList<String>();
             if ( theIncludeSubFoldersBox.isSelected() ) {
@@ -473,39 +470,19 @@ public class StatsresGUI extends JFrame {
         //Create panel for checkable options - grid layout 5 to 1.
         JPanel checkableFirstPanel = new JPanel(new GridLayout(1,5,5,5));
         //Mean value.
-        if ( theCurrentSettings != null ) { 
-        	theMeanBox = new JCheckBox("Mean", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MEAN)); 
-        } else { 
-        	theMeanBox = new JCheckBox("Mean", true);
-        }
+        theMeanBox = new JCheckBox("Mean", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MEAN)); 
         checkableFirstPanel.add(theMeanBox);
         //Min value.
-        if ( theCurrentSettings != null ) { 
-        	theMinBox = new JCheckBox("Minimum", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MIN));
-        } else { 
-        	theMinBox = new JCheckBox("Minimum", true);
-        }
+        theMinBox = new JCheckBox("Minimum", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MIN));
         checkableFirstPanel.add(theMinBox);
         //Max value.
-        if ( theCurrentSettings != null ) { 
-        	theMaxBox = new JCheckBox("Maximum", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MAX)); 
-        } else {
-        	theMaxBox = new JCheckBox("Maximum", true);
-        }
+        theMaxBox = new JCheckBox("Maximum", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MAX)); 
         checkableFirstPanel.add(theMaxBox);
         //Median value.
-        if ( theCurrentSettings != null ) { 
-        	theMedianBox = new JCheckBox("Median", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MEDIAN));
-        } else { 
-        	theMedianBox = new JCheckBox("Median", true); 
-        }
+        theMedianBox = new JCheckBox("Median", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MEDIAN));
         checkableFirstPanel.add(theMedianBox);
         //Count value.
-        if ( theCurrentSettings != null ) { 
-        	theCountBox = new JCheckBox("Count", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.COUNT)); 
-        } else { 
-        	theCountBox = new JCheckBox("Count", true);
-        }
+        theCountBox = new JCheckBox("Count", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.COUNT)); 
         checkableFirstPanel.add(theCountBox);
         //Add checkable first panel to statsOption panel.
         statsOptionsPanel.add(checkableFirstPanel);
@@ -513,32 +490,17 @@ public class StatsresGUI extends JFrame {
         
         //Create panel for second checkable options - grid layout 4 to 1.
         JPanel checkableSecondPanel = new JPanel(new GridLayout(1,5,5,5));
-        //IQR value.
-        if ( theCurrentSettings != null ) { 
-        	theIQRBox = new JCheckBox("IQR", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.INTER_QUARTILE_RANGE));
-        } else {
-        	theIQRBox = new JCheckBox("IQR", true);
-        }
+        //IQR value. 
+        theIQRBox = new JCheckBox("IQR", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.INTER_QUARTILE_RANGE));
         checkableSecondPanel.add(theIQRBox);
         //1st Quartile value.
-        if ( theCurrentSettings != null ) { 
-        	the1QBox = new JCheckBox("1st Quartile", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.QUARTILE_FIRST)); 
-    	} else { 
-    		the1QBox = new JCheckBox("1st Quartile", true);
-    	}
+        the1QBox = new JCheckBox("1st Quartile", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.QUARTILE_FIRST)); 
         checkableSecondPanel.add(the1QBox);
         //3rd Quartile value.
-        if ( theCurrentSettings != null ) { 
-        	the3QBox = new JCheckBox("3rd Quartile", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.QUARTILE_THIRD));
-    	} else { 
-    		the3QBox = new JCheckBox("3rd Quartile", true);
-    	}
+        the3QBox = new JCheckBox("3rd Quartile", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.QUARTILE_THIRD));
         checkableSecondPanel.add(the3QBox);
         //Standard Deviation value.
-        if ( theCurrentSettings != null ) { 
-        	theStDevBox = new JCheckBox("Standard Deviation", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.STANDARD_DEVIATION));
-        }
-        theStDevBox = new JCheckBox("Standard Deviation", true);
+        theStDevBox = new JCheckBox("Standard Deviation", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.STANDARD_DEVIATION));
         checkableSecondPanel.add(theStDevBox);
         //Add checkable second panel to statsOption panel.
         statsOptionsPanel.add(checkableSecondPanel);
@@ -656,27 +618,15 @@ public class StatsresGUI extends JFrame {
      * @param load a <code>Boolean</code> which is true iff load function activated. Otherwise save will be displayed in title.
      * @return a <code>String</code> containing the name of the file to load.
      */
-    public String loadSaveInputOutputFile ( String location, boolean isInput, boolean load ) {
+    public String loadSaveInputOutputFile ( final String location, final String dialogTitle ) {
         //Determine location of last file as user may wish to choose another file from that directory.
         JFileChooser fileDialog = new JFileChooser(location);
-        if (isInput) { 
-        	if (load) { 
-        		fileDialog.setDialogTitle("Load Settings File"); 
-        	} else {
-        		fileDialog.setDialogTitle("Save Settings File");
-        	}
-        } else {
-        	if (load) {
-        		fileDialog.setDialogTitle("Load Output File"); 
-        	} else {
-        		fileDialog.setDialogTitle("Save Output File");
-        	}
-        }
+        fileDialog.setDialogTitle(dialogTitle);
         //Set file selection mode to files only.
         fileDialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
         //Only display relevant extension.
         FileNameExtensionFilter filter;
-        if (isInput) { 
+        if (dialogTitle.contains("Settings File")) { 
         	filter = new FileNameExtensionFilter("Statsres Settings File (.srs)", "srs");
         } else {
         	filter = new FileNameExtensionFilter("Statsres Output File (.sro)", "sro"); 

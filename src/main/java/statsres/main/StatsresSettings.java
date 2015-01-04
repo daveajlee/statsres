@@ -82,6 +82,25 @@ public class StatsresSettings {
         return settingsList;
     }
 	
+	public static StatsresSettings createDefaultSettings ( final String fileName ) {
+		StatsresSettings mySettings = new StatsresSettings();
+		mySettings.setFile(fileName);
+		mySettings.setIncludeSubfolders(false);
+		mySettings.setColumnData(new ArrayList<String>());
+		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
+		functions.add(StatisticalFunctions.MEAN);
+		functions.add(StatisticalFunctions.MIN);
+		functions.add(StatisticalFunctions.MAX);
+		functions.add(StatisticalFunctions.MEDIAN);
+		functions.add(StatisticalFunctions.COUNT);
+		functions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
+		functions.add(StatisticalFunctions.QUARTILE_FIRST);
+		functions.add(StatisticalFunctions.QUARTILE_THIRD);
+		functions.add(StatisticalFunctions.STANDARD_DEVIATION);
+		mySettings.setStatisticalFunctions(functions);
+		return mySettings;
+	}
+	
 	public static StatsresSettings loadV1File ( String[] settings ) {
 		StatsresSettings mySettings = new StatsresSettings();
 		mySettings.setFile(settings[0]);

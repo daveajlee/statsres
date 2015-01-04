@@ -34,5 +34,14 @@ public class StatsresSettingsTest {
 		assertEquals(fileContents.size(), 12);
 		assertEquals(fileContents.get(3), "Mean=true");
 	}
+	
+	@Test
+	public void testDefaultSettings ( ) {
+		StatsresSettings settings = StatsresSettings.createDefaultSettings("");
+		assertEquals(settings.getFile(), "");
+		assertEquals(settings.getColumnData().size(), 0);
+		assertEquals(settings.isIncludeSubfolders(), false);
+		assertEquals(settings.getStatisticalFunctions().size(), 9);
+	}
 
 }
