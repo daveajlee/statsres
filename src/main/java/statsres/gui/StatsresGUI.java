@@ -56,11 +56,6 @@ public class StatsresGUI extends JFrame {
     private StatsresProg theOperations;
     private UserInterface theInterface;
     private StatsresSettings theCurrentSettings;
-
-    //Test Constructor.
-    public StatsresGUI ( ) {
-    	theCurrentSettings = StatsresSettings.createDefaultSettings("");
-    }
     
     /**
      * Default constructor. Create all of the user interface components and display them to the user.
@@ -382,14 +377,18 @@ public class StatsresGUI extends JFrame {
         }
         if ( !"".equalsIgnoreCase(theResultsFileField.getText()) ) { 
             //If folder selected then get list of files.
-            List<String> fileList = new LinkedList<String>();
             if ( theIncludeSubFoldersBox.isSelected() ) {
                 StatsresProg sp = new StatsresProg();
-                fileList = sp.getAllFiles(theResultsFileField.getText());
+                List<String> fileList = sp.getAllFiles(theResultsFileField.getText());
+                if ( ! fileList.isEmpty()) {
+                	loadFileGUI(fileList.get(0));
+                } else {
+                    theResultsFileField.setText("");
+                    JOptionPane.showMessageDialog(StatsresGUI.this, "The selected folder could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
+                }
             } else {
-                fileList.add(theResultsFileField.getText());
+                loadFileGUI(theResultsFileField.getText());
             }
-            loadFileGUI(fileList);
         }
         theColumnHeadings = new JList<String>(theColumnData);
         theColumnHeadings.setVisibleRowCount(3);
@@ -422,35 +421,16 @@ public class StatsresGUI extends JFrame {
         return resultsSelectionPanel;
     }
     
-    public void loadFileGUI ( final List<String> fileList) {
+    public void loadFileGUI ( final String file) {
     	//Load contents of file and whole of first line, colon-separated gives content.
-        if ( !fileList.isEmpty() ) {
-            String firstLine = ReadWriteFile.readFile(fileList.get(0), true).get(0);
-            if ( firstLine != null ) {
-                if ( firstLine.contains(",") ) {
-                    boolean addElement = true;
-                    for ( int j = 0; j < firstLine.length(); j++ ) {
-                        if ( !Character.isLetterOrDigit(firstLine.charAt(j)) && firstLine.charAt(j)!=',' ) {
-                            addElement = false;
-                        }
-                    }
-                    if ( addElement ) {
-                        String[] contents = firstLine.split(",");
-                        for ( int i = 0; i < contents.length; i++ ) {
-                            theColumnData.addElement(contents[i]);
-                        }
-                    } else {
-                        theResultsFileField.setText("");
-                        JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
-                    }   
-                } else {
-                    theResultsFileField.setText("");
-                    JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        } else {
-            theResultsFileField.setText("");
+        String firstLine = ReadWriteFile.readFile(file, true).get(0);
+        String[] contents = firstLine.split(",");
+        if ( contents.length == 0 ) {
+        	theResultsFileField.setText("");
             JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
+        }
+        for ( int i = 0; i < contents.length; i++ ) {
+            theColumnData.addElement(contents[i]);
         }
     }
     
@@ -658,6 +638,18 @@ public class StatsresGUI extends JFrame {
         theStDevBox.setSelected(true); 
         theMaxBox.setSelected(true);
         theMinBox.setSelected(true);
+    }
+    
+    public void deselectAllStatOptions() {
+    	the1QBox.setSelected(false); 
+        the3QBox.setSelected(false);
+        theCountBox.setSelected(false); 
+        theIQRBox.setSelected(false);
+        theMeanBox.setSelected(false); 
+        theMedianBox.setSelected(false);
+        theStDevBox.setSelected(false); 
+        theMaxBox.setSelected(false);
+        theMinBox.setSelected(false);
     }
     
     /**
