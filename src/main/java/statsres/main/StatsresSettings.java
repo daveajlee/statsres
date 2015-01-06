@@ -7,7 +7,6 @@ import java.util.List;
 public class StatsresSettings {
 	
 	private String file;
-	private boolean includeSubfolders;
 	private List<String> columnData;
 	private List<StatisticalFunctions> statisticalFunctions;
 	
@@ -17,14 +16,6 @@ public class StatsresSettings {
 	
 	public void setFile(final String file) {
 		this.file = file;
-	}
-	
-	public boolean isIncludeSubfolders() {
-		return includeSubfolders;
-	}
-	
-	public void setIncludeSubfolders(final boolean includeSubfolders) {
-		this.includeSubfolders = includeSubfolders;
 	}
 	
 	public List<String> getColumnData() {
@@ -61,7 +52,7 @@ public class StatsresSettings {
         //Add file.
         settingsList.add("File=" + file);
         //Add checkbox.
-        settingsList.add("File Checkbox=" + includeSubfolders);
+        settingsList.add("File Checkbox=" + (file!=null && file.endsWith(".csv")));
         //Add column data stuff.
         String columnDataStr = "Column Data=";
         for ( int i = 0; i < columnData.size(); i++) {
@@ -85,7 +76,6 @@ public class StatsresSettings {
 	public static StatsresSettings createDefaultSettings ( final String fileName ) {
 		StatsresSettings mySettings = new StatsresSettings();
 		mySettings.setFile(fileName);
-		mySettings.setIncludeSubfolders(false);
 		mySettings.setColumnData(new ArrayList<String>());
 		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
 		functions.add(StatisticalFunctions.MEAN);
@@ -104,7 +94,7 @@ public class StatsresSettings {
 	public static StatsresSettings loadV1File ( String[] settings ) {
 		StatsresSettings mySettings = new StatsresSettings();
 		mySettings.setFile(settings[0]);
-		mySettings.setIncludeSubfolders(Boolean.parseBoolean(settings[1]));
+		// settings[1] was file or folder - this is no longer needed in version 2 so we ignore settings[1].
 		mySettings.setColumnData(new ArrayList<String>(Arrays.asList(settings[2].split(","))));
 		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
 		if ( "true".equalsIgnoreCase(settings[3]) ) {

@@ -1,7 +1,6 @@
 package de.davelee.statsres.main;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +17,6 @@ public class StatsresSettingsTest {
 		StatsresSettings settings = new StatsresSettings();
 		settings.setFile("test.txt");
 		assertEquals(settings.getFile(), "test.txt");
-		settings.setIncludeSubfolders(true);
-		assertTrue(settings.isIncludeSubfolders());
 		List<String> columnData = new ArrayList<String>();
 		columnData.add("TestColumn");
 		settings.setColumnData(columnData);
@@ -40,7 +37,6 @@ public class StatsresSettingsTest {
 		StatsresSettings settings = StatsresSettings.createDefaultSettings("");
 		assertEquals(settings.getFile(), "");
 		assertEquals(settings.getColumnData().size(), 0);
-		assertEquals(settings.isIncludeSubfolders(), false);
 		assertEquals(settings.getStatisticalFunctions().size(), 9);
 	}
 

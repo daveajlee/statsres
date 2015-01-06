@@ -26,7 +26,6 @@ public class StatsresGUI extends JFrame {
     private JLabel theResultsFileLabel;
     private JTextField theResultsFileField;
     private JButton theResultsFileButton;
-    private JCheckBox theIncludeSubFoldersBox;
     
     private JLabel theDataOptionsLabel;
     private JLabel theColumnLabel;
@@ -64,7 +63,7 @@ public class StatsresGUI extends JFrame {
      * @param isMultipleFiles a <code>boolean</code> indicating whether it is folder or file selection.
      * @param settings a <code>String</code> array of settings for the interface - null equals a new session.
      */
-    public StatsresGUI ( UserInterface ui, String fileName, boolean isMultipleFiles, StatsresSettings settings, boolean testMode ) {
+    public StatsresGUI ( UserInterface ui, String fileName, StatsresSettings settings, boolean testMode ) {
         
     	//Create ProgramOperations object and store it.
         theOperations = new StatsresProg();
@@ -83,7 +82,7 @@ public class StatsresGUI extends JFrame {
         Container c = this.getContentPane();
         
         //Add the panel to the container.
-        c.add ( createDialogPanel(fileName, isMultipleFiles, testMode) );
+        c.add ( createDialogPanel(fileName, testMode) );
         
         //Display the dialog box to the user.
         if (!testMode) {
@@ -94,14 +93,14 @@ public class StatsresGUI extends JFrame {
         setLocationBounds();        
     }
     
-    public JPanel createDialogPanel ( final String fileName, final boolean isMultipleFiles, final boolean testMode ) {
+    public JPanel createDialogPanel ( final String fileName, final boolean testMode ) {
     	//Create a panel to display components.
         JPanel dialogPanel = new JPanel();
         dialogPanel.setLayout( new BoxLayout ( dialogPanel, BoxLayout.PAGE_AXIS ) );
         dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         
         //Add results file panel to dialogPanel.
-        dialogPanel.add(createFileOptionsPanel(fileName, isMultipleFiles, testMode));
+        dialogPanel.add(createFileOptionsPanel(fileName, testMode));
         dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
        
         //Add results selection panel to dialog panel.
@@ -133,16 +132,11 @@ public class StatsresGUI extends JFrame {
      * @param allowDirs a <code>Boolean</code> indicating whether user can select directories or files.
      * @return a <code>String</code> containing the name of the file to load.
      */
-    public String loadResultsFile ( String location, boolean allowDirs ) {
+    public String loadResultsFile ( String location ) {
         //Determine location of last file as user may wish to choose another file from that directory.
         JFileChooser fileDialog = new JFileChooser(location);
         fileDialog.setDialogTitle("Load Results File");
-        //Determine what user can select.
-        if ( allowDirs ) {
-            fileDialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        } else {
-            fileDialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        }
+        fileDialog.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         //Only display .csv files.
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Comma Separated Values File (.csv)", "csv");
         fileDialog.setFileFilter(filter);
@@ -178,7 +172,7 @@ public class StatsresGUI extends JFrame {
     private void loadSettingsMenu ( boolean testMode ) {
     	StatsresSettings settings = theOperations.loadSettingsFile(loadSaveInputOutputFile("", "Load Settings File"));
         if ( settings != null ) {
-        	new StatsresGUI(theInterface, "", false, settings, testMode);
+        	new StatsresGUI(theInterface, "", settings, testMode);
             dispose();
         } else {
         	JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid settings file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
@@ -196,19 +190,17 @@ public class StatsresGUI extends JFrame {
     
     private void saveSettingsMenu ( ) {
     	String fileName = loadSaveInputOutputFile("", "Save Settings File");
-        if ( !"".equalsIgnoreCase(fileName) && theOperations.saveContent(saveCurrentSettings().saveAsV1File(), fileName, ".srs" ) ) {
+        if ( theOperations.saveContent(saveCurrentSettings().saveAsV1File(), fileName, ".srs" ) ) {
         	JOptionPane.showMessageDialog(StatsresGUI.this, "Current settings were successfully saved to the selected file!", "Settings Saved Successfully", JOptionPane.INFORMATION_MESSAGE);
         }
     }
     
     private void saveOutputMenu ( ) {
     	String fileName = loadSaveInputOutputFile("", "Load Settings File");
-        if ( !"".equalsIgnoreCase(fileName) ) {
-        	List<String> output = new ArrayList<String>();
-        	output.add(theOutputArea.getText());
-            if ( theOperations.saveContent(output, fileName, ".sro" ) ) {
-                JOptionPane.showMessageDialog(StatsresGUI.this, "Output was successfully saved to the selected file!", "Output Saved Successfully", JOptionPane.INFORMATION_MESSAGE);
-            } 
+        List<String> output = new ArrayList<String>();
+        output.add(theOutputArea.getText());
+        if ( theOperations.saveContent(output, fileName, ".sro" ) ) {
+            JOptionPane.showMessageDialog(StatsresGUI.this, "Output was successfully saved to the selected file!", "Output Saved Successfully", JOptionPane.INFORMATION_MESSAGE);
         }
     }
     
@@ -289,7 +281,7 @@ public class StatsresGUI extends JFrame {
         return menuBar;
     }
     
-    public JPanel createFileOptionsPanel ( final String fileName, final boolean isMultipleFiles, final boolean testMode ) {
+    public JPanel createFileOptionsPanel ( final String fileName, final boolean testMode ) {
     	//Create fileOptions panel with border layout.
         JPanel fileOptionsPanel = new JPanel();
         fileOptionsPanel.setLayout( new BoxLayout ( fileOptionsPanel, BoxLayout.PAGE_AXIS ) );
@@ -315,9 +307,9 @@ public class StatsresGUI extends JFrame {
         theResultsFileButton = new JButton("Choose");
         theResultsFileButton.addActionListener ( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String file = loadResultsFile(theResultsFileField.getText(), theIncludeSubFoldersBox.isSelected());
+                String file = loadResultsFile(theResultsFileField.getText());
                 if ( !"".equalsIgnoreCase(file) ) {
-                    new StatsresGUI(theInterface, file, theIncludeSubFoldersBox.isSelected(),theCurrentSettings, testMode);
+                    new StatsresGUI(theInterface, file, theCurrentSettings, testMode);
                     dispose();
                 }
             }
@@ -328,25 +320,6 @@ public class StatsresGUI extends JFrame {
         fileOptionsPanel.add(resultsFilePanel);
         fileOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
             
-        //Create subfolder panel containing options about whether subfolders are included.
-        JPanel subfolderPanel = new JPanel ( new FlowLayout() );
-        //Include SubFolders JCheckBox.
-        theIncludeSubFoldersBox = new JCheckBox("Include Input Files in Subfolders", 
-            		isMultipleFiles || theCurrentSettings.isIncludeSubfolders());
-        theIncludeSubFoldersBox.addActionListener ( new ActionListener ( ) {
-            public void actionPerformed ( ActionEvent e ) {
-                if ( theIncludeSubFoldersBox.isSelected() ) {
-                    theResultsFileLabel.setText("Input Folder:");
-                } else {
-                    theResultsFileLabel.setText("Input File:");
-                }
-            }
-        });
-        subfolderPanel.add(theIncludeSubFoldersBox);
-        
-        //Add subfolder panel to dialog panel.
-        fileOptionsPanel.add(subfolderPanel);
-        fileOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         return fileOptionsPanel;
     }
     
@@ -377,7 +350,7 @@ public class StatsresGUI extends JFrame {
         }
         if ( !"".equalsIgnoreCase(theResultsFileField.getText()) ) { 
             //If folder selected then get list of files.
-            if ( theIncludeSubFoldersBox.isSelected() ) {
+            if ( !theResultsFileField.getText().endsWith(".csv") ) {
                 StatsresProg sp = new StatsresProg();
                 List<String> fileList = sp.getAllFiles(theResultsFileField.getText());
                 if ( ! fileList.isEmpty()) {
@@ -535,7 +508,7 @@ public class StatsresGUI extends JFrame {
                     //Set isProcessRunning variable to true.
                     theInterface.setProcessRunning(true);
                     //Do all other work in another thread to improve performance.
-                    ProcessRunner pr = new ProcessRunner(theInterface, theResultsFileField.getText(), processListOptions(), theColumnHeadings.getSelectedValuesList(), theOutputArea, theIncludeSubFoldersBox.isSelected());
+                    ProcessRunner pr = new ProcessRunner(theInterface, theResultsFileField.getText(), processListOptions(), theColumnHeadings.getSelectedValuesList(), theOutputArea);
                     new Thread(pr).start();
                 }
             }
@@ -627,7 +600,6 @@ public class StatsresGUI extends JFrame {
      */
     public void clearFields () {
         theResultsFileField.setText(""); 
-        theIncludeSubFoldersBox.setSelected(false);
         theColumnData.clear();
         the1QBox.setSelected(true); 
         the3QBox.setSelected(true);
@@ -659,7 +631,6 @@ public class StatsresGUI extends JFrame {
     public StatsresSettings saveCurrentSettings () {
     	StatsresSettings settings = new StatsresSettings();
     	settings.setFile(theResultsFileField.getText());
-    	settings.setIncludeSubfolders(theIncludeSubFoldersBox.isSelected());
     	//Convert DefaultListModel to proper List.
     	List<String> columnDataStr = new ArrayList<String>();
     	Enumeration<String> columnDataEnum = theColumnData.elements();

@@ -92,7 +92,6 @@ public class StatsresProgTest {
 		URL filePath = this.getClass().getResource("/readsettings.srs");
 		StatsresSettings settings = statsresProg.loadSettingsFile(filePath.getFile());
 		assertEquals(settings.getFile(), "test.txt");
-		assertTrue(settings.isIncludeSubfolders());
 		assertEquals(settings.getColumnData().size(), 1);
 		assertEquals(settings.getColumnData().get(0), "TestColumn");
 		assertEquals(settings.getStatisticalFunctions().size(), 5);

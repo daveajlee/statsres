@@ -20,15 +20,13 @@ public class ProcessRunner extends Thread {
     private List<String> theColumnHeadings;
     private List<StatisticalFunctions> statisticalFunctions;
     private JTextArea theOutputArea;
-    private boolean isFolders;
     private UserInterface theInterface;
     
-    public ProcessRunner ( UserInterface ui, String resFileFolder, List<StatisticalFunctions> functions, List<String> ch, JTextArea oa, boolean folders ) {
+    public ProcessRunner ( UserInterface ui, String resFileFolder, List<StatisticalFunctions> functions, List<String> ch, JTextArea oa ) {
         theResultsFileFolder = resFileFolder;
         statisticalFunctions = functions;
         theColumnHeadings = ch;
         theOutputArea = oa;
-        isFolders = folders;
         theInterface = ui;
     }
     
@@ -45,7 +43,7 @@ public class ProcessRunner extends Thread {
                     //Create file input variable.
                     List<String> fileList = new LinkedList<String>();
                     //If multiple files,
-                    if ( isFolders ) {
+                    if ( theResultsFileFolder.endsWith(".csv") ) {
                         fileList = sp.getAllFiles(theResultsFileFolder);
                     } else {
                         fileList.add(theResultsFileFolder);

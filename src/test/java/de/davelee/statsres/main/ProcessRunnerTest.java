@@ -19,11 +19,11 @@ public class ProcessRunnerTest {
 		columns.add("data");
 		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
 		functions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
-		ProcessRunner runner = new ProcessRunner ( new UserInterface(), "/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder.csv", functions, columns, new JTextArea(), true);
+		ProcessRunner runner = new ProcessRunner ( new UserInterface(), "/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder", functions, columns, new JTextArea());
 		runner.run();
-		ProcessRunner runner2 = new ProcessRunner ( new UserInterface(), "/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder2.csv", functions, columns, new JTextArea(), true);
+		ProcessRunner runner2 = new ProcessRunner ( new UserInterface(), "/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder2.csv", functions, columns, new JTextArea());
 		runner2.run();
-		ProcessRunner runner3 = new ProcessRunner ( new UserInterface(), "/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder.csv", new ArrayList<StatisticalFunctions>(), columns, new JTextArea(), true);
+		ProcessRunner runner3 = new ProcessRunner ( new UserInterface(), "/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder.csv", new ArrayList<StatisticalFunctions>(), columns, new JTextArea());
 		runner3.run();
 	}
 

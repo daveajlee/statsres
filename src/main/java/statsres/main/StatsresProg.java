@@ -234,6 +234,9 @@ public class StatsresProg extends Thread {
      */
     public boolean saveContent ( final List<String> content, final String location, final String fileExtension ) {
         String editedLocation = location;
+        if ( content.isEmpty() || location.contentEquals("")) {
+        	return false;
+        }
     	//First check if need to add extension.
         if ( !editedLocation.endsWith(fileExtension) ) {
             editedLocation += fileExtension;
