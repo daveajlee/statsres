@@ -63,10 +63,10 @@ public class StatsresGUI extends JFrame {
      * @param isMultipleFiles a <code>boolean</code> indicating whether it is folder or file selection.
      * @param settings a <code>String</code> array of settings for the interface - null equals a new session.
      */
-    public StatsresGUI ( UserInterface ui, String fileName, StatsresSettings settings, boolean testMode ) {
+    public StatsresGUI ( UserInterface ui, StatsresProg statsresProg, String fileName, StatsresSettings settings, boolean testMode ) {
         
     	//Create ProgramOperations object and store it.
-        theOperations = new StatsresProg();
+        theOperations = statsresProg;
         theInterface = ui;
         
         if ( settings == null ) {
@@ -169,18 +169,18 @@ public class StatsresGUI extends JFrame {
         this.setJMenuBar(createMenuBar(testMode));
     }
     
-    private void loadSettingsMenu ( boolean testMode ) {
-    	StatsresSettings settings = theOperations.loadSettingsFile(loadSaveInputOutputFile("", "Load Settings File"));
+    public void loadSettingsMenu ( final boolean testMode, final String fileName ) {
+    	StatsresSettings settings = theOperations.loadSettingsFile(fileName);
         if ( settings != null ) {
-        	new StatsresGUI(theInterface, "", settings, testMode);
+        	new StatsresGUI(theInterface, theOperations, "", settings, testMode);
             dispose();
         } else {
         	JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid settings file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
         }
     }
     
-    private void loadOutputMenu ( ) {
-    	String result = theOperations.loadOutputFile(loadSaveInputOutputFile("", "Load Output File"));
+    public void loadOutputMenu ( final String fileName ) {
+    	String result = theOperations.loadOutputFile(fileName);
         if ( !"".equalsIgnoreCase(result) ) {
         	theOutputArea.setText(result);
         } else {
@@ -188,15 +188,13 @@ public class StatsresGUI extends JFrame {
         }
     }
     
-    private void saveSettingsMenu ( ) {
-    	String fileName = loadSaveInputOutputFile("", "Save Settings File");
+    public void saveSettingsMenu ( final String fileName ) {
         if ( theOperations.saveContent(saveCurrentSettings().saveAsV1File(), fileName, ".srs" ) ) {
         	JOptionPane.showMessageDialog(StatsresGUI.this, "Current settings were successfully saved to the selected file!", "Settings Saved Successfully", JOptionPane.INFORMATION_MESSAGE);
         }
     }
     
-    private void saveOutputMenu ( ) {
-    	String fileName = loadSaveInputOutputFile("", "Load Settings File");
+    public void saveOutputMenu ( final String fileName ) {
         List<String> output = new ArrayList<String>();
         output.add(theOutputArea.getText());
         if ( theOperations.saveContent(output, fileName, ".sro" ) ) {
@@ -223,14 +221,14 @@ public class StatsresGUI extends JFrame {
         JMenuItem loadSettingsMenuItem = new JMenuItem("Settings");
         loadSettingsMenuItem.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
-                loadSettingsMenu(testMode);
+                loadSettingsMenu(testMode, loadSaveInputOutputFile("", "Load Settings File"));
             }
         });
         loadMenu.add(loadSettingsMenuItem);
         JMenuItem loadOutputMenuItem = new JMenuItem("Output");
         loadOutputMenuItem.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
-                loadOutputMenu();
+                loadOutputMenu(loadSaveInputOutputFile("", "Load Output File"));
             }
         });
         loadMenu.add(loadOutputMenuItem);
@@ -240,14 +238,14 @@ public class StatsresGUI extends JFrame {
         JMenuItem saveSettingsMenuItem = new JMenuItem("Settings");
         saveSettingsMenuItem.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
-                saveSettingsMenu();
+                saveSettingsMenu(loadSaveInputOutputFile("", "Save Settings File"));
             }
         });
         saveMenu.add(saveSettingsMenuItem);
         JMenuItem saveOutputMenuItem = new JMenuItem("Output");
         saveOutputMenuItem.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
-                saveOutputMenu();
+                saveOutputMenu(loadSaveInputOutputFile("", "Load Settings File"));
             }
         });
         saveMenu.add(saveOutputMenuItem);
@@ -309,7 +307,7 @@ public class StatsresGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String file = loadResultsFile(theResultsFileField.getText());
                 if ( !"".equalsIgnoreCase(file) ) {
-                    new StatsresGUI(theInterface, file, theCurrentSettings, testMode);
+                    new StatsresGUI(theInterface, theOperations, file, theCurrentSettings, testMode);
                     dispose();
                 }
             }
@@ -578,13 +576,7 @@ public class StatsresGUI extends JFrame {
         //Set file selection mode to files only.
         fileDialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
         //Only display relevant extension.
-        FileNameExtensionFilter filter;
-        if (dialogTitle.contains("Settings File")) { 
-        	filter = new FileNameExtensionFilter("Statsres Settings File (.srs)", "srs");
-        } else {
-        	filter = new FileNameExtensionFilter("Statsres Output File (.sro)", "sro"); 
-        }
-        fileDialog.setFileFilter(filter);
+        fileDialog.setFileFilter(createFileNameExtensionFilter(dialogTitle));
         int returnVal = fileDialog.showOpenDialog(this);
         //Check if the user submitted a file.
         if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -593,6 +585,14 @@ public class StatsresGUI extends JFrame {
         }
         //Return blank if user didn't select file.
         return "";
+    }
+    
+    public FileNameExtensionFilter createFileNameExtensionFilter ( final String dialogTitle ) {
+    	if (dialogTitle.contains("Settings File")) { 
+        	return new FileNameExtensionFilter("Statsres Settings File (.srs)", "srs");
+        } else {
+        	return new FileNameExtensionFilter("Statsres Output File (.sro)", "sro"); 
+        }
     }
     
     /**

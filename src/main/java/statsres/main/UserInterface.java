@@ -108,7 +108,7 @@ public class UserInterface {
     	UserInterface userInterface = new UserInterface();
         SplashWindow ss = new SplashWindow(false, userInterface, false);
         userInterface.doSleep();
-        new StatsresGUI(userInterface, "", null, false);
+        new StatsresGUI(userInterface, new StatsresProg(), "", null, false);
         ss.dispose();
     }
     
