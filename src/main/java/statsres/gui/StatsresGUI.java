@@ -56,6 +56,8 @@ public class StatsresGUI extends JFrame {
     private UserInterface theInterface;
     private StatsresSettings theCurrentSettings;
     
+    private static final Font ARIAL_BOLD = new Font("Arial", Font.BOLD+Font.ITALIC, 16);
+    
     /**
      * Default constructor. Create all of the user interface components and display them to the user.
      * @param ui a <code>UserInterface</code> object containing the current control user interface object.
@@ -158,7 +160,7 @@ public class StatsresGUI extends JFrame {
         //Call the Exit method in the UserInterface class if the user hits exit.
         this.addWindowListener ( new WindowAdapter() {
             public void windowClosing ( WindowEvent e ) {
-                theInterface.exit("Please Confirm","Are you sure you wish to exit 'Statsres'?");
+                theInterface.exit();
             }
         });
         
@@ -169,13 +171,17 @@ public class StatsresGUI extends JFrame {
         this.setJMenuBar(createMenuBar(testMode));
     }
     
+    public void showErrorDialog ( final String fileType ) {
+    	JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid " + fileType + " file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
+    }
+    
     public void loadSettingsMenu ( final boolean testMode, final String fileName ) {
     	StatsresSettings settings = theOperations.loadSettingsFile(fileName);
         if ( settings != null ) {
         	new StatsresGUI(theInterface, theOperations, "", settings, testMode);
             dispose();
         } else {
-        	JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid settings file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
+        	showErrorDialog("settings");
         }
     }
     
@@ -184,7 +190,7 @@ public class StatsresGUI extends JFrame {
         if ( !"".equalsIgnoreCase(result) ) {
         	theOutputArea.setText(result);
         } else {
-        	JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid output file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
+        	showErrorDialog("output");
         }
     }
     
@@ -254,7 +260,7 @@ public class StatsresGUI extends JFrame {
         JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                theInterface.exit("Please Confirm","Are you sure you wish to exit 'Statsres'?");
+                theInterface.exit();
             }
         });
         fileMenu.add(exitMenuItem);
@@ -288,7 +294,7 @@ public class StatsresGUI extends JFrame {
         //Create file options heading.
         JPanel fileOptionsTextPanel = new JPanel();
         theFileOptionsLabel = new JLabel("File Options:");
-        theFileOptionsLabel.setFont(new Font("Arial", Font.BOLD+Font.ITALIC, 16));
+        theFileOptionsLabel.setFont(ARIAL_BOLD);
         fileOptionsTextPanel.add(theFileOptionsLabel);
         fileOptionsPanel.add(fileOptionsTextPanel);
         fileOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
@@ -330,7 +336,7 @@ public class StatsresGUI extends JFrame {
         //Create data options heading.
         JPanel dataOptionsTextPanel = new JPanel();
         theDataOptionsLabel = new JLabel("Data Options:");
-        theDataOptionsLabel.setFont(new Font("Arial", Font.BOLD+Font.ITALIC, 16));
+        theDataOptionsLabel.setFont(ARIAL_BOLD);
         dataOptionsTextPanel.add(theDataOptionsLabel);
         resultsSelectionPanel.add(dataOptionsTextPanel);
         resultsSelectionPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
@@ -355,7 +361,7 @@ public class StatsresGUI extends JFrame {
                 	loadFileGUI(fileList.get(0));
                 } else {
                     theResultsFileField.setText("");
-                    JOptionPane.showMessageDialog(StatsresGUI.this, "The selected folder could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
+                    showErrorDialog("input");
                 }
             } else {
                 loadFileGUI(theResultsFileField.getText());
@@ -398,7 +404,7 @@ public class StatsresGUI extends JFrame {
         String[] contents = firstLine.split(",");
         if ( contents.length == 0 ) {
         	theResultsFileField.setText("");
-            JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid input file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
+            showErrorDialog("input");
         }
         for ( int i = 0; i < contents.length; i++ ) {
             theColumnData.addElement(contents[i]);
@@ -414,7 +420,7 @@ public class StatsresGUI extends JFrame {
         //Create file options heading.
         JPanel statsOptionTextPanel = new JPanel();
         theStatsOptionLabel = new JLabel("Statistical Options:");
-        theStatsOptionLabel.setFont(new Font("Arial", Font.BOLD+Font.ITALIC, 16));
+        theStatsOptionLabel.setFont(ARIAL_BOLD);
         statsOptionTextPanel.add(theStatsOptionLabel);
         statsOptionsPanel.add(statsOptionTextPanel);
         statsOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
@@ -526,7 +532,7 @@ public class StatsresGUI extends JFrame {
         theExitButton = new JButton ( "Exit" );
         theExitButton.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                theInterface.exit("Please Confirm","Are you sure you wish to exit 'Statsres'?");
+                theInterface.exit();
             }
         });
         theExitButton.setMaximumSize(new Dimension(50, 25));
@@ -538,7 +544,7 @@ public class StatsresGUI extends JFrame {
     	//Create output area with label and then output area.
         JPanel outputTextPanel = new JPanel();
         theOutputLabel = new JLabel("Output:");
-        theOutputLabel.setFont(new Font("Arial", Font.BOLD+Font.ITALIC, 16));
+        theOutputLabel.setFont(ARIAL_BOLD);
         outputTextPanel.add(theOutputLabel);
         return outputTextPanel;
     }

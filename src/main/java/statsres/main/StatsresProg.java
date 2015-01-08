@@ -49,7 +49,7 @@ public class StatsresProg extends Thread {
      */
     public void run (  ) {
     	stillRunning = true;
-        output = ""; //Initialise output.
+        output = "";
         //Repeat for all files,
         for ( int g = 0; g < files.size(); g++ ) {
             //Ensure fileData is blank.
@@ -57,19 +57,13 @@ public class StatsresProg extends Thread {
             //Open results file.
             List<String> resultsFileContents = ReadWriteFile.readFile(files.get(g), false);
             //Look through first row of data file to determine which positions in the array we need to look through.
-            int[] columnPositions = new int[columns.size()];
+            Map<String, Integer> columnPositions = new HashMap<String, Integer>();
             String[] firstRow = resultsFileContents.get(0).split(",");
             for ( int i = 0; i < firstRow.length; i++ ) {
-                //Check if this row is included in any of the columns.
-                for ( int j = 0; j < columns.size(); j++ ) {
-                    //For the moment, only support one column, so break when find first one.
-                    if ( firstRow[i].equalsIgnoreCase(columns.get(j)) ) { 
-                    	columnPositions[j] = i;
-                    }
-                    if ( !stillRunning ) { 
-                    	return;
-                    }
-                }
+            	columnPositions.put(firstRow[i], i);
+            }
+            if ( !stillRunning ) { 
+            	return;
             }
             //Append file name.
             if ( g != 0 ) { 
@@ -86,24 +80,24 @@ public class StatsresProg extends Thread {
     /**
      * Perform calculations on each of the columns.
      */
-    public void performCalculationsOnColumns ( final int[] columnPositions, final List<String> resultsFileContents ) {
-    	for ( int h = 0; h < columnPositions.length; h++ ) {
+    public void performCalculationsOnColumns ( final Map<String,Integer> columnPositions, final List<String> resultsFileContents ) {
+    	for ( int h = 0; h < columns.size(); h++ ) {
             //Ensure fileData is blank.
             fileData = new ArrayList<Double>();
             //Now go through rest of file contents and add data in the columnPosition of the row.
             try {
             	for ( int i = 1; i < resultsFileContents.size(); i++ ) {
             		String[] thisRow = resultsFileContents.get(i).split(",");
-            		fileData.add(Double.parseDouble(thisRow[columnPositions[h]]));
-            		if ( !stillRunning ) { 
-            			return;
-            		}
+            		fileData.add(Double.parseDouble(thisRow[columnPositions.get(columns.get(h))]));
             	}
             	//Now call performCalculations method on the String LinkedList.
             	if (h != 0) { 
             		output += "\n";
             	}
             	output += "\n" + performCalculations ( fileData, columns.get(h), statisticalFunctions);
+            	if ( !stillRunning ) { 
+        			return;
+        		}
             } catch ( Exception e ) {
             	LOG.error("Error mit non-numerical data", e);
                 output += "ERROR: Non-numerical data was present. Please ensure only numerical data is included except for column headings.";
@@ -187,18 +181,19 @@ public class StatsresProg extends Thread {
     	List<String> filesToProcess = new ArrayList<String>();
     	//Obtain a list for this directory of subfolders on the next level and files in this folder.
         String[] directoryFiles = new File(directory).list();
-        if ( directoryFiles != null ) {
-        	//Go through all files or subdirectories in this directory
-        	for ( int i = 0; i < directoryFiles.length; i++ ) {
-        		//It is a csv file - great we add it to the list if we don't have it.
-        		if ( directoryFiles[i].endsWith(".csv") ) {
-        			if (!fileAlreadyAdded(directoryFiles[i], filesToProcess)) { 
-        				filesToProcess.add(directory + directoryFiles[i]);
-        			}
-                } else if (!directoryFiles[i].contains(".")){
-                	//It must be a directory.
-                	filesToProcess.addAll(getFilesInDirectory(directory + directoryFiles[i] + "/"));
-                }
+        if ( directoryFiles == null ) { 
+        	return filesToProcess;
+        }
+        //Go through all files or subdirectories in this directory
+        for ( int i = 0; i < directoryFiles.length; i++ ) {
+        	//It is a csv file - great we add it to the list if we don't have it.
+        	if ( directoryFiles[i].endsWith(".csv") ) {
+        		if (!fileAlreadyAdded(directoryFiles[i], filesToProcess)) { 
+        			filesToProcess.add(directory + directoryFiles[i]);
+        		}
+        	} else if (!directoryFiles[i].contains(".")){
+        		//It must be a directory.
+                filesToProcess.addAll(getFilesInDirectory(directory + directoryFiles[i] + "/"));
             }
         }
         return filesToProcess;

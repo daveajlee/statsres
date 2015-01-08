@@ -37,7 +37,8 @@ public class StatsresGUITest {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
 		assertNotNull(gui.createFileOptionsPanel("", true));
 		assertNotNull(gui.createResultsSelectionPanel());
-		String[] settingsArray = new String[] { "=test.txt","=true","=hello,bye","=true","=true","=true","=true","=true","=true","=true","=true","=true"};
+		String trueStr = "=true";
+		String[] settingsArray = new String[] { "=test.txt",trueStr,"=hello,bye",trueStr,trueStr,trueStr,trueStr,trueStr,trueStr,trueStr,trueStr,trueStr};
 		StatsresSettings settings = StatsresSettings.loadV1File(settingsArray);
 		new StatsresGUI(new UserInterface(), new StatsresProg(), "test.txt", settings, true);
 	}
@@ -103,11 +104,12 @@ public class StatsresGUITest {
 	@Test
 	public void testMenu ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProgMock(), "", StatsresSettings.createDefaultSettings(""), true);
-		gui.saveSettingsMenu("status.srs");
+		String testFileNameGood = "status.srs";
+		gui.saveSettingsMenu(testFileNameGood);
 		gui.saveSettingsMenu("status.sro");
-		gui.saveOutputMenu("status.srs");
+		gui.saveOutputMenu(testFileNameGood);
 		gui.saveOutputMenu("status.sro");
-		gui.loadSettingsMenu(true, "status.srs");
+		gui.loadSettingsMenu(true, testFileNameGood);
 		gui.loadSettingsMenu(true, "settings.srs");
 		gui.loadOutputMenu("output.sro");
 		gui.loadOutputMenu("output2.sro");

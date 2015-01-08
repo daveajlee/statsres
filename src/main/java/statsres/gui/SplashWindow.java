@@ -26,6 +26,7 @@ public class SplashWindow extends JFrame {
     private UserInterface theInterface;
     
     private static final String VERSION_NUMBER = "1.1";
+    private static final String FONT_FAMILY = "Arial";
     
     //Test Constructor.
     public SplashWindow ( ) {
@@ -97,7 +98,7 @@ public class SplashWindow extends JFrame {
         JPanel titlePanel = new JPanel();
         titlePanel.setBackground(Color.WHITE);
         theTitleLabel = new JLabel("Statsres");
-        theTitleLabel.setFont(new Font("Arial", Font.BOLD, 25));
+        theTitleLabel.setFont(new Font(FONT_FAMILY, Font.BOLD, 25));
         titlePanel.add(theTitleLabel);
         centrePanel.add(titlePanel);
         
@@ -107,7 +108,7 @@ public class SplashWindow extends JFrame {
             JPanel loadingPanel = new JPanel();
             loadingPanel.setBackground(Color.WHITE);
             theLoadingLabel = new JLabel("Loading... Please Wait");
-            theLoadingLabel.setFont(new Font("Arial", Font.BOLD+Font.ITALIC, 16));
+            theLoadingLabel.setFont(new Font(FONT_FAMILY, Font.BOLD+Font.ITALIC, 16));
             loadingPanel.add(theLoadingLabel);
             centrePanel.add(loadingPanel);
         } else {
@@ -115,7 +116,7 @@ public class SplashWindow extends JFrame {
             JPanel versionPanel = new JPanel();
             versionPanel.setBackground(Color.WHITE);
             theVersionLabel = new JLabel("Version " + VERSION_NUMBER);
-            theVersionLabel.setFont(new Font("Arial", Font.BOLD+Font.ITALIC, 16));
+            theVersionLabel.setFont(new Font(FONT_FAMILY, Font.BOLD+Font.ITALIC, 16));
             versionPanel.add(theVersionLabel);
             centrePanel.add(versionPanel);
         }
@@ -124,7 +125,7 @@ public class SplashWindow extends JFrame {
         JPanel copyrightPanel = new JPanel();
         copyrightPanel.setBackground(Color.WHITE);
         theCopyrightLabel = new JLabel("Original Author: David A J Lee");
-        theCopyrightLabel.setFont(new Font("Arial", Font.ITALIC, 10) );
+        theCopyrightLabel.setFont(new Font(FONT_FAMILY, Font.ITALIC, 10) );
         copyrightPanel.add(theCopyrightLabel);
         centrePanel.add(copyrightPanel);
         return centrePanel;

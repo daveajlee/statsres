@@ -80,11 +80,11 @@ public final class ReadWriteFile {
             }
             //Close the writer.
             theWriter.close();
-            return true; //Operations were successful.
+            return true;
         } catch(IOException e){
         	LOG.error("Error while writing file", e);
             JOptionPane.showMessageDialog(null,"An error has occurred while writing this file.","Error: Writing file",JOptionPane.ERROR_MESSAGE);
-            return false; //Operations weren't successful.
+            return false;
         }
     } 
     

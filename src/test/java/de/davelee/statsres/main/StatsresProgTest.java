@@ -9,18 +9,25 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import statsres.main.StatisticalFunctions;
 import statsres.main.StatsresProg;
 import statsres.main.StatsresSettings;
 
-public class StatsresProgTest {
+public class StatsresProgTest {	
+	
+	private StatsresProg statsresProg;
+	
+	@Before
+	public void init ( ) {
+		statsresProg = new StatsresProg();
+	}
 	
 	@Test
 	public void testGetAllFiles ( ) {
 		URL url = this.getClass().getResource("/subfolder/");
-		StatsresProg statsresProg = new StatsresProg();
 		List<String> fileList = statsresProg.getAllFiles(url.getFile());
 		assertEquals(fileList.size(), 2);
 		assertEquals(fileList.get(0), "/C:/workspace/statsres/target/test-classes/subfolder/subfolder.csv");
@@ -29,7 +36,6 @@ public class StatsresProgTest {
 	
 	@Test
 	public void testSetCalcParameters() {
-		StatsresProg statsresProg = new StatsresProg();
 		List<String> fileList = new ArrayList<String>();
 		fileList.add("/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder.csv");
 		List<String> columns = new ArrayList<String>();
@@ -41,20 +47,12 @@ public class StatsresProgTest {
 	
 	@Test
 	public void testRun() {
-		StatsresProg statsresProg = new StatsresProg();
-		List<String> fileList = new ArrayList<String>();
-		fileList.add("/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder.csv");
-		List<String> columns = new ArrayList<String>();
-		columns.add("data");
-		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
-		functions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
-		statsresProg.setCalcParameters(fileList, columns, functions);
+		testSetCalcParameters();
 		statsresProg.run();
 	}
 	
 	@Test
 	public void testStopProcessing() {
-		StatsresProg statsresProg = new StatsresProg();
 		statsresProg.stopProcessing();
 		assertEquals(statsresProg.getOutput(), "\nWARNING: Processing was interrupted!");
 		assertEquals(statsresProg.isStillRunning(), false);
@@ -62,7 +60,6 @@ public class StatsresProgTest {
 	
 	@Test
 	public void testSaveFile() {
-		StatsresProg statsresProg = new StatsresProg();
 		StatsresSettings settings = new StatsresSettings();
 		settings.setColumnData(new ArrayList<String>());
 		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
@@ -75,7 +72,6 @@ public class StatsresProgTest {
 	
 	@Test
 	public void testLoadOutput() {
-		StatsresProg statsresProg = new StatsresProg();
 		URL filePath = this.getClass().getResource("/readfiletest.txt");
 		String text = statsresProg.loadOutputFile(filePath.getFile());
 		assertNotNull(text);
@@ -88,7 +84,6 @@ public class StatsresProgTest {
 	
 	@Test
 	public void testLoadSettings() {
-		StatsresProg statsresProg = new StatsresProg();
 		URL filePath = this.getClass().getResource("/readsettings.srs");
 		StatsresSettings settings = statsresProg.loadSettingsFile(filePath.getFile());
 		assertEquals(settings.getFile(), "test.txt");
@@ -110,7 +105,6 @@ public class StatsresProgTest {
 
 	@Test
 	public void testRemoveZeros() {
-		StatsresProg statsresProg = new StatsresProg();
 		assertEquals(statsresProg.removeZeros("1.00000000"), "1");
 		assertEquals(statsresProg.removeZeros("1.001000"), "1.001");
 		

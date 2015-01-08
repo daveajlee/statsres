@@ -37,14 +37,16 @@ public class UserInterfaceTest {
 	@Test
 	public void testExit() {
 		UserInterface userInterface = new UserInterfaceMock();
-		userInterface.exit("Please Confirm","Are you sure you wish to exit 'Statsres'?");
-		userInterface.exit("NoDialog", "NoDialog");
+		userInterface.setExitDialogTitle("Please Confirm");
+		userInterface.exit();
+		userInterface.setExitDialogTitle("NoDialog");
+		userInterface.exit();
 	}
 	
 	@Test
 	public void testYesNoDialog() {
 		UserInterface userInterface = new UserInterfaceMock();
-		assertEquals(userInterface.showYesNoDialog("NoDialog", "NoDialog"), JOptionPane.NO_OPTION);
+		assertEquals(userInterface.showYesNoDialog("NoDialog", "No2Dialog"), JOptionPane.NO_OPTION);
 		assertEquals(userInterface.showYesNoDialog("YesDialog", "YesDialog"), JOptionPane.YES_OPTION);
 	}
 	

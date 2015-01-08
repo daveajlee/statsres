@@ -19,6 +19,9 @@ public class UserInterface {
     private JFrame theCurrentFrame;
     private boolean processRunning = false;
     
+    private String exitDialogTitle;
+    private String exitDialogMessage;
+    
     private static final Logger LOG = LoggerFactory.getLogger(UserInterface.class);
     
     /**
@@ -26,6 +29,8 @@ public class UserInterface {
      */
     public UserInterface ( ) {
         theCurrentFrame = new JFrame();
+        setExitDialogTitle("Please Confirm");
+        setExitDialogMessage("Are you sure you wish to exit 'Statsres'?");
     }
     
     /**
@@ -60,12 +65,28 @@ public class UserInterface {
         return processRunning;
     }
     
-    /**
+    public String getExitDialogTitle() {
+		return exitDialogTitle;
+	}
+
+	public void setExitDialogTitle(final String exitDialogTitle) {
+		this.exitDialogTitle = exitDialogTitle;
+	}
+
+	public String getExitDialogMessage() {
+		return exitDialogMessage;
+	}
+
+	public void setExitDialogMessage(final String exitDialogMessage) {
+		this.exitDialogMessage = exitDialogMessage;
+	}
+
+	/**
      * Method to exit the program. Print warning dialog to user first.
      */
-    public void exit ( final String title, final String dialogText ) {
+    public void exit ( ) {
         //Confirm user meant to exit.
-        int result = showYesNoDialog(title, dialogText);
+        int result = showYesNoDialog(getExitDialogTitle(), getExitDialogMessage());
         if ( result == JOptionPane.YES_OPTION ) {
             //If yes, then exit.
             doExit();
