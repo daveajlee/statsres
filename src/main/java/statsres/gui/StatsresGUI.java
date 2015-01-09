@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.List;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 //Import file extension package.
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -33,6 +34,8 @@ public class StatsresGUI extends JFrame {
     private JList<String> theColumnHeadings;
     private JButton theSelectAllButton;
     private JButton theDeselectAllButton;
+    
+    private JLabel theStatusBarLabel;
     
     private JLabel theStatsOptionLabel;
     private JCheckBox theMeanBox;
@@ -80,6 +83,8 @@ public class StatsresGUI extends JFrame {
         //Set this as the current frame.
         theInterface.setCurrentFrame(this);
     	
+        addHeaderInfo(testMode);
+        
         //Get a container to add things to.
         Container c = this.getContentPane();
         
@@ -95,7 +100,27 @@ public class StatsresGUI extends JFrame {
         setLocationBounds();        
     }
     
+    public JPanel createStatusBarPanel ( final int width ) {
+    	// Code adapted from http://stackoverflow.com/questions/3035880/how-can-i-create-a-bar-in-the-bottom-of-a-java-app-like-a-status-bar
+    	JPanel statusPanel = new JPanel();
+    	statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+    	statusPanel.setSize(new Dimension(width, 16));
+    	statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+    	theStatusBarLabel = new JLabel("Ready...");
+    	theStatusBarLabel.setHorizontalAlignment(SwingConstants.LEFT);
+    	statusPanel.add(theStatusBarLabel);
+    	return statusPanel;
+    }
+    
+    public void updateStatusText ( final String text ) {
+    	theStatusBarLabel.setText(text);
+    }
+    
     public JPanel createDialogPanel ( final String fileName, final boolean testMode ) {
+    	JPanel overallDialogPanel = new JPanel(new BorderLayout());
+    	
+    	JPanel statusPanel = createStatusBarPanel(this.getWidth());
+    	
     	//Create a panel to display components.
         JPanel dialogPanel = new JPanel();
         dialogPanel.setLayout( new BoxLayout ( dialogPanel, BoxLayout.PAGE_AXIS ) );
@@ -125,7 +150,11 @@ public class StatsresGUI extends JFrame {
         dialogPanel.add(createOutputPane());
         dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         
-        return dialogPanel;
+        overallDialogPanel.add(dialogPanel, BorderLayout.CENTER);
+        
+        overallDialogPanel.add(statusPanel, BorderLayout.SOUTH);
+        
+        return overallDialogPanel;
     }
       
     /**
@@ -171,8 +200,8 @@ public class StatsresGUI extends JFrame {
         this.setJMenuBar(createMenuBar(testMode));
     }
     
-    public void showErrorDialog ( final String fileType ) {
-    	JOptionPane.showMessageDialog(StatsresGUI.this, "The selected file could not be loaded because it is not a valid " + fileType + " file. Please choose another file.", "ERROR: Could not load selected file", JOptionPane.ERROR_MESSAGE);
+    public void showErrorStatus ( final String fileType ) {
+    	updateStatusText("The selected file could not be loaded because it is not a valid " + fileType + " file. Please choose another file.");
     }
     
     public void loadSettingsMenu ( final boolean testMode, final String fileName ) {
@@ -181,7 +210,7 @@ public class StatsresGUI extends JFrame {
         	new StatsresGUI(theInterface, theOperations, "", settings, testMode);
             dispose();
         } else {
-        	showErrorDialog("settings");
+        	showErrorStatus("settings");
         }
     }
     
@@ -190,13 +219,13 @@ public class StatsresGUI extends JFrame {
         if ( !"".equalsIgnoreCase(result) ) {
         	theOutputArea.setText(result);
         } else {
-        	showErrorDialog("output");
+        	showErrorStatus("output");
         }
     }
     
     public void saveSettingsMenu ( final String fileName ) {
         if ( theOperations.saveContent(saveCurrentSettings().saveAsV1File(), fileName, ".srs" ) ) {
-        	JOptionPane.showMessageDialog(StatsresGUI.this, "Current settings were successfully saved to the selected file!", "Settings Saved Successfully", JOptionPane.INFORMATION_MESSAGE);
+        	updateStatusText("Current settings were successfully saved to the selected file!");
         }
     }
     
@@ -204,7 +233,7 @@ public class StatsresGUI extends JFrame {
         List<String> output = new ArrayList<String>();
         output.add(theOutputArea.getText());
         if ( theOperations.saveContent(output, fileName, ".sro" ) ) {
-            JOptionPane.showMessageDialog(StatsresGUI.this, "Output was successfully saved to the selected file!", "Output Saved Successfully", JOptionPane.INFORMATION_MESSAGE);
+            updateStatusText("Output was successfully saved to the selected file!");
         }
     }
     
@@ -251,7 +280,7 @@ public class StatsresGUI extends JFrame {
         JMenuItem saveOutputMenuItem = new JMenuItem("Output");
         saveOutputMenuItem.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
-                saveOutputMenu(loadSaveInputOutputFile("", "Load Settings File"));
+                saveOutputMenu(loadSaveInputOutputFile("", "Save Output File"));
             }
         });
         saveMenu.add(saveOutputMenuItem);
@@ -361,7 +390,7 @@ public class StatsresGUI extends JFrame {
                 	loadFileGUI(fileList.get(0));
                 } else {
                     theResultsFileField.setText("");
-                    showErrorDialog("input");
+                    showErrorStatus("input");
                 }
             } else {
                 loadFileGUI(theResultsFileField.getText());
@@ -404,7 +433,7 @@ public class StatsresGUI extends JFrame {
         String[] contents = firstLine.split(",");
         if ( contents.length == 0 ) {
         	theResultsFileField.setText("");
-            showErrorDialog("input");
+            showErrorStatus("input");
         }
         for ( int i = 0; i < contents.length; i++ ) {
             theColumnData.addElement(contents[i]);

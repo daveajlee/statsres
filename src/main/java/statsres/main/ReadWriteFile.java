@@ -51,7 +51,6 @@ public final class ReadWriteFile {
             theReader.close();
         } catch (IOException e){
         	LOG.error("Could not read specified file", e);
-            JOptionPane.showMessageDialog(null,"This program could not read the specified file. Please ensure that the correct file was selected.","Error: Reading file",JOptionPane.ERROR_MESSAGE);
             return Collections.emptyList();
         }
         //Return the linked list.
