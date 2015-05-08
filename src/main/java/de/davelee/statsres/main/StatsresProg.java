@@ -1,4 +1,4 @@
-package statsres.main;
+package de.davelee.statsres.main;
 //Import Java Util package.
 import java.util.*;
 //Import Java IO package.
@@ -8,9 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * StatsresProg.java is the central processing class for Statsres.
- * @author David Lee.
- * @version 1.0.
+ * StatsresProg is the central processing class for Statsres.
+ * @author Dave Lee.
  */
 public class StatsresProg extends Thread {
     
@@ -36,7 +35,7 @@ public class StatsresProg extends Thread {
      * Added in version 1.1 to enable better threading support.
      * @param files a <code>String</code> linkedlist containing the results file to process.
      * @param columns a <code>String</code> List containing the columns of the results file to process.
-     * @param outputs a <code>StatisticalFunctions List</code> containing the statistical measurements required by user.
+     * @param functions a <code>StatisticalFunctions List</code> containing the statistical measurements required by user.
      */
     public void setCalcParameters ( final List<String> files, final List<String> columns, final List<StatisticalFunctions> functions ) {
         this.files = files;
@@ -79,6 +78,8 @@ public class StatsresProg extends Thread {
     
     /**
      * Perform calculations on each of the columns.
+     * @param columnPositions a <code>Map</code> containing a mapping of column names to positions in the list.
+     * @param resultsFileContents a <code>List</code> containing the results file contents to perform calculations on. 
      */
     public void performCalculationsOnColumns ( final Map<String,Integer> columnPositions, final List<String> resultsFileContents ) {
     	for ( int h = 0; h < columns.size(); h++ ) {
@@ -167,6 +168,7 @@ public class StatsresProg extends Thread {
      * Method to return all files with the extension .csv in subfolders
      * of the folder supplied by the user.
      * @param directory a <code>String</code> with the folder of which subfolders should be searched.
+     * @return a <code>List</code> containing all files in subfolders of the specified directory.
      */
     public List<String> getAllFiles ( final String directory ) {
     	return getFilesInDirectory(directory);

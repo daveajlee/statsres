@@ -1,7 +1,5 @@
-package statsres.gui;
+package de.davelee.statsres.gui;
 //Import the required java classes.
-import statsres.main.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -12,10 +10,11 @@ import javax.swing.border.BevelBorder;
 //Import file extension package.
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import de.davelee.statsres.main.*;
+
 /**
  * StatsresGUI.java is a class to display the Statsres application.
- * @author David Lee.
- * @version 1.0.
+ * @author Dave Lee.
  */
 public class StatsresGUI extends JFrame {
     
@@ -64,9 +63,10 @@ public class StatsresGUI extends JFrame {
     /**
      * Default constructor. Create all of the user interface components and display them to the user.
      * @param ui a <code>UserInterface</code> object containing the current control user interface object.
+     * @param statsresProg a <code>StatsresProg</code> object representing the program functions.
      * @param fileName a <code>String</code> with the current file loaded into the interface.
-     * @param isMultipleFiles a <code>boolean</code> indicating whether it is folder or file selection.
-     * @param settings a <code>String</code> array of settings for the interface - null equals a new session.
+     * @param settings a <code>StatsresSettings</code> object representing the current settings for Statsres.
+     * @param testMode a <code>boolean</code> which is true iff the gui should not be displayed during JUnit tests.
      */
     public StatsresGUI ( UserInterface ui, StatsresProg statsresProg, String fileName, StatsresSettings settings, boolean testMode ) {
         
@@ -100,6 +100,11 @@ public class StatsresGUI extends JFrame {
         setLocationBounds();        
     }
     
+    /**
+     * Create the status bar panel for the specified width in pixels.
+     * @param width a <code>int</code> with the width in pixels.
+     * @return a <code>JPanel</code> object representing the created status bar panel.
+     */
     public JPanel createStatusBarPanel ( final int width ) {
     	// Code adapted from http://stackoverflow.com/questions/3035880/how-can-i-create-a-bar-in-the-bottom-of-a-java-app-like-a-status-bar
     	JPanel statusPanel = new JPanel();
@@ -112,10 +117,20 @@ public class StatsresGUI extends JFrame {
     	return statusPanel;
     }
     
+    /**
+     * Update the status bar with the specified text.
+     * @param text a <code>String</code> with the new text.
+     */
     public void updateStatusText ( final String text ) {
     	theStatusBarLabel.setText(text);
     }
     
+    /**
+     * Create the dialog panel based on the specified file name.
+     * @param fileName a <code>String</code> with the file name to load. Can be empty.
+     * @param testMode a <code>boolean</code> which is true iff the method is being called through JUnit tests.
+     * @return a <code>JPanel</code> object representing the created dialog panel.
+     */
     public JPanel createDialogPanel ( final String fileName, final boolean testMode ) {
     	JPanel overallDialogPanel = new JPanel(new BorderLayout());
     	
@@ -160,7 +175,6 @@ public class StatsresGUI extends JFrame {
     /**
      * Method to load results file into the interface.
      * @param location a <code>String</code> with the last opened file.
-     * @param allowDirs a <code>Boolean</code> indicating whether user can select directories or files.
      * @return a <code>String</code> containing the name of the file to load.
      */
     public String loadResultsFile ( String location ) {
@@ -181,6 +195,10 @@ public class StatsresGUI extends JFrame {
         return "";
     }
     
+    /**
+     * Add the header info to the panel e.g. icons, texts etc.
+     * @param testMode a <code>boolean</code> which is true iff the method is being called through a JUnit test.
+     */
     public void addHeaderInfo ( final boolean testMode ) {
     	//Set image icon.
         Image img = Toolkit.getDefaultToolkit().getImage(StatsresGUI.class.getResource("/logosmall.png"));
@@ -200,10 +218,19 @@ public class StatsresGUI extends JFrame {
         this.setJMenuBar(createMenuBar(testMode));
     }
     
+    /**
+     * Update the status bar with an error message for the specified file type.
+     * @param fileType a <code>String</code> with the file type to display an error message for.
+     */
     public void showErrorStatus ( final String fileType ) {
     	updateStatusText("The selected file could not be loaded because it is not a valid " + fileType + " file. Please choose another file.");
     }
     
+    /**
+     * Load the settings from the menu.
+     * @param testMode a <code>boolean</code> which is true iff the method is called from JUnit tests.
+     * @param fileName a <code>String</code> with the file to load the settings from.
+     */
     public void loadSettingsMenu ( final boolean testMode, final String fileName ) {
     	StatsresSettings settings = theOperations.loadSettingsFile(fileName);
         if ( settings != null ) {
@@ -214,6 +241,10 @@ public class StatsresGUI extends JFrame {
         }
     }
     
+    /**
+     * Load the output files from the menu.
+     * @param fileName a <code>String</code> with the file to load the output from.
+     */
     public void loadOutputMenu ( final String fileName ) {
     	String result = theOperations.loadOutputFile(fileName);
         if ( !"".equalsIgnoreCase(result) ) {
@@ -223,12 +254,20 @@ public class StatsresGUI extends JFrame {
         }
     }
     
+    /**
+     * Save the settings from the menu.
+     * @param fileName a <code>String</code> with the file to save the settings to.
+     */
     public void saveSettingsMenu ( final String fileName ) {
         if ( theOperations.saveContent(saveCurrentSettings().saveAsV1File(), fileName, ".srs" ) ) {
         	updateStatusText("Current settings were successfully saved to the selected file!");
         }
     }
     
+    /**
+     * Save the output text from the menu.
+     * @param fileName a <code>String</code> with the file to save the output text to.
+     */
     public void saveOutputMenu ( final String fileName ) {
         List<String> output = new ArrayList<String>();
         output.add(theOutputArea.getText());
@@ -237,6 +276,11 @@ public class StatsresGUI extends JFrame {
         }
     }
     
+    /**
+     * Create the menu bar.
+     * @param testMode a <code>boolean</code> which is true iff the method is called from the JUnit tests.
+     * @return a <code>JMenuBar</code> object representing the created menu bar.
+     */
     public JMenuBar createMenuBar ( final boolean testMode ) {
     	//Create menu bar and menu items.
         JMenuBar menuBar = new JMenuBar();
@@ -314,6 +358,12 @@ public class StatsresGUI extends JFrame {
         return menuBar;
     }
     
+    /**
+     * Create a file options panel.
+     * @param fileName a <code>String</code> with the current selected file name.
+     * @param testMode a <code>boolean</code> which is true iff the method is called from JUnit tests.
+     * @return a <code>JPanel</code> object representing the created file options panel.
+     */
     public JPanel createFileOptionsPanel ( final String fileName, final boolean testMode ) {
     	//Create fileOptions panel with border layout.
         JPanel fileOptionsPanel = new JPanel();
@@ -356,6 +406,10 @@ public class StatsresGUI extends JFrame {
         return fileOptionsPanel;
     }
     
+    /**
+     * Create the results selection panel.
+     * @return a <code>JPanel</code> object representing the created results selection panel.
+     */
     public JPanel createResultsSelectionPanel ( ) {
     	//Create results selection panel to contain column panel and selection buttons.
         JPanel resultsSelectionPanel = new JPanel();
@@ -427,6 +481,10 @@ public class StatsresGUI extends JFrame {
         return resultsSelectionPanel;
     }
     
+    /**
+     * Load a file from a GUI button.
+     * @param file a <code>String</code> with the file name.
+     */
     public void loadFileGUI ( final String file) {
     	//Load contents of file and whole of first line, colon-separated gives content.
         String firstLine = ReadWriteFile.readFile(file, true).get(0);
@@ -440,6 +498,10 @@ public class StatsresGUI extends JFrame {
         }
     }
     
+    /**
+     * Create the statistical options panel.
+     * @return a <code>JPanel</code> object representing the statistical options panel.
+     */
     public JPanel createStatsOptionPanel ( ) {
     	//Create statsOptionPanel with box layout.
         JPanel statsOptionsPanel = new JPanel();
@@ -494,6 +556,10 @@ public class StatsresGUI extends JFrame {
         return statsOptionsPanel;
     }
     
+    /**
+     * Process the list options based on the selected statistical functions and generate an enum.
+     * @return a <code>List</code> of <code>StatisticalFunctions</code> containing all selected statistical functions.
+     */
     private List<StatisticalFunctions> processListOptions ( ) {
     	//Make list of boolean options.
         java.util.List<StatisticalFunctions> statisticalFunctions = new ArrayList<StatisticalFunctions>();
@@ -527,6 +593,10 @@ public class StatsresGUI extends JFrame {
         return statisticalFunctions;
     }
     
+    /**
+     * Create the button panel.
+     * @return a <code>JPanel</code> object representing the created button panel.
+     */
     public JPanel createButtonPanel ( ) {
     	//Create button panel.
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -569,6 +639,10 @@ public class StatsresGUI extends JFrame {
         return buttonPanel;
     }
     
+    /**
+     * Create the output text panel.
+     * @return a <code>JPanel</code> object representing the output text panel.
+     */
     public JPanel createOutputTextPanel ( ) {
     	//Create output area with label and then output area.
         JPanel outputTextPanel = new JPanel();
@@ -578,6 +652,10 @@ public class StatsresGUI extends JFrame {
         return outputTextPanel;
     }
     
+    /**
+     * Create the output pane.
+     * @return a <code>JScrollPane</code> object representing the created scroll pane.
+     */
     public JScrollPane createOutputPane ( ) {
     	theOutputArea = new JTextArea(8,10);
         theOutputArea.setEditable(false);
@@ -589,8 +667,10 @@ public class StatsresGUI extends JFrame {
         return outputPane;
     }
     
+    /**
+     * Set the window's bounds, centering the window
+     */
     public void setLocationBounds ( ) {
-    	// Set the window's bounds, centering the window
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screen.width - this.getWidth()) / 2;
         int y = (screen.height - this.getHeight()) / 2;
@@ -600,8 +680,7 @@ public class StatsresGUI extends JFrame {
     /**
      * Method to load/save either input or output file into the interface.
      * @param location a <code>String</code> with the last opened file.
-     * @param isInput a <code>Boolean</code> indicating whether it is input (true) or output (false).
-     * @param load a <code>Boolean</code> which is true iff load function activated. Otherwise save will be displayed in title.
+     * @param dialogTitle a <code>String</code> which contains the title of the file dialog.
      * @return a <code>String</code> containing the name of the file to load.
      */
     public String loadSaveInputOutputFile ( final String location, final String dialogTitle ) {
@@ -622,6 +701,11 @@ public class StatsresGUI extends JFrame {
         return "";
     }
     
+    /**
+     * Create a file name extension filter based on the specified dialog title.
+     * @param dialogTitle a <code>String</code> with the dialog text.
+     * @return a <code>FileNameExtensionFilter</code> object.
+     */
     public FileNameExtensionFilter createFileNameExtensionFilter ( final String dialogTitle ) {
     	if (dialogTitle.contains("Settings File")) { 
         	return new FileNameExtensionFilter("Statsres Settings File (.srs)", "srs");
@@ -631,7 +715,7 @@ public class StatsresGUI extends JFrame {
     }
     
     /**
-     * Private method to clear all the fields of the interface.
+     * Clear all the fields of the interface.
      */
     public void clearFields () {
         theResultsFileField.setText(""); 
@@ -647,6 +731,9 @@ public class StatsresGUI extends JFrame {
         theMinBox.setSelected(true);
     }
     
+    /**
+     * Deselect all statistical options in the interface.
+     */
     public void deselectAllStatOptions() {
     	the1QBox.setSelected(false); 
         the3QBox.setSelected(false);
@@ -660,7 +747,7 @@ public class StatsresGUI extends JFrame {
     }
     
     /**
-     * Private method to save current settings to a text file.
+     * Save current settings to a text file.
      * @return a <code>String</code> linked list containing current settings.
      */
     public StatsresSettings saveCurrentSettings () {

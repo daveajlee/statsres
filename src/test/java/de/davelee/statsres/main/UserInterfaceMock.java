@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import statsres.main.UserInterface;
+import de.davelee.statsres.main.UserInterface;
 
 public class UserInterfaceMock extends UserInterface {
 	

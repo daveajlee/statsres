@@ -1,17 +1,17 @@
-package statsres.gui;
+package de.davelee.statsres.gui;
 
 //Import the Java GUI packages.
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
-//Import statsres main package.
-import statsres.main.*;
+
+import de.davelee.statsres.main.*;
 
 /**
  * SplashWindow.java is the screen to display the splash screen at the start of the statsres program.
- * Also displays about screen when user clicks Help > About.
+ * Also displays about screen when user clicks Help and then About.
  * @author Dave Lee
- * @version 1.1
  */
 public class SplashWindow extends JFrame {
     
@@ -28,15 +28,18 @@ public class SplashWindow extends JFrame {
     private static final String VERSION_NUMBER = "1.1";
     private static final String FONT_FAMILY = "Arial";
     
-    //Test Constructor.
+    /**
+     * Default constructor for JUnit tests.
+     */
     public SplashWindow ( ) {
     	
     }
     
     /**
-     * Default constructor to display the splash screen to the user.
+     * Constructor to display the splash screen to the user.
      * @param isAboutScreen a <code>boolean</code> which is true if we are to display about screen.
      * @param ui a <code>UserInterface</code> object which controls interface processing in Statsres.
+     * @param testMode a <code>boolean</code> which is true iff the gui should not be displayed during JUnit tests.
      */
     public SplashWindow ( boolean isAboutScreen, UserInterface ui, boolean testMode ) {
         
@@ -66,6 +69,9 @@ public class SplashWindow extends JFrame {
         
     }
     
+    /**
+     * Add the infos e.g. title, icon etc. to the header panel.
+     */
     public void addHeaderInfo ( ) {
         
         //Set image icon.
@@ -78,6 +84,11 @@ public class SplashWindow extends JFrame {
         this.setUndecorated(true);
     }
     
+    /**
+     * Create the center panel according to whether it is for an about screen or the splash screen.
+     * @param isAboutScreen a <code>boolean</code> which is true iff the about screen should be displayed.
+     * @return a <code>JPanel</code> representing the created center panel.
+     */
     public JPanel createCenterPanel ( boolean isAboutScreen ) {
     	//Construct centre panel with box layout to display all components.
         JPanel centrePanel = new JPanel();
@@ -131,6 +142,10 @@ public class SplashWindow extends JFrame {
         return centrePanel;
     }
     
+    /**
+     * Create the mouse listener which when clicked no longer displays the screen to the user.
+     * @return a <code>MouseListener</code> object representing the created mouse listener.
+     */
     public MouseListener createMouseListener ( ) {
         return new MouseListener () {
         	public void mouseClicked(MouseEvent e) {
@@ -152,8 +167,10 @@ public class SplashWindow extends JFrame {
      	};
     }
     
+    /**
+     * Position the screen at the center of the screen.
+     */
     public void setLocationBounds ( ) {
-    	//Position the screen at the center of the screen.
         Toolkit tools = Toolkit.getDefaultToolkit();
         Dimension screenDim = tools.getScreenSize();
         Dimension displayDim = getPreferredSize();

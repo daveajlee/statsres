@@ -1,4 +1,4 @@
-package statsres.gui;
+package de.davelee.statsres.gui;
 
 //Import java awt packages.
 import java.awt.*;
@@ -19,9 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * HelpGUI.java is the screen to display the help screen for Statsres.
+ * HelpGUI is the screen to display the help screen for Statsres.
  * @author Dave Lee
- * @version 1.0
  */
 public class HelpGUI extends JFrame {
 
@@ -40,6 +39,7 @@ public class HelpGUI extends JFrame {
     
     /**
      * Default constructor for HelpGUI which creates the help screen interface and displays it to the user.
+     * @param testMode a <code>boolean</code> which is true iff the gui should not be displayed during JUnit tests.
      */
     public HelpGUI ( final boolean testMode ) {
     	
@@ -86,6 +86,9 @@ public class HelpGUI extends JFrame {
         
     }
     
+    /**
+     * Add the desired infos to the header of the panel e.g. close function, title etc.
+     */
     public void addHeaderInfos ( ) {
     	//Set image icon.
         Image img = Toolkit.getDefaultToolkit().getImage(HelpGUI.class.getResource("/logosmall.png"));
@@ -104,6 +107,9 @@ public class HelpGUI extends JFrame {
         this.setDefaultCloseOperation (DO_NOTHING_ON_CLOSE);
     }
     
+    /**
+     * Initialise the help content mapping titles to urls.
+     */
     public void initialiseContent ( ) {
     	contentUrls = new HashMap<String, String>();
     	contentUrls.put("Welcome", "/intro.html");
@@ -116,10 +122,18 @@ public class HelpGUI extends JFrame {
     	contentUrls.put("Save Output", "/saveoutput.html");
     }
     
+    /**
+     * Return the mapping of content urls to titles.
+     * @return a <code>String</code> representing the mapping of content urls to titles.
+     */
     public Map<String, String> getContentUrls() {
 		return contentUrls;
 	}
     
+    /**
+     * Create the left hand panel with search field and titles.
+     * @return a <code>JPanel</code> representing the created left hand panel.
+     */
     public JPanel createLeftPanel ( ) {
     	//Create left hand panel.
         JPanel leftPanel = new JPanel();
@@ -176,6 +190,10 @@ public class HelpGUI extends JFrame {
         return leftPanel;
     }
     
+    /**
+     * Create the right hand panel with the html content page.
+     * @return a <code>JPanel</code> representing the created right hand panel.
+     */
     public JPanel createRightPanel ( ) {
     	//Create right pane.
         JPanel rightPanel = new JPanel();

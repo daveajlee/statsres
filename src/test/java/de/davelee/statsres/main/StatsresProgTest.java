@@ -12,9 +12,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import statsres.main.StatisticalFunctions;
-import statsres.main.StatsresProg;
-import statsres.main.StatsresSettings;
+import de.davelee.statsres.main.StatisticalFunctions;
+import de.davelee.statsres.main.StatsresProg;
+import de.davelee.statsres.main.StatsresSettings;
 
 public class StatsresProgTest {	
 	

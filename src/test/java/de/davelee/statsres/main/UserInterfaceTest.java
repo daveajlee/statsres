@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.junit.Test;
 
-import statsres.main.UserInterface;
+import de.davelee.statsres.main.UserInterface;
 
 public class UserInterfaceTest {
 	

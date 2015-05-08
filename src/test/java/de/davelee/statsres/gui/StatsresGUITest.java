@@ -7,11 +7,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.junit.Test;
 
+import de.davelee.statsres.gui.StatsresGUI;
+import de.davelee.statsres.main.StatsresProg;
 import de.davelee.statsres.main.StatsresProgMock;
-import statsres.gui.StatsresGUI;
-import statsres.main.StatsresProg;
-import statsres.main.StatsresSettings;
-import statsres.main.UserInterface;
+import de.davelee.statsres.main.StatsresSettings;
+import de.davelee.statsres.main.UserInterface;
 
 public class StatsresGUITest {
 	

@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import statsres.main.ReadWriteFile;
+import de.davelee.statsres.main.ReadWriteFile;
 
 public class ReadWriteFileTest {
 	

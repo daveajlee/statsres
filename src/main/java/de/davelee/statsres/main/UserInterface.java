@@ -1,4 +1,4 @@
-package statsres.main;
+package de.davelee.statsres.main;
 
 //Import java swing package.
 import javax.swing.*;
@@ -7,12 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //Import Statsres gui package.
-import statsres.gui.*;
+
+import de.davelee.statsres.gui.*;
 
 /**
- * UserInterface.java - Main User Interface processing class for Statsres.
- * @author David Lee.
- * @version 1.0.
+ * Main User Interface processing class for Statsres.
+ * @author Dave Lee.
  */
 public class UserInterface {
 
@@ -65,18 +65,34 @@ public class UserInterface {
         return processRunning;
     }
     
+    /**
+     * Return the title for the exit dialog.
+     * @return a <code>String</code> representing the title of the exit dialog.
+     */
     public String getExitDialogTitle() {
 		return exitDialogTitle;
 	}
 
+    /**
+     * Set the title for the exit dialog.
+     * @param exitDialogTitle a <code>String</code> representing the title of the exit dialog.
+     */
 	public void setExitDialogTitle(final String exitDialogTitle) {
 		this.exitDialogTitle = exitDialogTitle;
 	}
 
+	/**
+     * Return the message for the exit dialog.
+     * @return a <code>String</code> representing the message of the exit dialog.
+     */
 	public String getExitDialogMessage() {
 		return exitDialogMessage;
 	}
 
+	/**
+     * Set the message for the exit dialog.
+     * @param exitDialogMessage a <code>String</code> representing the message of the exit dialog.
+     */
 	public void setExitDialogMessage(final String exitDialogMessage) {
 		this.exitDialogMessage = exitDialogMessage;
 	}
@@ -95,7 +111,9 @@ public class UserInterface {
     
     /**
      * Method to display a yes/no dialog with supplied text and then return result.
-     * @return
+     * @param title a <code>String</code> with the title for the dialog.
+     * @param dialogText a <code>String</code> with the text for the dialog.
+     * @return a <code>int</code> with the result of the dialog.
      */
     public int showYesNoDialog ( final String title, final String dialogText ) {
     	return JOptionPane.showOptionDialog(theCurrentFrame,dialogText,title,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,new String[] { "Yes", "No" },"No");
@@ -108,6 +126,9 @@ public class UserInterface {
     	System.exit(0);
     }
     
+    /**
+     * Method to set the thread to sleep.
+     */
     public void doSleep() {
     	try {
     		threadSleep();
@@ -116,6 +137,10 @@ public class UserInterface {
         }
     }
     
+    /**
+     * Control how long a thread sleeps and throw an execution if interrupted.
+     * @throws InterruptedException a <code>InterruptedException</code> which is thrown iff the pause is interrupted.
+     */
     public void threadSleep() throws InterruptedException {
     	Thread.sleep(2000);
     }

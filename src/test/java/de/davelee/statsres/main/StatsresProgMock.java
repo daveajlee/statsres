@@ -2,8 +2,8 @@ package de.davelee.statsres.main;
 
 import java.util.List;
 
-import statsres.main.StatsresProg;
-import statsres.main.StatsresSettings;
+import de.davelee.statsres.main.StatsresProg;
+import de.davelee.statsres.main.StatsresSettings;
 
 public class StatsresProgMock extends StatsresProg {
 	

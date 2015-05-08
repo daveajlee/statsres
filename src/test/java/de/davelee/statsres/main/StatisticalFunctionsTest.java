@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import statsres.main.StatisticalFunctions;
+import de.davelee.statsres.main.StatisticalFunctions;
 
 public class StatisticalFunctionsTest {
 	

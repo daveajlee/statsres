@@ -7,9 +7,9 @@ import javax.swing.JTextArea;
 
 import org.junit.Test;
 
-import statsres.main.ProcessRunner;
-import statsres.main.StatisticalFunctions;
-import statsres.main.UserInterface;
+import de.davelee.statsres.main.ProcessRunner;
+import de.davelee.statsres.main.StatisticalFunctions;
+import de.davelee.statsres.main.UserInterface;
 
 public class ProcessRunnerTest {
 	

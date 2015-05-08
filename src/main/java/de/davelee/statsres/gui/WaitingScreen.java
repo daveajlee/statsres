@@ -1,16 +1,16 @@
-package statsres.gui;
+package de.davelee.statsres.gui;
 
 //Import the Java GUI packages.
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
-//Import statsres main package.
-import statsres.main.*;
+
+import de.davelee.statsres.main.*;
 
 /**
- * WaitingScreen.java is the screen to display the please wait message during processing.
+ * Screen to display the please wait message during processing.
  * @author Dave Lee
- * @version 1.1
  */
 public class WaitingScreen extends JFrame {
     
@@ -22,14 +22,16 @@ public class WaitingScreen extends JFrame {
     private JButton theCancelButton;
     private StatsresProg theProg;
     
-    //Test constructor.
+    /**
+     * Default constructor for JUnit tests.
+     */
     public WaitingScreen ( ) {
     	
     }
     
     /**
-     * Default constructor to display the waiting screen to the user.
-     * @param ui a <code>UserInterface</code> object which controls interface processing in Statsres.
+     * Constructor to display the waiting screen to the user.
+     * @param sp a <code>StatsresProg</code> object which controls program functions in Statsres.
      */
     public WaitingScreen ( StatsresProg sp ) {
         
@@ -49,6 +51,9 @@ public class WaitingScreen extends JFrame {
         
     }
     
+    /**
+     * Add the header info to the panel e.g. icon, title etc.
+     */
     public void addHeaderInfo ( ) {
     	//Set image icon.
         Image img = Toolkit.getDefaultToolkit().getImage(WaitingScreen.class.getResource("/logosmall.png"));
@@ -60,8 +65,11 @@ public class WaitingScreen extends JFrame {
         this.setUndecorated(false);
     }
     
+    /**
+     * Construct centre panel with box layout to display all components.
+     * @return a <code>JPanel</code> object representing the created center panel.
+     */
     public JPanel createCenterPanel ( ) {
-    	//Construct centre panel with box layout to display all components.
         JPanel centrePanel = new JPanel();
         centrePanel.setLayout ( new BoxLayout ( centrePanel, BoxLayout.PAGE_AXIS ) );
         centrePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black,1), BorderFactory.createEmptyBorder(5,5,5,5)));
@@ -90,8 +98,10 @@ public class WaitingScreen extends JFrame {
         return centrePanel;
     }
     
+    /**
+     * Position the screen at the center of the screen.
+     */
     public void setLocation ( ) {
-    	//Position the screen at the center of the screen.
         Toolkit tools = Toolkit.getDefaultToolkit();
         Dimension screenDim = tools.getScreenSize();
         Dimension displayDim = getPreferredSize();

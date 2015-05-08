@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import statsres.gui.HelpGUI;
+import de.davelee.statsres.gui.HelpGUI;
 
 public class HelpGUITest {
 	

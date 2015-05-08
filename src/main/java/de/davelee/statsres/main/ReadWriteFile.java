@@ -1,4 +1,4 @@
-package statsres.main;
+package de.davelee.statsres.main;
 //Import java io package.
 import java.io.*;
 //Import java.util package.
@@ -10,10 +10,9 @@ import javax.swing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*
+/**
  * Class for writing and reading result files.
- * @author David Lee.
- * @version 1.0.
+ * @author Dave Lee.
  */
 public final class ReadWriteFile {
 	
@@ -23,7 +22,7 @@ public final class ReadWriteFile {
 		
 	}
     
-    /*
+    /**
      * Performs the tasks of a readFile method.
      * Creates a buffered reader and reads the file line by line.
      * @param location a <code>String</code> representation of the location of the file to be read.
@@ -57,7 +56,7 @@ public final class ReadWriteFile {
         return theLinkedList;
     }
     
-    /*
+    /**
      * Takes a String array and a File to write to.
      * Performs the basic tasks of a writeFile method.
      * Creates a BufferedWriter and writes the String array to the file.

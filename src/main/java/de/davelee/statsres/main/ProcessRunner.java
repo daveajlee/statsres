@@ -1,18 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+package de.davelee.statsres.main;
 
-package statsres.main;
-
-import statsres.gui.*;
 import java.util.*;
 import java.io.*;
+
 import javax.swing.*;
 
+import de.davelee.statsres.gui.*;
+
 /**
- *
- * @author Dave
+ * This class runs processes in a thread for Statsres.
+ * @author Dave Lee
  */
 public class ProcessRunner extends Thread {
 
@@ -22,14 +19,25 @@ public class ProcessRunner extends Thread {
     private JTextArea theOutputArea;
     private UserInterface theInterface;
     
-    public ProcessRunner ( UserInterface ui, String resFileFolder, List<StatisticalFunctions> functions, List<String> ch, JTextArea oa ) {
-        theResultsFileFolder = resFileFolder;
+    /**
+     * Create a new runner for processes.
+     * @param userInterface a <code>UserInterface</code> object representing the current user interface.
+     * @param resultsFileFolder a <code>String</code> with the results file or all results file in the selected directory.
+     * @param functions a <code>List</code> of <code>StatisticalFunctions</code> with the statistical functions selected by the user. 
+     * @param ch a <code>List</code> of <code>String</code> with the column headings to be processed.
+     * @param oa a <code>JTextArea</code> to display the output text.
+     */
+    public ProcessRunner ( UserInterface userInterface, String resultsFileFolder, List<StatisticalFunctions> functions, List<String> ch, JTextArea oa ) {
+        theResultsFileFolder = resultsFileFolder;
         statisticalFunctions = functions;
         theColumnHeadings = ch;
         theOutputArea = oa;
-        theInterface = ui;
+        theInterface = userInterface;
     }
     
+    /**
+     * Run the process based on the current variables in this <code>ProcessRunner</code> object.
+     */
     public void run () {
         //First, error checking - does selected file/directory exist.
         if ( !new File(theResultsFileFolder).exists() ) {

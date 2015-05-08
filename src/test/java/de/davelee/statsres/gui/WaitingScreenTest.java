@@ -4,7 +4,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import statsres.gui.WaitingScreen;
+import de.davelee.statsres.gui.WaitingScreen;
 
 public class WaitingScreenTest {
 	

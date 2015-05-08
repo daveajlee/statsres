@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import statsres.main.StatisticalFunctions;
-import statsres.main.StatsresSettings;
+import de.davelee.statsres.main.StatisticalFunctions;
+import de.davelee.statsres.main.StatsresSettings;
 
 public class StatsresSettingsTest {
 	
