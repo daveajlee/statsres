@@ -24,14 +24,11 @@ import org.slf4j.LoggerFactory;
  */
 public class HelpGUI extends JFrame {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 2946013407669763566L;
-	private JTextField theSearchField;
-    private JList<String> theTopicsList;
-    private DefaultListModel<String> theTopicsModel;
-    private JEditorPane theDisplayPane;
+	private JTextField searchField;
+    private JList<String> topicsList;
+    private DefaultListModel<String> topicsModel;
+    private JEditorPane displayPane;
     
     private Map<String, String> contentUrls;
     
@@ -141,49 +138,49 @@ public class HelpGUI extends JFrame {
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         
         //Add search field.
-        theSearchField = new JTextField();
-        theSearchField.setColumns(20);
-        theSearchField.addKeyListener( new KeyAdapter() {
+        searchField = new JTextField();
+        searchField.setColumns(20);
+        searchField.addKeyListener( new KeyAdapter() {
             public void keyReleased ( KeyEvent e ) {
-                updateList(theSearchField.getText());
+                updateList(searchField.getText());
             }
         });
-        leftPanel.add(theSearchField);
+        leftPanel.add(searchField);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 20))); //Spacer.
         
         //Add topics list.
-        theTopicsModel = new DefaultListModel<String>();
+        topicsModel = new DefaultListModel<String>();
         Iterator<String> contentIterator = contentUrls.keySet().iterator();
         while ( contentIterator.hasNext() ) {
-        	theTopicsModel.addElement(contentIterator.next());
+        	topicsModel.addElement(contentIterator.next());
         }
-        theTopicsList = new JList<String>(theTopicsModel);
-        theTopicsList.setVisibleRowCount(20);
-        theTopicsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        topicsList = new JList<String>(topicsModel);
+        topicsList.setVisibleRowCount(20);
+        topicsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         //Default.
-        theTopicsList.setSelectedIndex(0);
+        topicsList.setSelectedIndex(0);
         //Action Listener for when a particular help topic is selected.
-        theTopicsList.addListSelectionListener(new ListSelectionListener() {
+        topicsList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged ( ListSelectionEvent lse ) {
                 //Get selected item.
                 String selectedItem;
                 try {
-                    selectedItem = theTopicsList.getSelectedValue().toString();
+                    selectedItem = topicsList.getSelectedValue().toString();
                 } catch ( NullPointerException npe ) {
                 	LOG.warn("Selected Item was null - retrieving automatically the first element as selected element", npe);
-                    selectedItem = theTopicsList.getModel().getElementAt(0).toString();
-                    theTopicsList.setSelectedValue(selectedItem, true);
+                    selectedItem = topicsList.getModel().getElementAt(0).toString();
+                    topicsList.setSelectedValue(selectedItem, true);
                 }
                 //If loading content fails, then stack trace and dispose.
                 try {
-                    theDisplayPane.setPage(HelpGUI.class.getResource(contentUrls.get(selectedItem)));
+                    displayPane.setPage(HelpGUI.class.getResource(contentUrls.get(selectedItem)));
                 } catch ( IOException e ) {
                 	LOG.error("Could not load HTML file, exiting ", e);
                     dispose();
                 }
             }
         });
-        JScrollPane topicsPane = new JScrollPane(theTopicsList);
+        JScrollPane topicsPane = new JScrollPane(topicsList);
         leftPanel.add(topicsPane);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         leftPanel.setMaximumSize(new Dimension(450,200));
@@ -201,13 +198,13 @@ public class HelpGUI extends JFrame {
         rightPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer
         //Add editor pane.
         try {
-            theDisplayPane = new JEditorPane(HelpGUI.class.getResource("/intro.html")); 
-            theDisplayPane.setMaximumSize(new Dimension(450,390));
+            displayPane = new JEditorPane(HelpGUI.class.getResource("/intro.html")); 
+            displayPane.setMaximumSize(new Dimension(450,390));
         } catch (IOException e) {
             LOG.error("Could not load HTML file, exiting...", e);
             dispose();
         }
-        JScrollPane displayScroll = new JScrollPane(theDisplayPane);
+        JScrollPane displayScroll = new JScrollPane(displayPane);
         displayScroll.setMaximumSize(new Dimension(450,390));
         rightPanel.add(displayScroll);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
@@ -224,17 +221,17 @@ public class HelpGUI extends JFrame {
         DefaultListModel<String> tempModel = new DefaultListModel<String>();
         //If text is blank then set tempModel to fullModel. Otherwise, add those which have this prefix.
         if ( "".equalsIgnoreCase(text) ) {
-            tempModel = theTopicsModel;
+            tempModel = topicsModel;
         } else {
-            for ( int i = 0; i < theTopicsModel.size(); i++ ) {
-                if ( includeString(text, theTopicsModel.get(i).toString()) ) {
-                    tempModel.addElement(theTopicsModel.get(i).toString());
+            for ( int i = 0; i < topicsModel.size(); i++ ) {
+                if ( includeString(text, topicsModel.get(i).toString()) ) {
+                    tempModel.addElement(topicsModel.get(i).toString());
                 }
             }
         }
         //Set the list to the temp model.
-        theTopicsList.setModel(tempModel);
-        theTopicsList.setSelectedIndex(0);
+        topicsList.setModel(tempModel);
+        topicsList.setSelectedIndex(0);
     }
     
     /**

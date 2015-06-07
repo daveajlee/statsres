@@ -19,11 +19,11 @@ public class SplashWindow extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -2481626829536427543L;
-    private JLabel theTitleLabel;
-    private JLabel theLoadingLabel;
-    private JLabel theVersionLabel;
-    private JLabel theCopyrightLabel;
-    private UserInterface theInterface;
+    private JLabel titleLabel;
+    private JLabel loadingLabel;
+    private JLabel versionLabel;
+    private JLabel copyrightLabel;
+    private UserInterface userInterface;
     
     private static final String VERSION_NUMBER = "1.1";
     private static final String FONT_FAMILY = "Arial";
@@ -44,8 +44,8 @@ public class SplashWindow extends JFrame {
     public SplashWindow ( boolean isAboutScreen, UserInterface ui, boolean testMode ) {
         
     	//Initialise user interface and set this as current frame.
-        theInterface = ui;
-        theInterface.setCurrentFrame(this);
+        userInterface = ui;
+        userInterface.setCurrentFrame(this);
         
         addHeaderInfo();
         
@@ -108,9 +108,9 @@ public class SplashWindow extends JFrame {
         //Construct title panel to add to the centre panel.
         JPanel titlePanel = new JPanel();
         titlePanel.setBackground(Color.WHITE);
-        theTitleLabel = new JLabel("Statsres");
-        theTitleLabel.setFont(new Font(FONT_FAMILY, Font.BOLD, 25));
-        titlePanel.add(theTitleLabel);
+        titleLabel = new JLabel("Statsres");
+        titleLabel.setFont(new Font(FONT_FAMILY, Font.BOLD, 25));
+        titlePanel.add(titleLabel);
         centrePanel.add(titlePanel);
         
         //This presents "Loading... Please Wait" if using this as a splash screen.
@@ -118,26 +118,26 @@ public class SplashWindow extends JFrame {
             //Construct loading panel to add to the centre panel.
             JPanel loadingPanel = new JPanel();
             loadingPanel.setBackground(Color.WHITE);
-            theLoadingLabel = new JLabel("Loading... Please Wait");
-            theLoadingLabel.setFont(new Font(FONT_FAMILY, Font.BOLD+Font.ITALIC, 16));
-            loadingPanel.add(theLoadingLabel);
+            loadingLabel = new JLabel("Loading... Please Wait");
+            loadingLabel.setFont(new Font(FONT_FAMILY, Font.BOLD+Font.ITALIC, 16));
+            loadingPanel.add(loadingLabel);
             centrePanel.add(loadingPanel);
         } else {
             //Construct version panel to add to the centre panel. This presents "Version" if about screen.
             JPanel versionPanel = new JPanel();
             versionPanel.setBackground(Color.WHITE);
-            theVersionLabel = new JLabel("Version " + VERSION_NUMBER);
-            theVersionLabel.setFont(new Font(FONT_FAMILY, Font.BOLD+Font.ITALIC, 16));
-            versionPanel.add(theVersionLabel);
+            versionLabel = new JLabel("Version " + VERSION_NUMBER);
+            versionLabel.setFont(new Font(FONT_FAMILY, Font.BOLD+Font.ITALIC, 16));
+            versionPanel.add(versionLabel);
             centrePanel.add(versionPanel);
         }
         
         //Construct copyright panel to add to the centre panel.
         JPanel copyrightPanel = new JPanel();
         copyrightPanel.setBackground(Color.WHITE);
-        theCopyrightLabel = new JLabel("Original Author: David A J Lee");
-        theCopyrightLabel.setFont(new Font(FONT_FAMILY, Font.ITALIC, 10) );
-        copyrightPanel.add(theCopyrightLabel);
+        copyrightLabel = new JLabel("Original Author: David A J Lee");
+        copyrightLabel.setFont(new Font(FONT_FAMILY, Font.ITALIC, 10) );
+        copyrightPanel.add(copyrightLabel);
         centrePanel.add(copyrightPanel);
         return centrePanel;
     }

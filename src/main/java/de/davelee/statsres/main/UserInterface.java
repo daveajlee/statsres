@@ -16,7 +16,7 @@ import de.davelee.statsres.gui.*;
  */
 public class UserInterface {
 
-    private JFrame theCurrentFrame;
+    private JFrame currentFrame;
     private boolean processRunning = false;
     
     private String exitDialogTitle;
@@ -28,7 +28,7 @@ public class UserInterface {
      * Default constructor - initialise variables.
      */
     public UserInterface ( ) {
-        theCurrentFrame = new JFrame();
+        currentFrame = new JFrame();
         setExitDialogTitle("Please Confirm");
         setExitDialogMessage("Are you sure you wish to exit 'Statsres'?");
     }
@@ -38,7 +38,7 @@ public class UserInterface {
      * @param currentFrame a <code>JFrame</code> object containing the current frame displayed to user.
      */
     public void setCurrentFrame ( JFrame currentFrame ) {
-        theCurrentFrame = currentFrame;
+        this.currentFrame = currentFrame;
     }
     
     /**
@@ -46,7 +46,7 @@ public class UserInterface {
      * @return a <code>JFrame</code> object containing the current frame being displayed to user.
      */
     public JFrame getCurrentFrame ( ) {
-        return theCurrentFrame;
+        return currentFrame;
     }
     
     /**
@@ -116,7 +116,7 @@ public class UserInterface {
      * @return a <code>int</code> with the result of the dialog.
      */
     public int showYesNoDialog ( final String title, final String dialogText ) {
-    	return JOptionPane.showOptionDialog(theCurrentFrame,dialogText,title,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,new String[] { "Yes", "No" },"No");
+    	return JOptionPane.showOptionDialog(currentFrame,dialogText,title,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,new String[] { "Yes", "No" },"No");
     }
     
     /**

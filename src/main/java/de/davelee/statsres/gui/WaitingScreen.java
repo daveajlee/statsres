@@ -18,9 +18,9 @@ public class WaitingScreen extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 8872811946893980953L;
-	private JLabel thePleaseWaitLabel;
-    private JButton theCancelButton;
-    private StatsresProg theProg;
+	private JLabel pleaseWaitLabel;
+    private JButton cancelButton;
+    private StatsresProg statsresProg;
     
     /**
      * Default constructor for JUnit tests.
@@ -36,7 +36,7 @@ public class WaitingScreen extends JFrame {
     public WaitingScreen ( StatsresProg sp ) {
         
         //Initialise user interface and program variables.
-        theProg = sp;
+        statsresProg = sp;
         
         
         
@@ -79,21 +79,21 @@ public class WaitingScreen extends JFrame {
         //Construct wait panel to add to the centre panel.
         JPanel waitPanel = new JPanel();
         waitPanel.setBackground(Color.WHITE);
-        thePleaseWaitLabel = new JLabel("Please Wait...");
-        thePleaseWaitLabel.setFont(new Font("Arial", Font.ITALIC, 20));
-        waitPanel.add(thePleaseWaitLabel);
+        pleaseWaitLabel = new JLabel("Please Wait...");
+        pleaseWaitLabel.setFont(new Font("Arial", Font.ITALIC, 20));
+        waitPanel.add(pleaseWaitLabel);
         centrePanel.add(waitPanel);
         
         //Construct button panel to add to the centre panel.
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
-        theCancelButton = new JButton("Cancel");
-        theCancelButton.addActionListener(new ActionListener() {
+        cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                theProg.stopProcessing();
+                statsresProg.stopProcessing();
             }
         });
-        buttonPanel.add(theCancelButton);
+        buttonPanel.add(cancelButton);
         centrePanel.add(buttonPanel);
         return centrePanel;
     }

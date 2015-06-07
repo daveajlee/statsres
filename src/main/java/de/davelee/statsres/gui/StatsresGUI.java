@@ -22,41 +22,41 @@ public class StatsresGUI extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 2556833225592251195L;
-	private JLabel theFileOptionsLabel;
-    private JLabel theResultsFileLabel;
-    private JTextField theResultsFileField;
-    private JButton theResultsFileButton;
+	private JLabel fileOptionsLabel;
+    private JLabel resultsFileLabel;
+    private JTextField resultsFileField;
+    private JButton resultsFileButton;
     
-    private JLabel theDataOptionsLabel;
-    private JLabel theColumnLabel;
-    private DefaultListModel<String> theColumnData;
-    private JList<String> theColumnHeadings;
-    private JButton theSelectAllButton;
-    private JButton theDeselectAllButton;
+    private JLabel dataOptionsLabel;
+    private JLabel columnLabel;
+    private DefaultListModel<String> columnData;
+    private JList<String> columnHeadings;
+    private JButton selectAllButton;
+    private JButton deselectAllButton;
     
-    private JLabel theStatusBarLabel;
+    private JLabel statusBarLabel;
     
-    private JLabel theStatsOptionLabel;
-    private JCheckBox theMeanBox;
-    private JCheckBox theMinBox;
-    private JCheckBox theMaxBox;
-    private JCheckBox theMedianBox;
-    private JCheckBox theStDevBox;
-    private JCheckBox theIQRBox;
-    private JCheckBox the1QBox;
-    private JCheckBox the3QBox;
-    private JCheckBox theCountBox;
+    private JLabel statsOptionLabel;
+    private JCheckBox meanBox;
+    private JCheckBox minBox;
+    private JCheckBox maxBox;
+    private JCheckBox medianBox;
+    private JCheckBox stDevBox;
+    private JCheckBox iqrBox;
+    private JCheckBox firstQuartileBox;
+    private JCheckBox thirdQuartileBox;
+    private JCheckBox countBox;
     
-    private JButton theProcessButton;
-    private JButton theClearButton;
-    private JButton theExitButton;
+    private JButton processButton;
+    private JButton clearButton;
+    private JButton exitButton;
     
-    private JLabel theOutputLabel;
-    private JTextArea theOutputArea;
+    private JLabel outputLabel;
+    private JTextArea outputArea;
     
-    private StatsresProg theOperations;
-    private UserInterface theInterface;
-    private StatsresSettings theCurrentSettings;
+    private StatsresProg statsresProg;
+    private UserInterface userInterface;
+    private StatsresSettings statsresSettings;
     
     private static final Font ARIAL_BOLD = new Font("Arial", Font.BOLD+Font.ITALIC, 16);
     
@@ -71,17 +71,17 @@ public class StatsresGUI extends JFrame {
     public StatsresGUI ( UserInterface ui, StatsresProg statsresProg, String fileName, StatsresSettings settings, boolean testMode ) {
         
     	//Create ProgramOperations object and store it.
-        theOperations = statsresProg;
-        theInterface = ui;
+        this.statsresProg = statsresProg;
+        userInterface = ui;
         
         if ( settings == null ) {
-        	theCurrentSettings = StatsresSettings.createDefaultSettings(fileName);
+        	statsresSettings = StatsresSettings.createDefaultSettings(fileName);
         } else {
-        	theCurrentSettings = settings;
+        	statsresSettings = settings;
         }
         
         //Set this as the current frame.
-        theInterface.setCurrentFrame(this);
+        userInterface.setCurrentFrame(this);
     	
         addHeaderInfo(testMode);
         
@@ -111,9 +111,9 @@ public class StatsresGUI extends JFrame {
     	statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
     	statusPanel.setSize(new Dimension(width, 16));
     	statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
-    	theStatusBarLabel = new JLabel("Ready...");
-    	theStatusBarLabel.setHorizontalAlignment(SwingConstants.LEFT);
-    	statusPanel.add(theStatusBarLabel);
+    	statusBarLabel = new JLabel("Ready...");
+    	statusBarLabel.setHorizontalAlignment(SwingConstants.LEFT);
+    	statusPanel.add(statusBarLabel);
     	return statusPanel;
     }
     
@@ -122,7 +122,7 @@ public class StatsresGUI extends JFrame {
      * @param text a <code>String</code> with the new text.
      */
     public void updateStatusText ( final String text ) {
-    	theStatusBarLabel.setText(text);
+    	statusBarLabel.setText(text);
     }
     
     /**
@@ -207,7 +207,7 @@ public class StatsresGUI extends JFrame {
         //Call the Exit method in the UserInterface class if the user hits exit.
         this.addWindowListener ( new WindowAdapter() {
             public void windowClosing ( WindowEvent e ) {
-                theInterface.exit();
+                userInterface.exit();
             }
         });
         
@@ -232,9 +232,9 @@ public class StatsresGUI extends JFrame {
      * @param fileName a <code>String</code> with the file to load the settings from.
      */
     public void loadSettingsMenu ( final boolean testMode, final String fileName ) {
-    	StatsresSettings settings = theOperations.loadSettingsFile(fileName);
+    	StatsresSettings settings = statsresProg.loadSettingsFile(fileName);
         if ( settings != null ) {
-        	new StatsresGUI(theInterface, theOperations, "", settings, testMode);
+        	new StatsresGUI(userInterface, statsresProg, "", settings, testMode);
             dispose();
         } else {
         	showErrorStatus("settings");
@@ -246,9 +246,9 @@ public class StatsresGUI extends JFrame {
      * @param fileName a <code>String</code> with the file to load the output from.
      */
     public void loadOutputMenu ( final String fileName ) {
-    	String result = theOperations.loadOutputFile(fileName);
+    	String result = statsresProg.loadOutputFile(fileName);
         if ( !"".equalsIgnoreCase(result) ) {
-        	theOutputArea.setText(result);
+        	outputArea.setText(result);
         } else {
         	showErrorStatus("output");
         }
@@ -259,7 +259,7 @@ public class StatsresGUI extends JFrame {
      * @param fileName a <code>String</code> with the file to save the settings to.
      */
     public void saveSettingsMenu ( final String fileName ) {
-        if ( theOperations.saveContent(saveCurrentSettings().saveAsV1File(), fileName, ".srs" ) ) {
+        if ( statsresProg.saveContent(saveCurrentSettings().saveAsV1File(), fileName, ".srs" ) ) {
         	updateStatusText("Current settings were successfully saved to the selected file!");
         }
     }
@@ -270,8 +270,8 @@ public class StatsresGUI extends JFrame {
      */
     public void saveOutputMenu ( final String fileName ) {
         List<String> output = new ArrayList<String>();
-        output.add(theOutputArea.getText());
-        if ( theOperations.saveContent(output, fileName, ".sro" ) ) {
+        output.add(outputArea.getText());
+        if ( statsresProg.saveContent(output, fileName, ".sro" ) ) {
             updateStatusText("Output was successfully saved to the selected file!");
         }
     }
@@ -333,7 +333,7 @@ public class StatsresGUI extends JFrame {
         JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                theInterface.exit();
+                userInterface.exit();
             }
         });
         fileMenu.add(exitMenuItem);
@@ -351,7 +351,7 @@ public class StatsresGUI extends JFrame {
         JMenuItem aboutMenuItem = new JMenuItem("About");
         aboutMenuItem.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                new SplashWindow(true, theInterface, false);
+                new SplashWindow(true, userInterface, false);
             }
         });
         helpMenu.add(aboutMenuItem);
@@ -372,32 +372,32 @@ public class StatsresGUI extends JFrame {
         fileOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         //Create file options heading.
         JPanel fileOptionsTextPanel = new JPanel();
-        theFileOptionsLabel = new JLabel("File Options:");
-        theFileOptionsLabel.setFont(ARIAL_BOLD);
-        fileOptionsTextPanel.add(theFileOptionsLabel);
+        fileOptionsLabel = new JLabel("File Options:");
+        fileOptionsLabel.setFont(ARIAL_BOLD);
+        fileOptionsTextPanel.add(fileOptionsLabel);
         fileOptionsPanel.add(fileOptionsTextPanel);
         fileOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         //Create results file panel to choose results file.
         JPanel resultsFilePanel = new JPanel(new FlowLayout());
         //Results File Label.
-        theResultsFileLabel = new JLabel("Input File:");
-        resultsFilePanel.add(theResultsFileLabel);
+        resultsFileLabel = new JLabel("Input File:");
+        resultsFilePanel.add(resultsFileLabel);
         //Results File Field.
-        theResultsFileField = new JTextField(theCurrentSettings.getFile());
-        theResultsFileField.setColumns(30);
-        resultsFilePanel.add(theResultsFileField);
+        resultsFileField = new JTextField(statsresSettings.getFile());
+        resultsFileField.setColumns(30);
+        resultsFilePanel.add(resultsFileField);
         //Results File Button.
-        theResultsFileButton = new JButton("Choose");
-        theResultsFileButton.addActionListener ( new ActionListener() {
+        resultsFileButton = new JButton("Choose");
+        resultsFileButton.addActionListener ( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String file = loadResultsFile(theResultsFileField.getText());
+                String file = loadResultsFile(resultsFileField.getText());
                 if ( !"".equalsIgnoreCase(file) ) {
-                    new StatsresGUI(theInterface, theOperations, file, theCurrentSettings, testMode);
+                    new StatsresGUI(userInterface, statsresProg, file, statsresSettings, testMode);
                     dispose();
                 }
             }
         }); 
-        resultsFilePanel.add(theResultsFileButton);
+        resultsFilePanel.add(resultsFileButton);
         
         //Add results file panel to dialogPanel.
         fileOptionsPanel.add(resultsFilePanel);
@@ -418,63 +418,63 @@ public class StatsresGUI extends JFrame {
         resultsSelectionPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         //Create data options heading.
         JPanel dataOptionsTextPanel = new JPanel();
-        theDataOptionsLabel = new JLabel("Data Options:");
-        theDataOptionsLabel.setFont(ARIAL_BOLD);
-        dataOptionsTextPanel.add(theDataOptionsLabel);
+        dataOptionsLabel = new JLabel("Data Options:");
+        dataOptionsLabel.setFont(ARIAL_BOLD);
+        dataOptionsTextPanel.add(dataOptionsLabel);
         resultsSelectionPanel.add(dataOptionsTextPanel);
         resultsSelectionPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         //JPanel for columns.
         JPanel columnPanel = new JPanel(new FlowLayout());
         //JLabel for column heading.
-        theColumnLabel = new JLabel("Select Column(s):");
-        columnPanel.add(theColumnLabel);
+        columnLabel = new JLabel("Select Column(s):");
+        columnPanel.add(columnLabel);
         //JList for column headings.
-        theColumnData = new DefaultListModel<String>();
+        columnData = new DefaultListModel<String>();
         //Only process contents of file if current settings is not null or a file was selected!
-        List<String> columns = theCurrentSettings.getColumnData();
+        List<String> columns = statsresSettings.getColumnData();
         for ( int i = 0; i < columns.size(); i++ ) {
-        	theColumnData.addElement(columns.get(i));
+        	columnData.addElement(columns.get(i));
         }
-        if ( !"".equalsIgnoreCase(theResultsFileField.getText()) ) { 
+        if ( !"".equalsIgnoreCase(resultsFileField.getText()) ) { 
             //If folder selected then get list of files.
-            if ( !theResultsFileField.getText().endsWith(".csv") ) {
+            if ( !resultsFileField.getText().endsWith(".csv") ) {
                 StatsresProg sp = new StatsresProg();
-                List<String> fileList = sp.getAllFiles(theResultsFileField.getText());
+                List<String> fileList = sp.getAllFiles(resultsFileField.getText());
                 if ( ! fileList.isEmpty()) {
                 	loadFileGUI(fileList.get(0));
                 } else {
-                    theResultsFileField.setText("");
+                    resultsFileField.setText("");
                     showErrorStatus("input");
                 }
             } else {
-                loadFileGUI(theResultsFileField.getText());
+                loadFileGUI(resultsFileField.getText());
             }
         }
-        theColumnHeadings = new JList<String>(theColumnData);
-        theColumnHeadings.setVisibleRowCount(3);
-        JScrollPane columnPane = new JScrollPane(theColumnHeadings);
+        columnHeadings = new JList<String>(columnData);
+        columnHeadings.setVisibleRowCount(3);
+        JScrollPane columnPane = new JScrollPane(columnHeadings);
         columnPanel.add(columnPane);
         //Add column panel to results selection panel.
         resultsSelectionPanel.add(columnPanel);
         resultsSelectionPanel.add(Box.createRigidArea(new Dimension(0,5)));
         //Create select button panel.
         JPanel selectButtonPanel = new JPanel();
-        theSelectAllButton = new JButton("Select All");
-        theSelectAllButton.addActionListener( new ActionListener() {
+        selectAllButton = new JButton("Select All");
+        selectAllButton.addActionListener( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                if ( theColumnHeadings.getModel().getSize()>0 ) {
-                    theColumnHeadings.setSelectionInterval(0, theColumnHeadings.getModel().getSize()-1);
+                if ( columnHeadings.getModel().getSize()>0 ) {
+                    columnHeadings.setSelectionInterval(0, columnHeadings.getModel().getSize()-1);
                 }
             }
         }); 
-        selectButtonPanel.add(theSelectAllButton);
-        theDeselectAllButton = new JButton("Deselect All");
-        theDeselectAllButton.addActionListener( new ActionListener() {
+        selectButtonPanel.add(selectAllButton);
+        deselectAllButton = new JButton("Deselect All");
+        deselectAllButton.addActionListener( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                theColumnHeadings.clearSelection();
+                columnHeadings.clearSelection();
             }
         });
-        selectButtonPanel.add(theDeselectAllButton);
+        selectButtonPanel.add(deselectAllButton);
         //Add selectButtonPanel to results selection panel.
         resultsSelectionPanel.add(selectButtonPanel);
         resultsSelectionPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
@@ -490,11 +490,11 @@ public class StatsresGUI extends JFrame {
         String firstLine = ReadWriteFile.readFile(file, true).get(0);
         String[] contents = firstLine.split(",");
         if ( contents.length == 0 ) {
-        	theResultsFileField.setText("");
+        	resultsFileField.setText("");
             showErrorStatus("input");
         }
         for ( int i = 0; i < contents.length; i++ ) {
-            theColumnData.addElement(contents[i]);
+            columnData.addElement(contents[i]);
         }
     }
     
@@ -510,28 +510,28 @@ public class StatsresGUI extends JFrame {
         statsOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         //Create file options heading.
         JPanel statsOptionTextPanel = new JPanel();
-        theStatsOptionLabel = new JLabel("Statistical Options:");
-        theStatsOptionLabel.setFont(ARIAL_BOLD);
-        statsOptionTextPanel.add(theStatsOptionLabel);
+        statsOptionLabel = new JLabel("Statistical Options:");
+        statsOptionLabel.setFont(ARIAL_BOLD);
+        statsOptionTextPanel.add(statsOptionLabel);
         statsOptionsPanel.add(statsOptionTextPanel);
         statsOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         //Create panel for checkable options - grid layout 5 to 1.
         JPanel checkableFirstPanel = new JPanel(new GridLayout(1,5,5,5));
         //Mean value.
-        theMeanBox = new JCheckBox("Mean", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MEAN)); 
-        checkableFirstPanel.add(theMeanBox);
+        meanBox = new JCheckBox("Mean", statsresSettings.getStatisticalFunctions().contains(StatisticalFunctions.MEAN)); 
+        checkableFirstPanel.add(meanBox);
         //Min value.
-        theMinBox = new JCheckBox("Minimum", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MIN));
-        checkableFirstPanel.add(theMinBox);
+        minBox = new JCheckBox("Minimum", statsresSettings.getStatisticalFunctions().contains(StatisticalFunctions.MIN));
+        checkableFirstPanel.add(minBox);
         //Max value.
-        theMaxBox = new JCheckBox("Maximum", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MAX)); 
-        checkableFirstPanel.add(theMaxBox);
+        maxBox = new JCheckBox("Maximum", statsresSettings.getStatisticalFunctions().contains(StatisticalFunctions.MAX)); 
+        checkableFirstPanel.add(maxBox);
         //Median value.
-        theMedianBox = new JCheckBox("Median", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.MEDIAN));
-        checkableFirstPanel.add(theMedianBox);
+        medianBox = new JCheckBox("Median", statsresSettings.getStatisticalFunctions().contains(StatisticalFunctions.MEDIAN));
+        checkableFirstPanel.add(medianBox);
         //Count value.
-        theCountBox = new JCheckBox("Count", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.COUNT)); 
-        checkableFirstPanel.add(theCountBox);
+        countBox = new JCheckBox("Count", statsresSettings.getStatisticalFunctions().contains(StatisticalFunctions.COUNT)); 
+        checkableFirstPanel.add(countBox);
         //Add checkable first panel to statsOption panel.
         statsOptionsPanel.add(checkableFirstPanel);
         statsOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
@@ -539,17 +539,17 @@ public class StatsresGUI extends JFrame {
         //Create panel for second checkable options - grid layout 4 to 1.
         JPanel checkableSecondPanel = new JPanel(new GridLayout(1,5,5,5));
         //IQR value. 
-        theIQRBox = new JCheckBox("IQR", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.INTER_QUARTILE_RANGE));
-        checkableSecondPanel.add(theIQRBox);
+        iqrBox = new JCheckBox("IQR", statsresSettings.getStatisticalFunctions().contains(StatisticalFunctions.INTER_QUARTILE_RANGE));
+        checkableSecondPanel.add(iqrBox);
         //1st Quartile value.
-        the1QBox = new JCheckBox("1st Quartile", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.QUARTILE_FIRST)); 
-        checkableSecondPanel.add(the1QBox);
+        firstQuartileBox = new JCheckBox("1st Quartile", statsresSettings.getStatisticalFunctions().contains(StatisticalFunctions.QUARTILE_FIRST)); 
+        checkableSecondPanel.add(firstQuartileBox);
         //3rd Quartile value.
-        the3QBox = new JCheckBox("3rd Quartile", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.QUARTILE_THIRD));
-        checkableSecondPanel.add(the3QBox);
+        thirdQuartileBox = new JCheckBox("3rd Quartile", statsresSettings.getStatisticalFunctions().contains(StatisticalFunctions.QUARTILE_THIRD));
+        checkableSecondPanel.add(thirdQuartileBox);
         //Standard Deviation value.
-        theStDevBox = new JCheckBox("Standard Deviation", theCurrentSettings.getStatisticalFunctions().contains(StatisticalFunctions.STANDARD_DEVIATION));
-        checkableSecondPanel.add(theStDevBox);
+        stDevBox = new JCheckBox("Standard Deviation", statsresSettings.getStatisticalFunctions().contains(StatisticalFunctions.STANDARD_DEVIATION));
+        checkableSecondPanel.add(stDevBox);
         //Add checkable second panel to statsOption panel.
         statsOptionsPanel.add(checkableSecondPanel);
         statsOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
@@ -563,31 +563,31 @@ public class StatsresGUI extends JFrame {
     private List<StatisticalFunctions> processListOptions ( ) {
     	//Make list of boolean options.
         java.util.List<StatisticalFunctions> statisticalFunctions = new ArrayList<StatisticalFunctions>();
-        if ( theMeanBox.isSelected() ) {
+        if ( meanBox.isSelected() ) {
         	statisticalFunctions.add(StatisticalFunctions.MEAN);
         } 
-        if ( theMinBox.isSelected() ) {
+        if ( minBox.isSelected() ) {
         	statisticalFunctions.add(StatisticalFunctions.MIN);
         }
-        if ( theMaxBox.isSelected() ) {
+        if ( maxBox.isSelected() ) {
         	statisticalFunctions.add(StatisticalFunctions.MAX);
         }
-        if ( theMedianBox.isSelected() ) {
+        if ( medianBox.isSelected() ) {
         	statisticalFunctions.add(StatisticalFunctions.MEDIAN);
         }
-        if ( theCountBox.isSelected() ) {
+        if ( countBox.isSelected() ) {
         	statisticalFunctions.add(StatisticalFunctions.COUNT);
         }
-        if ( the1QBox.isSelected() ) {
+        if ( firstQuartileBox.isSelected() ) {
         	statisticalFunctions.add(StatisticalFunctions.QUARTILE_FIRST);
         }
-        if ( the3QBox.isSelected() ) {
+        if ( thirdQuartileBox.isSelected() ) {
         	statisticalFunctions.add(StatisticalFunctions.QUARTILE_THIRD);
         }
-        if ( theIQRBox.isSelected() ) {
+        if ( iqrBox.isSelected() ) {
         	statisticalFunctions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
         }
-        if ( theStDevBox.isSelected() ) {
+        if ( stDevBox.isSelected() ) {
         	statisticalFunctions.add(StatisticalFunctions.STANDARD_DEVIATION);
         }
         return statisticalFunctions;
@@ -601,41 +601,41 @@ public class StatsresGUI extends JFrame {
     	//Create button panel.
         JPanel buttonPanel = new JPanel(new FlowLayout());
         //Create the Process Button.
-        theProcessButton = new JButton ( "Process Results" );
-        theProcessButton.addActionListener ( new ActionListener() {
+        processButton = new JButton ( "Process Results" );
+        processButton.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
                 //Check process variable.
-                if ( theInterface.getProcessRunning() ) {
+                if ( userInterface.getProcessRunning() ) {
                     JOptionPane.showMessageDialog(StatsresGUI.this, "Cannot start process as another process is already running!", "ERROR: Attempting to Start Multiple Processes!", JOptionPane.ERROR_MESSAGE);
                 } else {
                     //Set isProcessRunning variable to true.
-                    theInterface.setProcessRunning(true);
+                    userInterface.setProcessRunning(true);
                     //Do all other work in another thread to improve performance.
-                    ProcessRunner pr = new ProcessRunner(theInterface, theResultsFileField.getText(), processListOptions(), theColumnHeadings.getSelectedValuesList(), theOutputArea);
+                    ProcessRunner pr = new ProcessRunner(userInterface, resultsFileField.getText(), processListOptions(), columnHeadings.getSelectedValuesList(), outputArea);
                     new Thread(pr).start();
                 }
             }
         });
-        theProcessButton.setMaximumSize(new Dimension(50, 25));
-        buttonPanel.add ( theProcessButton );
+        processButton.setMaximumSize(new Dimension(50, 25));
+        buttonPanel.add ( processButton );
         //Create the Clear Button.
-        theClearButton = new JButton("Reset");
-        theClearButton.addActionListener ( new ActionListener() {
+        clearButton = new JButton("Reset");
+        clearButton.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
                 clearFields();
             }
         });
-        theClearButton.setMaximumSize(new Dimension(50, 25));
-        buttonPanel.add ( theClearButton );
+        clearButton.setMaximumSize(new Dimension(50, 25));
+        buttonPanel.add ( clearButton );
         //Create the Exit Button.
-        theExitButton = new JButton ( "Exit" );
-        theExitButton.addActionListener ( new ActionListener() {
+        exitButton = new JButton ( "Exit" );
+        exitButton.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
-                theInterface.exit();
+                userInterface.exit();
             }
         });
-        theExitButton.setMaximumSize(new Dimension(50, 25));
-        buttonPanel.add ( theExitButton );
+        exitButton.setMaximumSize(new Dimension(50, 25));
+        buttonPanel.add ( exitButton );
         return buttonPanel;
     }
     
@@ -646,9 +646,9 @@ public class StatsresGUI extends JFrame {
     public JPanel createOutputTextPanel ( ) {
     	//Create output area with label and then output area.
         JPanel outputTextPanel = new JPanel();
-        theOutputLabel = new JLabel("Output:");
-        theOutputLabel.setFont(ARIAL_BOLD);
-        outputTextPanel.add(theOutputLabel);
+        outputLabel = new JLabel("Output:");
+        outputLabel.setFont(ARIAL_BOLD);
+        outputTextPanel.add(outputLabel);
         return outputTextPanel;
     }
     
@@ -657,11 +657,11 @@ public class StatsresGUI extends JFrame {
      * @return a <code>JScrollPane</code> object representing the created scroll pane.
      */
     public JScrollPane createOutputPane ( ) {
-    	theOutputArea = new JTextArea(8,10);
-        theOutputArea.setEditable(false);
-        theOutputArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        theOutputArea.setText("No output available!");
-        JScrollPane outputPane = new JScrollPane(theOutputArea);
+    	outputArea = new JTextArea(8,10);
+        outputArea.setEditable(false);
+        outputArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        outputArea.setText("No output available!");
+        JScrollPane outputPane = new JScrollPane(outputArea);
         outputPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         outputPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         return outputPane;
@@ -718,32 +718,32 @@ public class StatsresGUI extends JFrame {
      * Clear all the fields of the interface.
      */
     public void clearFields () {
-        theResultsFileField.setText(""); 
-        theColumnData.clear();
-        the1QBox.setSelected(true); 
-        the3QBox.setSelected(true);
-        theCountBox.setSelected(true); 
-        theIQRBox.setSelected(true);
-        theMeanBox.setSelected(true); 
-        theMedianBox.setSelected(true);
-        theStDevBox.setSelected(true); 
-        theMaxBox.setSelected(true);
-        theMinBox.setSelected(true);
+        resultsFileField.setText(""); 
+        columnData.clear();
+        firstQuartileBox.setSelected(true); 
+        thirdQuartileBox.setSelected(true);
+        countBox.setSelected(true); 
+        iqrBox.setSelected(true);
+        meanBox.setSelected(true); 
+        medianBox.setSelected(true);
+        stDevBox.setSelected(true); 
+        maxBox.setSelected(true);
+        minBox.setSelected(true);
     }
     
     /**
      * Deselect all statistical options in the interface.
      */
     public void deselectAllStatOptions() {
-    	the1QBox.setSelected(false); 
-        the3QBox.setSelected(false);
-        theCountBox.setSelected(false); 
-        theIQRBox.setSelected(false);
-        theMeanBox.setSelected(false); 
-        theMedianBox.setSelected(false);
-        theStDevBox.setSelected(false); 
-        theMaxBox.setSelected(false);
-        theMinBox.setSelected(false);
+    	firstQuartileBox.setSelected(false); 
+        thirdQuartileBox.setSelected(false);
+        countBox.setSelected(false); 
+        iqrBox.setSelected(false);
+        meanBox.setSelected(false); 
+        medianBox.setSelected(false);
+        stDevBox.setSelected(false); 
+        maxBox.setSelected(false);
+        minBox.setSelected(false);
     }
     
     /**
@@ -752,10 +752,10 @@ public class StatsresGUI extends JFrame {
      */
     public StatsresSettings saveCurrentSettings () {
     	StatsresSettings settings = new StatsresSettings();
-    	settings.setFile(theResultsFileField.getText());
+    	settings.setFile(resultsFileField.getText());
     	//Convert DefaultListModel to proper List.
     	List<String> columnDataStr = new ArrayList<String>();
-    	Enumeration<String> columnDataEnum = theColumnData.elements();
+    	Enumeration<String> columnDataEnum = columnData.elements();
     	while (columnDataEnum.hasMoreElements()) {
     		columnDataStr.add(columnDataEnum.nextElement());
     	}

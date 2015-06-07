@@ -30,30 +30,30 @@ public final class ReadWriteFile {
      * @return a <code>String</code> linked list of the contents of the file.
      */
     public static List<String> readFile(final String location, final boolean readOnlyFirstLine) {
-        List<String> theLinkedList = new ArrayList<String>();
+        List<String> readList = new ArrayList<String>();
         //Commencing reading of the file.
         try{
             //Create a new buffered reader object and a new string called line.
-            BufferedReader theReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(location))));
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(location))));
             String line = "";
             //Read each line of the file and add it to the linked list.
             do{
-                line = theReader.readLine();
+                line = fileReader.readLine();
                 //Additional check to make sure that the line is not null.
                 if(line==null) { 
                 	break;
                 }
-                theLinkedList.add(line);
+                readList.add(line);
             }
             //Until the end of the file is reached.
             while(line!=null && !readOnlyFirstLine);
-            theReader.close();
+            fileReader.close();
         } catch (IOException e){
         	LOG.error("Could not read specified file", e);
             return Collections.emptyList();
         }
         //Return the linked list.
-        return theLinkedList;
+        return readList;
     }
     
     /**
@@ -61,23 +61,23 @@ public final class ReadWriteFile {
      * Performs the basic tasks of a writeFile method.
      * Creates a BufferedWriter and writes the String array to the file.
      * @param phrase a <code>String</code> list containing the phrases to be written to the file.
-     * @param theFile a <code>File</code> object containing the file that the phrase should be written to.
+     * @param file a <code>File</code> object containing the file that the phrase should be written to.
      * @param append a <code>boolean</code> indicating whether or not the data should be appended to the end of the file.
      * @return a <code>boolean</code> value indicating whether the file writing was successful.
      */
-    public static boolean writeFile(final List<String> phrase, final File theFile, final boolean append ){
+    public static boolean writeFile(final List<String> phrase, final File file, final boolean append ){
         try{
             //Create the file.
-            theFile.createNewFile();
+            file.createNewFile();
             //Create a new buffered writer object.
-            BufferedWriter theWriter = new BufferedWriter(new FileWriter(theFile, append));
+            BufferedWriter filewriter = new BufferedWriter(new FileWriter(file, append));
             //For each phrase in the String array write the phrase to the file and then a new line character.
             for(int i=0;i<phrase.size();i++){
-                theWriter.write(phrase.get(i));
-                theWriter.newLine();
+                filewriter.write(phrase.get(i));
+                filewriter.newLine();
             }
             //Close the writer.
-            theWriter.close();
+            filewriter.close();
             return true;
         } catch(IOException e){
         	LOG.error("Error while writing file", e);
