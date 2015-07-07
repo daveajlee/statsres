@@ -392,6 +392,7 @@ public class StatsresGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String file = loadResultsFile(resultsFileField.getText());
                 if ( !"".equalsIgnoreCase(file) ) {
+                	statsresSettings.setFile(file);
                     new StatsresGUI(userInterface, statsresProg, file, statsresSettings, testMode);
                     dispose();
                 }
