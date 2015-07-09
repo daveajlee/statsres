@@ -54,11 +54,11 @@ public class ProcessRunner extends Thread {
             StatsresProg sp = new StatsresProg();
             //Create file input variable.
             List<String> fileList = new LinkedList<String>();
-            //If multiple files,
+            //If single file then add to file list. Otherwise get all relevant files.
             if ( resultsFileFolder.endsWith(".csv") ) {
-            	fileList = sp.getAllFiles(resultsFileFolder);
-            } else {
             	fileList.add(resultsFileFolder);
+            } else {
+            	fileList = sp.getAllFiles(resultsFileFolder);
             }
             sp.setCalcParameters(fileList, columnHeadings, statisticalFunctions);
             WaitingScreen ws = new WaitingScreen(sp);
