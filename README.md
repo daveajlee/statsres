@@ -4,7 +4,7 @@ Thank you for your interest in Statsres - Statistical Analysis Software. This re
 
 ### What is this repository for? ###
 
-* This repository contains the current version of Statsres and the current source code in Java. The current version of Statsres is 1.1. The next planned version is 2.0 - building the current source code builds version 2.0 beta.
+* This repository contains the current version of Statsres and the current source code in Java. The current version of Statsres is 2.1.0. The next planned version is 2.2.0 - building the current source code builds version 2.2.0 beta.
 
 ### How do I get set up? ###
 
