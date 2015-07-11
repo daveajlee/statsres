@@ -25,7 +25,7 @@ public class SplashWindow extends JFrame {
     private JLabel copyrightLabel;
     private UserInterface userInterface;
     
-    private static final String VERSION_NUMBER = "2.1.0";
+    private static final String VERSION_NUMBER = "2.2.0-SNAPSHOT";
     private static final String FONT_FAMILY = "Arial";
     
     /**
