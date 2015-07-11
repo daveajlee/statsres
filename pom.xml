@@ -16,6 +16,12 @@
 		<slf4j.version>1.7.7</slf4j.version>
 		<log4j.version>2.0.2</log4j.version>
 	</properties>
+	
+	<scm>
+		<connection>scm:git:git://dal109txl@bitbucket.org/dal109txl/mdiscis.git</connection>
+		<developerConnection>scm:git:https://dal109txl@bitbucket.org/dal109txl/mdiscis.git</developerConnection>
+		<url>https://dal109txl@bitbucket.org/dal109txl/mdiscis.git</url>
+	</scm>
 
 	<dependencies>
 		<dependency>
@@ -50,8 +56,28 @@
 
 
 	<build>
-		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>2.3</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+							<configuration>
+								<transformers>
+									<transformer
+										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										<mainClass>de.davelee.statsres.main.UserInterface</mainClass>
+									</transformer>
+								</transformers>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
@@ -97,7 +123,12 @@
 					</configuration>
 				</plugin>
 			</plugins>
-		</pluginManagement>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 	</build>
 
 </project>
