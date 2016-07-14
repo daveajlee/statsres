@@ -10,12 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import de.davelee.statsres.main.StatisticalFunctions;
-import de.davelee.statsres.main.StatsresProg;
-import de.davelee.statsres.main.StatsresSettings;
 
 public class StatsresProgTest {	
 	
@@ -38,7 +33,7 @@ public class StatsresProgTest {
 	@Test
 	public void testSetCalcParameters() {
 		List<String> fileList = new ArrayList<String>();
-		fileList.add("/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder.csv");
+		fileList.add(this.getClass().getClassLoader().getResource("subfolder/subsubfolder/subsubfolder.csv").getFile());
 		List<String> columns = new ArrayList<String>();
 		columns.add("data");
 		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
@@ -47,7 +42,6 @@ public class StatsresProgTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testRun() {
 		testSetCalcParameters();
 		statsresProg.run();
