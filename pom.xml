@@ -121,7 +121,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<configuration>
+					<!--<configuration>
 						<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
 						<docletArtifact>
 							<groupId>org.umlgraph</groupId>
@@ -132,7 +132,7 @@
 							-enumerations -operations -types -visibility -inferrel -inferdep
 							-hide java.* -inferrel -collpackages java.util.*</additionalparam>
 						<show>public</show>
-					</configuration>
+					</configuration>-->
 				</plugin>
 			</plugins>
 		<resources>
