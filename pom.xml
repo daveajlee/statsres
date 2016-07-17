@@ -114,7 +114,6 @@
 							</goals>
 						</execution>
 					</executions>
-
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -136,6 +135,25 @@
 							-hide java.* -inferrel -collpackages java.util.*</additionalparam>
 						<show>public</show>
 					</configuration>-->
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-pmd-plugin</artifactId>
+					<version>3.6</version>
+					<configuration>
+						<formats>
+							<format>xml</format>
+						</formats>
+					</configuration>
+					<executions>
+						<execution>
+							<id>install</id>
+							<phase>install</phase>
+							<goals>
+								<goal>pmd</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		<resources>
