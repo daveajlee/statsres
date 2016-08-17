@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import de.davelee.statsres.gui.StatsresGUI;
@@ -17,14 +16,12 @@ import de.davelee.statsres.main.UserInterface;
 public class StatsresGUITest {
 	
 	@Test
-	@Ignore
 	public void testAddHeaderInfo ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
 		gui.addHeaderInfo(true);
 	}
 	
 	@Test
-	@Ignore
 	public void testCreateFileOptionsPanel ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
 		assertNotNull(gui.createFileOptionsPanel("", true));
@@ -36,7 +33,6 @@ public class StatsresGUITest {
 	}
 	
 	@Test
-	@Ignore
 	public void testCreateResultsSelectionPanel ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
 		assertNotNull(gui.createFileOptionsPanel("", true));
@@ -48,49 +44,42 @@ public class StatsresGUITest {
 	}
 	
 	@Test
-	@Ignore
 	public void testCreateStatsOptionPanel ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
 		assertNotNull(gui.createStatsOptionPanel());
 	}
 	
 	@Test
-	@Ignore
 	public void testButtonPanel ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
 		assertNotNull(gui.createButtonPanel());
 	}
 
 	@Test
-	@Ignore
 	public void testOutputPanel ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
 		assertNotNull(gui.createOutputTextPanel());
 	}
 	
 	@Test
-	@Ignore
 	public void testOutputPane ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
 		assertNotNull(gui.createOutputPane());
 	}
 	
 	@Test
-	@Ignore
 	public void testLocationBounds ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
 		gui.setLocationBounds();
 	}
 	
 	@Test
-	@Ignore
 	public void testCreateDialogPanel ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
 		assertNotNull(gui.createDialogPanel("", true));
 	}
 	
 	@Test
-	@Ignore
 	public void testClearFields ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
 		assertNotNull(gui.createDialogPanel("", true));
@@ -98,7 +87,6 @@ public class StatsresGUITest {
 	}
 	
 	@Test
-	@Ignore
 	public void testSaveCurrentSettings ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
 		assertNotNull(gui.createDialogPanel("", true));
@@ -108,14 +96,12 @@ public class StatsresGUITest {
 	}
 	
 	@Test
-	@Ignore
 	public void testSettingsNotNull ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", StatsresSettings.createDefaultSettings(""), true);
 		assertNotNull(gui);
 	}
 	
 	@Test
-	@Ignore
 	public void testMenu ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProgMock(), "", StatsresSettings.createDefaultSettings(""), true);
 		String testFileNameGood = "status.srs";
@@ -130,7 +116,6 @@ public class StatsresGUITest {
 	}
 	
 	@Test
-	@Ignore
 	public void testFileExtension ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProgMock(), "", StatsresSettings.createDefaultSettings(""), true);
 		FileNameExtensionFilter filter = gui.createFileNameExtensionFilter("Settings File");
