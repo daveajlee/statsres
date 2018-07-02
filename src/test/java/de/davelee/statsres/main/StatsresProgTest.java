@@ -1,9 +1,8 @@
 package de.davelee.statsres.main;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
+import static org.junit.Assert.*;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,10 +10,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import de.davelee.statsres.main.StatisticalFunctions;
-import de.davelee.statsres.main.StatsresProg;
-import de.davelee.statsres.main.StatsresSettings;
 
 public class StatsresProgTest {	
 	
@@ -30,14 +25,14 @@ public class StatsresProgTest {
 		URL url = this.getClass().getResource("/subfolder/");
 		List<String> fileList = statsresProg.getAllFiles(url.getFile());
 		assertEquals(fileList.size(), 2);
-		assertEquals(fileList.get(0), "/C:/workspace/statsres/target/test-classes/subfolder/subfolder.csv");
-		assertEquals(fileList.get(1), "/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder.csv");
+		assertThat(fileList, hasItems(endsWith("/subfolder/subfolder.csv")));
+		assertThat(fileList, hasItems(endsWith("/subfolder/subsubfolder/subsubfolder.csv")));
 	}
 	
 	@Test
 	public void testSetCalcParameters() {
 		List<String> fileList = new ArrayList<String>();
-		fileList.add("/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder/subsubfolder.csv");
+		fileList.add(this.getClass().getClassLoader().getResource("subfolder/subsubfolder/subsubfolder.csv").getFile());
 		List<String> columns = new ArrayList<String>();
 		columns.add("data");
 		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
