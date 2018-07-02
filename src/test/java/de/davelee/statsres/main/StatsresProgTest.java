@@ -1,9 +1,8 @@
 package de.davelee.statsres.main;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
+import static org.junit.Assert.*;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,8 +25,8 @@ public class StatsresProgTest {
 		URL url = this.getClass().getResource("/subfolder/");
 		List<String> fileList = statsresProg.getAllFiles(url.getFile());
 		assertEquals(fileList.size(), 2);
-		assertTrue(fileList.get(0).endsWith("/subfolder/subfolder.csv"));
-		assertTrue(fileList.get(1).endsWith("/subfolder/subsubfolder/subsubfolder.csv"));
+		assertThat(fileList, hasItems(endsWith("/subfolder/subfolder.csv")));
+		assertThat(fileList, hasItems(endsWith("/subfolder/subsubfolder/subsubfolder.csv")));
 	}
 	
 	@Test
