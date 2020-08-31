@@ -3,12 +3,10 @@ package de.davelee.statsres.main;
 //Import java swing package.
 import javax.swing.*;
 
+import de.davelee.statsres.gui.SplashWindow;
+import de.davelee.statsres.gui.StatsresGUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//Import Statsres gui package.
-
-import de.davelee.statsres.gui.*;
 
 /**
  * Main User Interface processing class for Statsres.

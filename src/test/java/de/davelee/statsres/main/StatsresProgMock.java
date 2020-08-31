@@ -8,10 +8,7 @@ import de.davelee.statsres.main.StatsresSettings;
 public class StatsresProgMock extends StatsresProg {
 	
 	 public boolean saveContent ( final List<String> content, final String location, final String fileExtension ) {
-		 if ( location.contentEquals("status.srs") ) { 
-			 return true;
-		 }
-		 return false;
+		 return location.contentEquals("status.srs");
 	 }
 	 
 	 public StatsresSettings loadSettingsFile ( String location ) {

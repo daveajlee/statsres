@@ -59,6 +59,7 @@ public class UserInterfaceTest {
 	@Ignore
 	public void testSleep() {
 		UserInterface userInterface = new UserInterfaceMock();
+		assertNotNull(userInterface);
 		userInterface.doSleep();
 	}
 

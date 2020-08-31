@@ -1,8 +1,5 @@
 package de.davelee.statsres.gui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.junit.Test;
@@ -12,6 +9,8 @@ import de.davelee.statsres.main.StatsresProg;
 import de.davelee.statsres.main.StatsresProgMock;
 import de.davelee.statsres.main.StatsresSettings;
 import de.davelee.statsres.main.UserInterface;
+
+import static org.junit.Assert.*;
 
 public class StatsresGUITest {
 	
@@ -105,7 +104,7 @@ public class StatsresGUITest {
 	public void testMenu ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProgMock(), "", StatsresSettings.createDefaultSettings(""), true);
 		String testFileNameGood = "status.srs";
-		gui.saveSettingsMenu(testFileNameGood);
+		assertTrue(gui.saveSettingsMenu(testFileNameGood));
 		gui.saveSettingsMenu("status.sro");
 		gui.saveOutputMenu(testFileNameGood);
 		gui.saveOutputMenu("status.sro");

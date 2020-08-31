@@ -1,5 +1,12 @@
 package de.davelee.statsres.gui;
 //Import the required java classes.
+import de.davelee.statsres.main.StatsresProg;
+import de.davelee.statsres.main.StatsresSettings;
+import de.davelee.statsres.main.UserInterface;
+import de.davelee.statsres.main.ReadWriteFile;
+import de.davelee.statsres.main.StatisticalFunctions;
+import de.davelee.statsres.main.ProcessRunner;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -9,8 +16,6 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 //Import file extension package.
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import de.davelee.statsres.main.*;
 
 /**
  * StatsresGUI.java is a class to display the Statsres application.
@@ -22,21 +27,13 @@ public class StatsresGUI extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 2556833225592251195L;
-	private JLabel fileOptionsLabel;
-    private JLabel resultsFileLabel;
     private JTextField resultsFileField;
-    private JButton resultsFileButton;
-    
-    private JLabel dataOptionsLabel;
-    private JLabel columnLabel;
+
     private DefaultListModel<String> columnData;
     private JList<String> columnHeadings;
-    private JButton selectAllButton;
-    private JButton deselectAllButton;
     
     private JLabel statusBarLabel;
-    
-    private JLabel statsOptionLabel;
+
     private JCheckBox meanBox;
     private JCheckBox minBox;
     private JCheckBox maxBox;
@@ -46,12 +43,7 @@ public class StatsresGUI extends JFrame {
     private JCheckBox firstQuartileBox;
     private JCheckBox thirdQuartileBox;
     private JCheckBox countBox;
-    
-    private JButton processButton;
-    private JButton clearButton;
-    private JButton exitButton;
-    
-    private JLabel outputLabel;
+
     private JTextArea outputArea;
     
     private StatsresProg statsresProg;
@@ -257,11 +249,14 @@ public class StatsresGUI extends JFrame {
     /**
      * Save the settings from the menu.
      * @param fileName a <code>String</code> with the file to save the settings to.
+     * @return a <code>boolean</code> which is true iff the settings were saved successfully.
      */
-    public void saveSettingsMenu ( final String fileName ) {
+    public boolean saveSettingsMenu ( final String fileName ) {
         if ( statsresProg.saveContent(saveCurrentSettings().saveAsV1File(), fileName, ".srs" ) ) {
         	updateStatusText("Current settings were successfully saved to the selected file!");
+        	return true;
         }
+        return false;
     }
     
     /**
@@ -372,7 +367,7 @@ public class StatsresGUI extends JFrame {
         fileOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         //Create file options heading.
         JPanel fileOptionsTextPanel = new JPanel();
-        fileOptionsLabel = new JLabel("File Options:");
+        JLabel fileOptionsLabel = new JLabel("File Options:");
         fileOptionsLabel.setFont(ARIAL_BOLD);
         fileOptionsTextPanel.add(fileOptionsLabel);
         fileOptionsPanel.add(fileOptionsTextPanel);
@@ -380,14 +375,14 @@ public class StatsresGUI extends JFrame {
         //Create results file panel to choose results file.
         JPanel resultsFilePanel = new JPanel(new FlowLayout());
         //Results File Label.
-        resultsFileLabel = new JLabel("Input File:");
+        JLabel resultsFileLabel = new JLabel("Input File:");
         resultsFilePanel.add(resultsFileLabel);
         //Results File Field.
         resultsFileField = new JTextField(statsresSettings.getFile());
         resultsFileField.setColumns(30);
         resultsFilePanel.add(resultsFileField);
         //Results File Button.
-        resultsFileButton = new JButton("Choose");
+        JButton resultsFileButton = new JButton("Choose");
         resultsFileButton.addActionListener ( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String file = loadResultsFile(resultsFileField.getText());
@@ -419,7 +414,7 @@ public class StatsresGUI extends JFrame {
         resultsSelectionPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         //Create data options heading.
         JPanel dataOptionsTextPanel = new JPanel();
-        dataOptionsLabel = new JLabel("Data Options:");
+        JLabel dataOptionsLabel = new JLabel("Data Options:");
         dataOptionsLabel.setFont(ARIAL_BOLD);
         dataOptionsTextPanel.add(dataOptionsLabel);
         resultsSelectionPanel.add(dataOptionsTextPanel);
@@ -427,7 +422,7 @@ public class StatsresGUI extends JFrame {
         //JPanel for columns.
         JPanel columnPanel = new JPanel(new FlowLayout());
         //JLabel for column heading.
-        columnLabel = new JLabel("Select Column(s):");
+        JLabel columnLabel = new JLabel("Select Column(s):");
         columnPanel.add(columnLabel);
         //JList for column headings.
         columnData = new DefaultListModel<String>();
@@ -460,7 +455,7 @@ public class StatsresGUI extends JFrame {
         resultsSelectionPanel.add(Box.createRigidArea(new Dimension(0,5)));
         //Create select button panel.
         JPanel selectButtonPanel = new JPanel();
-        selectAllButton = new JButton("Select All");
+        JButton selectAllButton = new JButton("Select All");
         selectAllButton.addActionListener( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
                 if ( columnHeadings.getModel().getSize()>0 ) {
@@ -469,7 +464,7 @@ public class StatsresGUI extends JFrame {
             }
         }); 
         selectButtonPanel.add(selectAllButton);
-        deselectAllButton = new JButton("Deselect All");
+        JButton deselectAllButton = new JButton("Deselect All");
         deselectAllButton.addActionListener( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
                 columnHeadings.clearSelection();
@@ -511,7 +506,7 @@ public class StatsresGUI extends JFrame {
         statsOptionsPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         //Create file options heading.
         JPanel statsOptionTextPanel = new JPanel();
-        statsOptionLabel = new JLabel("Statistical Options:");
+        JLabel statsOptionLabel = new JLabel("Statistical Options:");
         statsOptionLabel.setFont(ARIAL_BOLD);
         statsOptionTextPanel.add(statsOptionLabel);
         statsOptionsPanel.add(statsOptionTextPanel);
@@ -563,7 +558,7 @@ public class StatsresGUI extends JFrame {
      */
     private List<StatisticalFunctions> processListOptions ( ) {
     	//Make list of boolean options.
-        java.util.List<StatisticalFunctions> statisticalFunctions = new ArrayList<StatisticalFunctions>();
+        List<StatisticalFunctions> statisticalFunctions = new ArrayList<StatisticalFunctions>();
         if ( meanBox.isSelected() ) {
         	statisticalFunctions.add(StatisticalFunctions.MEAN);
         } 
@@ -602,7 +597,7 @@ public class StatsresGUI extends JFrame {
     	//Create button panel.
         JPanel buttonPanel = new JPanel(new FlowLayout());
         //Create the Process Button.
-        processButton = new JButton ( "Process Results" );
+        JButton processButton = new JButton ( "Process Results" );
         processButton.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
                 //Check process variable.
@@ -620,7 +615,7 @@ public class StatsresGUI extends JFrame {
         processButton.setMaximumSize(new Dimension(50, 25));
         buttonPanel.add ( processButton );
         //Create the Clear Button.
-        clearButton = new JButton("Reset");
+        JButton clearButton = new JButton("Reset");
         clearButton.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
                 clearFields();
@@ -629,7 +624,7 @@ public class StatsresGUI extends JFrame {
         clearButton.setMaximumSize(new Dimension(50, 25));
         buttonPanel.add ( clearButton );
         //Create the Exit Button.
-        exitButton = new JButton ( "Exit" );
+        JButton exitButton = new JButton ( "Exit" );
         exitButton.addActionListener ( new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
                 userInterface.exit();
@@ -647,7 +642,7 @@ public class StatsresGUI extends JFrame {
     public JPanel createOutputTextPanel ( ) {
     	//Create output area with label and then output area.
         JPanel outputTextPanel = new JPanel();
-        outputLabel = new JLabel("Output:");
+        JLabel outputLabel = new JLabel("Output:");
         outputLabel.setFont(ARIAL_BOLD);
         outputTextPanel.add(outputLabel);
         return outputTextPanel;

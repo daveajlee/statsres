@@ -1,12 +1,12 @@
 package de.davelee.statsres.gui;
 
 //Import the Java GUI packages.
+import de.davelee.statsres.main.StatsresProg;
+
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
-
-import de.davelee.statsres.main.*;
 
 /**
  * Screen to display the please wait message during processing.
@@ -18,7 +18,6 @@ public class WaitingScreen extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 8872811946893980953L;
-	private JLabel pleaseWaitLabel;
     private JButton cancelButton;
     private StatsresProg statsresProg;
     
@@ -79,7 +78,7 @@ public class WaitingScreen extends JFrame {
         //Construct wait panel to add to the centre panel.
         JPanel waitPanel = new JPanel();
         waitPanel.setBackground(Color.WHITE);
-        pleaseWaitLabel = new JLabel("Please Wait...");
+        JLabel pleaseWaitLabel = new JLabel("Please Wait...");
         pleaseWaitLabel.setFont(new Font("Arial", Font.ITALIC, 20));
         waitPanel.add(pleaseWaitLabel);
         centrePanel.add(waitPanel);

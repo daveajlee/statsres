@@ -1,12 +1,12 @@
 package de.davelee.statsres.gui;
 
 //Import the Java GUI packages.
+import de.davelee.statsres.main.UserInterface;
+
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
-
-import de.davelee.statsres.main.*;
 
 /**
  * SplashWindow.java is the screen to display the splash screen at the start of the statsres program.
@@ -19,11 +19,8 @@ public class SplashWindow extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -2481626829536427543L;
-    private JLabel titleLabel;
     private JLabel loadingLabel;
     private JLabel versionLabel;
-    private JLabel copyrightLabel;
-    private UserInterface userInterface;
     
     private static final String VERSION_NUMBER = "2.2.0-SNAPSHOT";
     private static final String FONT_FAMILY = "Arial";
@@ -41,11 +38,10 @@ public class SplashWindow extends JFrame {
      * @param ui a <code>UserInterface</code> object which controls interface processing in Statsres.
      * @param testMode a <code>boolean</code> which is true iff the gui should not be displayed during JUnit tests.
      */
-    public SplashWindow ( boolean isAboutScreen, UserInterface ui, boolean testMode ) {
+    public SplashWindow (boolean isAboutScreen, UserInterface ui, boolean testMode ) {
         
     	//Initialise user interface and set this as current frame.
-        userInterface = ui;
-        userInterface.setCurrentFrame(this);
+        ui.setCurrentFrame(this);
         
         addHeaderInfo();
         
@@ -108,7 +104,7 @@ public class SplashWindow extends JFrame {
         //Construct title panel to add to the centre panel.
         JPanel titlePanel = new JPanel();
         titlePanel.setBackground(Color.WHITE);
-        titleLabel = new JLabel("Statsres");
+        JLabel titleLabel = new JLabel("Statsres");
         titleLabel.setFont(new Font(FONT_FAMILY, Font.BOLD, 25));
         titlePanel.add(titleLabel);
         centrePanel.add(titlePanel);
@@ -135,7 +131,7 @@ public class SplashWindow extends JFrame {
         //Construct copyright panel to add to the centre panel.
         JPanel copyrightPanel = new JPanel();
         copyrightPanel.setBackground(Color.WHITE);
-        copyrightLabel = new JLabel("Original Author: David A J Lee");
+        JLabel copyrightLabel = new JLabel("Original Author: David A J Lee");
         copyrightLabel.setFont(new Font(FONT_FAMILY, Font.ITALIC, 10) );
         copyrightPanel.add(copyrightLabel);
         centrePanel.add(copyrightPanel);
