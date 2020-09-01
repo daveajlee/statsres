@@ -1,11 +1,11 @@
 package de.davelee.statsres.main;
 
+import de.davelee.statsres.gui.WaitingScreen;
+
 import java.util.*;
 import java.io.*;
 
 import javax.swing.*;
-
-import de.davelee.statsres.gui.*;
 
 /**
  * This class runs processes in a thread for Statsres.

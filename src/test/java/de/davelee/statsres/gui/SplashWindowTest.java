@@ -24,12 +24,14 @@ public class SplashWindowTest {
 	@Test
 	public void testAddHeaderInfos() {
 		SplashWindow splashWindow = new SplashWindow();
+		assertNotNull(splashWindow);
 		splashWindow.addHeaderInfo();
 	}
 	
 	@Test
 	public void testSetLocationBounds() {
 		SplashWindow splashWindow = new SplashWindow();
+		assertNotNull(splashWindow);
 		splashWindow.setLocationBounds();
 	}
 	

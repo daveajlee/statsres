@@ -8,9 +8,7 @@ import javax.swing.JTextArea;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.davelee.statsres.main.ProcessRunner;
-import de.davelee.statsres.main.StatisticalFunctions;
-import de.davelee.statsres.main.UserInterface;
+import static org.junit.Assert.assertEquals;
 
 public class ProcessRunnerTest {
 	
@@ -19,6 +17,7 @@ public class ProcessRunnerTest {
 	public void testProcessRunner ( ) {
 		List<String> columns = new ArrayList<String>();
 		columns.add("data");
+		assertEquals(1, columns.size());
 		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
 		functions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
 		ProcessRunner runner = new ProcessRunner ( new UserInterface(), "/C:/workspace/statsres/target/test-classes/subfolder/subsubfolder", functions, columns, new JTextArea());

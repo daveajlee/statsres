@@ -17,6 +17,7 @@ public class StatsresGUITest {
 	@Test
 	public void testAddHeaderInfo ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
+		assertNotNull(gui);
 		gui.addHeaderInfo(true);
 	}
 	
@@ -69,6 +70,7 @@ public class StatsresGUITest {
 	@Test
 	public void testLocationBounds ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
+		assertNotNull(gui);
 		gui.setLocationBounds();
 	}
 	

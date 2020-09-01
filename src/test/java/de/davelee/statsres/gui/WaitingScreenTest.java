@@ -11,6 +11,7 @@ public class WaitingScreenTest {
 	@Test
 	public void testAddHeaderInfos ( ) {
 		WaitingScreen screen = new WaitingScreen();
+		assertNotNull(screen);
 		screen.addHeaderInfo();
 	}
 	
@@ -23,6 +24,7 @@ public class WaitingScreenTest {
 	@Test
 	public void testSetLocation ( ) {
 		WaitingScreen screen = new WaitingScreen();
+		assertNotNull(screen);
 		screen.setLocation();
 	}
 

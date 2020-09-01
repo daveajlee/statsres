@@ -71,7 +71,7 @@ public class StatsresSettings {
 	 */
 	private boolean isFunctionInList ( final StatisticalFunctions function, final List<StatisticalFunctions> functionList) {
 		for ( StatisticalFunctions myFunction : functionList ) {
-			if ( myFunction == function ) {
+			if ( myFunction.getDisplayName().contentEquals(function.getDisplayName()) ) {
 				return true;
 			}
 		}

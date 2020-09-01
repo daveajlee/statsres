@@ -54,7 +54,7 @@ public class StatsresProg extends Thread {
             //Ensure fileData is blank.
             fileData = new ArrayList<Double>();
             //Open results file.
-            List<String> resultsFileContents = ReadWriteFile.readFile(files.get(g), false);
+            List<String> resultsFileContents = ReadWriteFileUtil.readFile(files.get(g), false);
             //Look through first row of data file to determine which positions in the array we need to look through.
             Map<String, Integer> columnPositions = new HashMap<String, Integer>();
             String[] firstRow = resultsFileContents.get(0).split(",");
@@ -212,7 +212,7 @@ public class StatsresProg extends Thread {
             return "";
         } else {
             String outputText = "";
-            List<String> outputList = ReadWriteFile.readFile(location, false);
+            List<String> outputList = ReadWriteFileUtil.readFile(location, false);
             //Process file into single string with new line characters.
             for ( int i = 0; i < outputList.size(); i++ ) {
                 outputText += outputList.get(i) + "\n";
@@ -239,7 +239,7 @@ public class StatsresProg extends Thread {
             editedLocation += fileExtension;
         }
         //Then write file.
-        return ReadWriteFile.writeFile(content, new File(editedLocation), true);
+        return ReadWriteFileUtil.writeFile(content, new File(editedLocation), true);
     }
     
     /**
@@ -255,7 +255,7 @@ public class StatsresProg extends Thread {
             //Create options listing.
             String[] settings = new String[12];
             //Read in file.
-            List<String> outputList = ReadWriteFile.readFile(location, false);
+            List<String> outputList = ReadWriteFileUtil.readFile(location, false);
             //Error checking - all settings must be present.
             if ( outputList.size() != settings.length ) { 
             	return null;

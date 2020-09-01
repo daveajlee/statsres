@@ -18,7 +18,6 @@ public class WaitingScreen extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 8872811946893980953L;
-    private JButton cancelButton;
     private StatsresProg statsresProg;
     
     /**
@@ -86,7 +85,7 @@ public class WaitingScreen extends JFrame {
         //Construct button panel to add to the centre panel.
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
-        cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed ( ActionEvent e ) {
                 statsresProg.stopProcessing();

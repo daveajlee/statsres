@@ -3,7 +3,7 @@ package de.davelee.statsres.gui;
 import de.davelee.statsres.main.StatsresProg;
 import de.davelee.statsres.main.StatsresSettings;
 import de.davelee.statsres.main.UserInterface;
-import de.davelee.statsres.main.ReadWriteFile;
+import de.davelee.statsres.main.ReadWriteFileUtil;
 import de.davelee.statsres.main.StatisticalFunctions;
 import de.davelee.statsres.main.ProcessRunner;
 
@@ -483,7 +483,7 @@ public class StatsresGUI extends JFrame {
      */
     public void loadFileGUI ( final String file) {
     	//Load contents of file and whole of first line, colon-separated gives content.
-        String firstLine = ReadWriteFile.readFile(file, true).get(0);
+        String firstLine = ReadWriteFileUtil.readFile(file, true).get(0);
         String[] contents = firstLine.split(",");
         if ( contents.length == 0 ) {
         	resultsFileField.setText("");

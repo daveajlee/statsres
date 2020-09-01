@@ -14,11 +14,11 @@ import org.slf4j.LoggerFactory;
  * Class for writing and reading result files.
  * @author Dave Lee.
  */
-public final class ReadWriteFile {
+public final class ReadWriteFileUtil {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(ReadWriteFile.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ReadWriteFileUtil.class);
 	
-	private ReadWriteFile ( ) {
+	private ReadWriteFileUtil( ) {
 		
 	}
     

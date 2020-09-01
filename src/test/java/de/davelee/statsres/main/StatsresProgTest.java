@@ -2,7 +2,11 @@ package de.davelee.statsres.main;
 
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,6 +39,7 @@ public class StatsresProgTest {
 		fileList.add(this.getClass().getClassLoader().getResource("subfolder/subsubfolder/subsubfolder.csv").getFile());
 		List<String> columns = new ArrayList<String>();
 		columns.add("data");
+		assertEquals(1, columns.size());
 		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
 		functions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
 		statsresProg.setCalcParameters(fileList, columns, functions);
@@ -43,6 +48,7 @@ public class StatsresProgTest {
 	@Test
 	public void testRun() {
 		testSetCalcParameters();
+		assertNotNull(statsresProg);
 		statsresProg.run();
 	}
 	

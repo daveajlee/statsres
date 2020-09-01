@@ -41,6 +41,7 @@ public class UserInterfaceTest {
 	@Ignore
 	public void testExit() {
 		UserInterface userInterface = new UserInterfaceMock();
+		assertNotNull(userInterface);
 		userInterface.setExitDialogTitle("Please Confirm");
 		userInterface.exit();
 		userInterface.setExitDialogTitle("NoDialog");

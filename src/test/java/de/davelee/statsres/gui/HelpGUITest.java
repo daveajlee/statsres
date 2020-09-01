@@ -29,6 +29,7 @@ public class HelpGUITest {
 	@Test
 	public void testAddHeaderInfos ( ) {
 		HelpGUI gui = new HelpGUI(true);
+		assertNotNull(gui);
 		gui.addHeaderInfos();
 	}
 	
@@ -48,6 +49,7 @@ public class HelpGUITest {
 	@Test
 	public void testUpdateList ( ) {
 		HelpGUI gui = new HelpGUI(true);
+		assertNotNull(gui);
 		gui.initialiseContent();
 		gui.createLeftPanel();
 		gui.createRightPanel();
