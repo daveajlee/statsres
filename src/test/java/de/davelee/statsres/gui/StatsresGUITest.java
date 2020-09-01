@@ -4,13 +4,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.junit.Test;
 
-import de.davelee.statsres.gui.StatsresGUI;
 import de.davelee.statsres.main.StatsresProg;
 import de.davelee.statsres.main.StatsresProgMock;
 import de.davelee.statsres.main.StatsresSettings;
 import de.davelee.statsres.main.UserInterface;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class StatsresGUITest {
 	
