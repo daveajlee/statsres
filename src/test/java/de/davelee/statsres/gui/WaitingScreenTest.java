@@ -2,10 +2,12 @@ package de.davelee.statsres.gui;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.davelee.statsres.gui.WaitingScreen;
 
+@Ignore
 public class WaitingScreenTest {
 	
 	@Test

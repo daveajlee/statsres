@@ -2,6 +2,7 @@ package de.davelee.statsres.gui;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.davelee.statsres.main.StatsresProg;
@@ -13,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class StatsresGUITest {
 	
 	@Test
