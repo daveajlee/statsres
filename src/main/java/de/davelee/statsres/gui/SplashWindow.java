@@ -21,7 +21,9 @@ public class SplashWindow extends JFrame {
 	private static final long serialVersionUID = -2481626829536427543L;
     private JLabel loadingLabel;
     private JLabel versionLabel;
-    
+
+    private ImageDisplay logoDisplay;
+
     private static final String VERSION_NUMBER = "2.2.0-SNAPSHOT";
     private static final String FONT_FAMILY = "Arial";
     
@@ -52,6 +54,7 @@ public class SplashWindow extends JFrame {
         
         if ( isAboutScreen ) {
         	c.addMouseListener(createMouseListener());
+            logoDisplay.addMouseListener(createMouseListener());
         }
         
         setLocationBounds();
@@ -96,18 +99,11 @@ public class SplashWindow extends JFrame {
         //Construct logo panel to add to the centre panel.
         JPanel logoPanel = new JPanel();
         logoPanel.setBackground(Color.WHITE);
-        ImageIcon image = new ImageIcon(SplashWindow.class.getResource("/logo.png"));
-        JLabel label = new JLabel("", image, JLabel.CENTER);
-        logoPanel.add(label);
+        logoDisplay = new ImageDisplay("statsres-logo.png", 0, 0);
+        logoDisplay.setSize(794,493);
+        logoDisplay.setBackground(Color.WHITE);
+        logoPanel.add(logoDisplay);
         centrePanel.add(logoPanel);
-        
-        //Construct title panel to add to the centre panel.
-        JPanel titlePanel = new JPanel();
-        titlePanel.setBackground(Color.WHITE);
-        JLabel titleLabel = new JLabel("Statsres");
-        titleLabel.setFont(new Font(FONT_FAMILY, Font.BOLD, 25));
-        titlePanel.add(titleLabel);
-        centrePanel.add(titlePanel);
         
         //This presents "Loading... Please Wait" if using this as a splash screen.
         if ( !isAboutScreen ) {
@@ -131,7 +127,7 @@ public class SplashWindow extends JFrame {
         //Construct copyright panel to add to the centre panel.
         JPanel copyrightPanel = new JPanel();
         copyrightPanel.setBackground(Color.WHITE);
-        JLabel copyrightLabel = new JLabel("Original Author: David A J Lee");
+        JLabel copyrightLabel = new JLabel("Copyright 2013-2020 Dr. David A J Lee. All rights reserved.");
         copyrightLabel.setFont(new Font(FONT_FAMILY, Font.ITALIC, 10) );
         copyrightPanel.add(copyrightLabel);
         centrePanel.add(copyrightPanel);
@@ -144,21 +140,20 @@ public class SplashWindow extends JFrame {
      */
     public MouseListener createMouseListener ( ) {
         return new MouseListener () {
-        	public void mouseClicked(MouseEvent e) {
-        		dispose();
+            public void mouseClicked(MouseEvent e) {
+                dispose();
             }
-            
-        	public void mousePressed(MouseEvent e) {
-        		throw new UnsupportedOperationException();
+            public void mousePressed(MouseEvent e) {
+                //Nothing happens when mouse pressed.
             }
-        	public void mouseReleased(MouseEvent e) {
-        		throw new UnsupportedOperationException();
+            public void mouseReleased(MouseEvent e) {
+                //Nothing happens when mouse released.
             }
             public void mouseEntered(MouseEvent e) {
-            	throw new UnsupportedOperationException();
+                //Nothing happens when mouse entered.
             }
             public void mouseExited(MouseEvent e) {
-            	throw new UnsupportedOperationException();
+                //Nothing happens when mouse exited.
             }
      	};
     }

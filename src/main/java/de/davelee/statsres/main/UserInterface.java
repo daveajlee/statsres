@@ -114,7 +114,8 @@ public class UserInterface {
      * @return a <code>int</code> with the result of the dialog.
      */
     public int showYesNoDialog ( final String title, final String dialogText ) {
-    	return JOptionPane.showOptionDialog(currentFrame,dialogText,title,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,new String[] { "Yes", "No" },"No");
+        ImageIcon imageIcon = new ImageIcon(UserInterface.class.getResource("/statsres-logo-icon.png"));
+    	return JOptionPane.showOptionDialog(currentFrame,dialogText,title,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,imageIcon,new String[] { "Yes", "No" },"No");
     }
     
     /**
