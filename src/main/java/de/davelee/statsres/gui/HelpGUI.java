@@ -88,7 +88,7 @@ public class HelpGUI extends JFrame {
      */
     public void addHeaderInfos ( ) {
     	//Set image icon.
-        Image img = Toolkit.getDefaultToolkit().getImage(HelpGUI.class.getResource("/logosmall.png"));
+        Image img = Toolkit.getDefaultToolkit().getImage(HelpGUI.class.getResource("/statsres-logo-icon.png"));
         setIconImage(img);
         
         //Close this window if the user hits exit.

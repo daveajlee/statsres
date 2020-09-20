@@ -193,7 +193,7 @@ public class StatsresGUI extends JFrame {
      */
     public void addHeaderInfo ( final boolean testMode ) {
     	//Set image icon.
-        Image img = Toolkit.getDefaultToolkit().getImage(StatsresGUI.class.getResource("/logosmall.png"));
+        Image img = Toolkit.getDefaultToolkit().getImage(StatsresGUI.class.getResource("/statsres-logo-icon.png"));
         setIconImage(img);
         
         //Call the Exit method in the UserInterface class if the user hits exit.

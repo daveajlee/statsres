@@ -74,7 +74,7 @@ public class SplashWindow extends JFrame {
     public void addHeaderInfo ( ) {
         
         //Set image icon.
-        Image img = Toolkit.getDefaultToolkit().getImage(SplashWindow.class.getResource("/logosmall.png"));
+        Image img = Toolkit.getDefaultToolkit().getImage(SplashWindow.class.getResource("/statsres-logo-icon.png"));
         setIconImage(img);
         
         //Initialise GUI with resizable, title and decorate methods.

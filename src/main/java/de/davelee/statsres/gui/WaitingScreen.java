@@ -54,7 +54,7 @@ public class WaitingScreen extends JFrame {
      */
     public void addHeaderInfo ( ) {
     	//Set image icon.
-        Image img = Toolkit.getDefaultToolkit().getImage(WaitingScreen.class.getResource("/logosmall.png"));
+        Image img = Toolkit.getDefaultToolkit().getImage(WaitingScreen.class.getResource("/statsres-logo-icon.png"));
         setIconImage(img);
         
         //Initialise GUI with resizable, title and decorate methods.
