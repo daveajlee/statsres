@@ -1,12 +1,8 @@
 package de.davelee.statsres.main;
 
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.core.IsCollectionContaining.hasItems;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.junit.Assert.*;
+import static org.junit.matchers.JUnitMatchers.hasItems;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,12 +31,12 @@ public class StatsresProgTest {
 	
 	@Test
 	public void testSetCalcParameters() {
-		List<String> fileList = new ArrayList<String>();
+		List<String> fileList = new ArrayList<>();
 		fileList.add(this.getClass().getClassLoader().getResource("subfolder/subsubfolder/subsubfolder.csv").getFile());
-		List<String> columns = new ArrayList<String>();
+		List<String> columns = new ArrayList<>();
 		columns.add("data");
 		assertEquals(1, columns.size());
-		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
+		List<StatisticalFunctions> functions = new ArrayList<>();
 		functions.add(StatisticalFunctions.INTER_QUARTILE_RANGE);
 		statsresProg.setCalcParameters(fileList, columns, functions);
 	}
@@ -56,14 +52,14 @@ public class StatsresProgTest {
 	public void testStopProcessing() {
 		statsresProg.stopProcessing();
 		assertEquals(statsresProg.getOutput(), "\nWARNING: Processing was interrupted!");
-		assertEquals(statsresProg.isStillRunning(), false);
+		assertFalse(statsresProg.isStillRunning());
 	}
 	
 	@Test
 	public void testSaveFile() {
 		StatsresSettings settings = new StatsresSettings();
-		settings.setColumnData(new ArrayList<String>());
-		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
+		settings.setColumnData(new ArrayList<>());
+		List<StatisticalFunctions> functions = new ArrayList<>();
 		functions.add(StatisticalFunctions.MEAN);
 		settings.setStatisticalFunctions(functions);
 		URL filePath = this.getClass().getResource("/settings.srs");
