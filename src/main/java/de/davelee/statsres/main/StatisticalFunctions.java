@@ -13,8 +13,8 @@ public enum StatisticalFunctions {
 	
 		public double calculate(final List<Double> numericalData ) {
 			double numericalTotal = 0.0;
-			for ( int i = 0; i < numericalData.size(); i++ ) {
-				numericalTotal += numericalData.get(i);
+			for ( Double myNumber : numericalData) {
+				numericalTotal += myNumber;
 			}
 			return numericalTotal/numericalData.size();
 		}
@@ -30,7 +30,7 @@ public enum StatisticalFunctions {
 	 */
 	MIN {
 		public double calculate(final List<Double> numericalData ) {
-			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
+			List<Double> numericalSortedData = new ArrayList<>(numericalData);
 			Collections.sort(numericalSortedData);
 			return numericalSortedData.get(0);
 		}
@@ -45,7 +45,7 @@ public enum StatisticalFunctions {
 	 */
 	MAX {
 		public double calculate(final List<Double> numericalData ) {
-			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
+			List<Double> numericalSortedData = new ArrayList<>(numericalData);
 			Collections.sort(numericalSortedData);
 			return numericalSortedData.get(numericalSortedData.size()-1);
 		}
@@ -60,16 +60,16 @@ public enum StatisticalFunctions {
 	 */
 	MEDIAN {
 		public double calculate(final List<Double> numericalData ) {
-			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
+			List<Double> numericalSortedData = new ArrayList<>(numericalData);
 			Collections.sort(numericalSortedData);
-			int medianPos = Math.round(numericalSortedData.size()/2); 
-			double median = -1;
-            if ( numericalSortedData.size() ==1 ) {
-                median = numericalSortedData.get(medianPos);
-            } else {
-                median = ((numericalSortedData.get(medianPos) - numericalSortedData.get(medianPos-1))/2) + numericalSortedData.get(medianPos-1);
-            }
-            return median;
+			int medianPos = (Math.round((float) numericalSortedData.size()/ 2.0f))-1;
+			double median;
+			if ( numericalSortedData.size() % 2 != 0 ) {
+				median = numericalSortedData.get(medianPos);
+			} else {
+				median = (numericalSortedData.get(medianPos) + numericalSortedData.get(medianPos+1))/2;
+			}
+			return median;
 		}
 		
 		public String getDisplayName() {
@@ -97,16 +97,18 @@ public enum StatisticalFunctions {
 	QUARTILE_FIRST {
 		
 		public double calculate(final List<Double> numericalData ) {
-			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
+			//Put the numbers in order.
+			List<Double> numericalSortedData = new ArrayList<>(numericalData);
 			Collections.sort(numericalSortedData);
-			int oneQuartilePos = Math.round(numericalSortedData.size()/4); 
-			double oneQuartile = -1;
-            if ( numericalSortedData.size() ==1 || oneQuartilePos == 0 ) {
-                oneQuartile = numericalSortedData.get(oneQuartilePos);
-            } else {
-                oneQuartile = ((numericalSortedData.get(oneQuartilePos) - numericalSortedData.get(oneQuartilePos-1))/2) + numericalSortedData.get(oneQuartilePos-1);
-            }
-            return oneQuartile;
+			// Divide the list into the lower half.
+			List<Double> firstHalfData;
+			if ( numericalSortedData.size() % 2 != 0 ) {
+				firstHalfData = numericalSortedData.subList(0, (int) Math.floor((double) numericalSortedData.size()/2.0));
+			} else {
+				firstHalfData = numericalData.subList(0, numericalSortedData.size()/2);
+			}
+			//Find the median for this half.
+			return StatisticalFunctions.MEDIAN.calculate(firstHalfData);
 		}
 		
 		public String getDisplayName() {
@@ -121,16 +123,18 @@ public enum StatisticalFunctions {
 	QUARTILE_THIRD {
 		
 		public double calculate(final List<Double> numericalData ) {
-			List<Double> numericalSortedData = new ArrayList<Double>(numericalData);
+			//Put the numbers in order.
+			List<Double> numericalSortedData = new ArrayList<>(numericalData);
 			Collections.sort(numericalSortedData);
-			int threeQuartilePos = Math.round(numericalSortedData.size()/4) * 3; 
-			double threeQuartile = -1;
-            if ( numericalSortedData.size() ==1 || threeQuartilePos == 0 ) {
-                threeQuartile = numericalSortedData.get(threeQuartilePos);
-            } else {
-                threeQuartile = ((numericalSortedData.get(threeQuartilePos) - numericalSortedData.get(threeQuartilePos-1))/2) + numericalSortedData.get(threeQuartilePos-1);
-            }
-            return threeQuartile;
+			// Divide the list into the lower half.
+			List<Double> secondHalfData;
+			if ( numericalSortedData.size() % 2 != 0 ) {
+				secondHalfData = numericalSortedData.subList((int) Math.ceil((double) numericalSortedData.size()/2.0), numericalSortedData.size());
+			} else {
+				secondHalfData = numericalData.subList( numericalSortedData.size()/2, numericalSortedData.size());
+			}
+			//Find the median for this half.
+			return StatisticalFunctions.MEDIAN.calculate(secondHalfData);
 		}
 		
 		public String getDisplayName() {
@@ -162,11 +166,17 @@ public enum StatisticalFunctions {
 	STANDARD_DEVIATION {
 		
 		public double calculate(final List<Double> numericalData ) {
-			long variance = 0;
-            for ( int i = 0; i < numericalData.size(); i++ ) {
-                variance += Math.pow(numericalData.get(i)-StatisticalFunctions.MEAN.calculate(numericalData), 2.0);
-            }
-            return Math.sqrt(variance/(numericalData.size()-1));
+			//1. Work out the Mean (the simple average of the numbers)
+			double mean = StatisticalFunctions.MEAN.calculate(numericalData);
+			//2. Then for each number: subtract the Mean and square the result
+			List<Double> squaredData = new ArrayList<>();
+			for ( Double data : numericalData ) {
+				squaredData.add(Math.pow(data-mean, 2.0));
+			}
+			//3. Then work out the mean of those squared differences.
+			double squaredMean = StatisticalFunctions.MEAN.calculate(squaredData);
+			//4. Take the square root of that and we are done!
+			return Math.sqrt(squaredMean);
 		}
 		
 		public String getDisplayName() {
