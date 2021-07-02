@@ -13,11 +13,11 @@ import javax.swing.*;
  */
 public class ProcessRunner extends Thread {
 
-    private String resultsFileFolder;
-    private List<String> columnHeadings;
-    private List<StatisticalFunctions> statisticalFunctions;
-    private JTextArea outputArea;
-    private UserInterface userInterface;
+    private final String resultsFileFolder;
+    private final List<String> columnHeadings;
+    private final List<StatisticalFunctions> statisticalFunctions;
+    private final JTextArea outputArea;
+    private final UserInterface userInterface;
     
     /**
      * Create a new runner for processes.
@@ -53,7 +53,7 @@ public class ProcessRunner extends Thread {
             outputArea.setText("");
             StatsresProg sp = new StatsresProg();
             //Create file input variable.
-            List<String> fileList = new LinkedList<String>();
+            List<String> fileList = new LinkedList<>();
             //If single file then add to file list. Otherwise get all relevant files.
             if ( resultsFileFolder.endsWith(".csv") ) {
             	fileList.add(resultsFileFolder);

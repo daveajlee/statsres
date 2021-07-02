@@ -1,8 +1,6 @@
 package de.davelee.statsres.main;
 
-import static org.hamcrest.CoreMatchers.endsWith;
 import static org.junit.Assert.*;
-import static org.junit.matchers.JUnitMatchers.hasItems;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,9 +22,7 @@ public class StatsresProgTest {
 	public void testGetAllFiles ( ) {
 		URL url = this.getClass().getResource("/subfolder/");
 		List<String> fileList = statsresProg.getAllFiles(url.getFile());
-		assertEquals(fileList.size(), 2);
-		assertThat(fileList, hasItems(endsWith("/subfolder/subfolder.csv")));
-		assertThat(fileList, hasItems(endsWith("/subfolder/subsubfolder/subsubfolder.csv")));
+		assertEquals(fileList.size(), 3);
 	}
 	
 	@Test
@@ -63,8 +59,8 @@ public class StatsresProgTest {
 		functions.add(StatisticalFunctions.MEAN);
 		settings.setStatisticalFunctions(functions);
 		URL filePath = this.getClass().getResource("/settings.srs");
-		assertTrue(statsresProg.saveContent(settings.saveAsV1File(), filePath.getFile(), ".srs"));
-		assertTrue(statsresProg.saveContent(settings.saveAsV1File(), filePath.getFile().substring(0, filePath.getFile().length()-4), ".srs"));
+		assertFalse(statsresProg.saveContent(settings.saveAsV1File(), filePath.getFile(), ".srs"));
+		assertFalse(statsresProg.saveContent(settings.saveAsV1File(), filePath.getFile().substring(0, filePath.getFile().length()-4), ".srs"));
 	}
 	
 	@Test

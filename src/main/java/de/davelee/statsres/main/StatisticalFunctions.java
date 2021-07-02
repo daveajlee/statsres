@@ -66,6 +66,8 @@ public enum StatisticalFunctions {
 			double median;
 			if ( numericalSortedData.size() % 2 != 0 ) {
 				median = numericalSortedData.get(medianPos);
+			} else if ( numericalSortedData.size() == 1 ) {
+				median = numericalSortedData.get(0);
 			} else {
 				median = (numericalSortedData.get(medianPos) + numericalSortedData.get(medianPos+1))/2;
 			}
@@ -102,7 +104,10 @@ public enum StatisticalFunctions {
 			Collections.sort(numericalSortedData);
 			// Divide the list into the lower half.
 			List<Double> firstHalfData;
-			if ( numericalSortedData.size() % 2 != 0 ) {
+			if ( numericalSortedData.size() == 1 ) {
+				return numericalSortedData.get(0);
+			}
+			else if ( numericalSortedData.size() % 2 != 0 ) {
 				firstHalfData = numericalSortedData.subList(0, (int) Math.floor((double) numericalSortedData.size()/2.0));
 			} else {
 				firstHalfData = numericalData.subList(0, numericalSortedData.size()/2);
@@ -128,7 +133,9 @@ public enum StatisticalFunctions {
 			Collections.sort(numericalSortedData);
 			// Divide the list into the lower half.
 			List<Double> secondHalfData;
-			if ( numericalSortedData.size() % 2 != 0 ) {
+			if (numericalSortedData.size() == 1 ) {
+				return numericalSortedData.get(0);
+			} else if ( numericalSortedData.size() % 2 != 0 ) {
 				secondHalfData = numericalSortedData.subList((int) Math.ceil((double) numericalSortedData.size()/2.0), numericalSortedData.size());
 			} else {
 				secondHalfData = numericalData.subList( numericalSortedData.size()/2, numericalSortedData.size());

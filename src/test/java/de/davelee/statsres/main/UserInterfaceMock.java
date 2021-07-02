@@ -5,15 +5,13 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.davelee.statsres.main.UserInterface;
-
 public class UserInterfaceMock extends UserInterface {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UserInterfaceMock.class);
 	
 	/**
      * Method to display a yes/no dialog with supplied text and then return result.
-     * @return
+     * @return a <code>int</code> with the selected option.
      */
     public int showYesNoDialog ( final String title, final String dialogText ) {
     	if ( title.contentEquals("NoDialog")) {

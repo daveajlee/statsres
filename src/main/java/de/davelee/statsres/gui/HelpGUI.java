@@ -6,14 +6,12 @@ import java.awt.event.*;
 //Import java io and util packages.
 import java.io.*;
 import java.util.HashMap;
-import java.util.Iterator;
 
 
 import java.util.Map;
 
 //Import java swing packages.
 import javax.swing.*;
-import javax.swing.event.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +106,7 @@ public class HelpGUI extends JFrame {
      * Initialise the help content mapping titles to urls.
      */
     public void initialiseContent ( ) {
-    	contentUrls = new HashMap<String, String>();
+    	contentUrls = new HashMap<>();
     	contentUrls.put("Welcome", "/intro.html");
     	contentUrls.put("Getting Started", "/gettingstarted.html");
     	contentUrls.put("Input Options", "/inputoptions.html");
@@ -149,35 +147,32 @@ public class HelpGUI extends JFrame {
         leftPanel.add(Box.createRigidArea(new Dimension(0, 20))); //Spacer.
         
         //Add topics list.
-        topicsModel = new DefaultListModel<String>();
-        Iterator<String> contentIterator = contentUrls.keySet().iterator();
-        while ( contentIterator.hasNext() ) {
-        	topicsModel.addElement(contentIterator.next());
+        topicsModel = new DefaultListModel<>();
+        for (String s : contentUrls.keySet()) {
+            topicsModel.addElement(s);
         }
-        topicsList = new JList<String>(topicsModel);
+        topicsList = new JList<>(topicsModel);
         topicsList.setVisibleRowCount(20);
         topicsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         //Default.
         topicsList.setSelectedIndex(0);
         //Action Listener for when a particular help topic is selected.
-        topicsList.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged ( ListSelectionEvent lse ) {
-                //Get selected item.
-                String selectedItem;
-                try {
-                    selectedItem = topicsList.getSelectedValue().toString();
-                } catch ( NullPointerException npe ) {
-                	LOG.warn("Selected Item was null - retrieving automatically the first element as selected element", npe);
-                    selectedItem = topicsList.getModel().getElementAt(0).toString();
-                    topicsList.setSelectedValue(selectedItem, true);
-                }
-                //If loading content fails, then stack trace and dispose.
-                try {
-                    displayPane.setPage(HelpGUI.class.getResource(contentUrls.get(selectedItem)));
-                } catch ( IOException e ) {
-                	LOG.error("Could not load HTML file, exiting ", e);
-                    dispose();
-                }
+        topicsList.addListSelectionListener(lse -> {
+            //Get selected item.
+            String selectedItem;
+            try {
+                selectedItem = topicsList.getSelectedValue();
+            } catch ( NullPointerException npe ) {
+                LOG.warn("Selected Item was null - retrieving automatically the first element as selected element", npe);
+                selectedItem = topicsList.getModel().getElementAt(0);
+                topicsList.setSelectedValue(selectedItem, true);
+            }
+            //If loading content fails, then stack trace and dispose.
+            try {
+                displayPane.setPage(HelpGUI.class.getResource(contentUrls.get(selectedItem)));
+            } catch ( IOException e ) {
+                LOG.error("Could not load HTML file, exiting ", e);
+                dispose();
             }
         });
         JScrollPane topicsPane = new JScrollPane(topicsList);
@@ -218,14 +213,14 @@ public class HelpGUI extends JFrame {
      */
     public void updateList ( String text ) {
         //Create temp model.
-        DefaultListModel<String> tempModel = new DefaultListModel<String>();
+        DefaultListModel<String> tempModel = new DefaultListModel<>();
         //If text is blank then set tempModel to fullModel. Otherwise, add those which have this prefix.
         if ( "".equalsIgnoreCase(text) ) {
             tempModel = topicsModel;
         } else {
             for ( int i = 0; i < topicsModel.size(); i++ ) {
-                if ( includeString(text, topicsModel.get(i).toString()) ) {
-                    tempModel.addElement(topicsModel.get(i).toString());
+                if ( includeString(text, topicsModel.get(i)) ) {
+                    tempModel.addElement(topicsModel.get(i));
                 }
             }
         }

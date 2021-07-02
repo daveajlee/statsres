@@ -84,17 +84,19 @@ public class StatsresSettings {
 	 */
 	public List<String> saveAsV1File() {
         //Create list to return.
-        List<String> settingsList = new ArrayList<String>();
+        List<String> settingsList = new ArrayList<>();
         //Add file.
         settingsList.add("File=" + file);
         //Add checkbox.
         settingsList.add("File Checkbox=" + (file!=null && file.endsWith(".csv")));
         //Add column data stuff.
-        String columnDataStr = "Column Data=";
-        for ( int i = 0; i < columnData.size(); i++) {
-            columnDataStr += columnData.get(i) + ",";
-        }
-        settingsList.add(columnDataStr);
+		StringBuilder columnDataStrBuilder = new StringBuilder();
+        columnDataStrBuilder.append("Column Data=");
+		for (String columnDatum : columnData) {
+			columnDataStrBuilder.append(columnDatum);
+			columnDataStrBuilder.append(",");
+		}
+        settingsList.add(columnDataStrBuilder.toString());
         //Now add each checkbox.
         settingsList.add("Mean=" + isFunctionInList(StatisticalFunctions.MEAN, statisticalFunctions));
         settingsList.add("Min=" + isFunctionInList(StatisticalFunctions.MIN, statisticalFunctions));
@@ -117,8 +119,8 @@ public class StatsresSettings {
 	public static StatsresSettings createDefaultSettings ( final String fileName ) {
 		StatsresSettings mySettings = new StatsresSettings();
 		mySettings.setFile(fileName);
-		mySettings.setColumnData(new ArrayList<String>());
-		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
+		mySettings.setColumnData(new ArrayList<>());
+		List<StatisticalFunctions> functions = new ArrayList<>();
 		functions.add(StatisticalFunctions.MEAN);
 		functions.add(StatisticalFunctions.MIN);
 		functions.add(StatisticalFunctions.MAX);
@@ -141,8 +143,8 @@ public class StatsresSettings {
 		StatsresSettings mySettings = new StatsresSettings();
 		mySettings.setFile(settings[0]);
 		// settings[1] was file or folder - this is no longer needed in version 2 so we ignore settings[1].
-		mySettings.setColumnData(new ArrayList<String>(Arrays.asList(settings[2].split(","))));
-		List<StatisticalFunctions> functions = new ArrayList<StatisticalFunctions>();
+		mySettings.setColumnData(new ArrayList<>(Arrays.asList(settings[2].split(","))));
+		List<StatisticalFunctions> functions = new ArrayList<>();
 		if ( "true".equalsIgnoreCase(settings[3]) ) {
 			functions.add(StatisticalFunctions.MEAN);
 		} if ( "true".equalsIgnoreCase(settings[4]) ) {

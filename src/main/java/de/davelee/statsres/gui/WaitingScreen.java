@@ -4,7 +4,6 @@ package de.davelee.statsres.gui;
 import de.davelee.statsres.main.StatsresProg;
 
 import java.awt.*;
-import java.awt.event.*;
 
 import javax.swing.*;
 
@@ -86,11 +85,7 @@ public class WaitingScreen extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
         JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed ( ActionEvent e ) {
-                statsresProg.stopProcessing();
-            }
-        });
+        cancelButton.addActionListener(e -> statsresProg.stopProcessing());
         buttonPanel.add(cancelButton);
         centrePanel.add(buttonPanel);
         return centrePanel;
@@ -103,7 +98,7 @@ public class WaitingScreen extends JFrame {
         Toolkit tools = Toolkit.getDefaultToolkit();
         Dimension screenDim = tools.getScreenSize();
         Dimension displayDim = getPreferredSize();
-        this.setLocation ( (int) (screenDim.width/2)-(displayDim.width/2), (int) (screenDim.height/2)-(displayDim.height/2));
+        this.setLocation ( (screenDim.width/2)-(displayDim.width/2), (screenDim.height/2)-(displayDim.height/2));
     }
     
 }

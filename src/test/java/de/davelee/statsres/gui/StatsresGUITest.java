@@ -27,18 +27,18 @@ public class StatsresGUITest {
 	@Test
 	public void testCreateFileOptionsPanel ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
-		assertNotNull(gui.createFileOptionsPanel("", true));
-		assertNotNull(gui.createFileOptionsPanel("", true));
-		assertNotNull(gui.createFileOptionsPanel(this.getClass().getResource("/subfolder/subsubfolder/subsubfolder.csv").getFile(), true));
+		assertNotNull(gui.createFileOptionsPanel(true));
+		assertNotNull(gui.createFileOptionsPanel(true));
+		assertNotNull(gui.createFileOptionsPanel(/*this.getClass().getResource("/subfolder/subsubfolder/subsubfolder.csv").getFile(),*/ true));
 		assertNotNull(gui.createResultsSelectionPanel());
-		assertNotNull(gui.createFileOptionsPanel(this.getClass().getResource("/subfolder").getFile(), true));
+		assertNotNull(gui.createFileOptionsPanel(/*this.getClass().getResource("/subfolder").getFile(),*/ true));
 		assertNotNull(gui.createResultsSelectionPanel());
 	}
 	
 	@Test
 	public void testCreateResultsSelectionPanel ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
-		assertNotNull(gui.createFileOptionsPanel("", true));
+		assertNotNull(gui.createFileOptionsPanel(true));
 		assertNotNull(gui.createResultsSelectionPanel());
 		String trueStr = "=true";
 		String[] settingsArray = new String[] { "=test.txt",trueStr,"=hello,bye",trueStr,trueStr,trueStr,trueStr,trueStr,trueStr,trueStr,trueStr,trueStr};
@@ -80,20 +80,20 @@ public class StatsresGUITest {
 	@Test
 	public void testCreateDialogPanel ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
-		assertNotNull(gui.createDialogPanel("", true));
+		assertNotNull(gui.createDialogPanel(true));
 	}
 	
 	@Test
 	public void testClearFields ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
-		assertNotNull(gui.createDialogPanel("", true));
+		assertNotNull(gui.createDialogPanel(true));
 		gui.clearFields();
 	}
 	
 	@Test
 	public void testSaveCurrentSettings ( ) {
 		StatsresGUI gui = new StatsresGUI(new UserInterface(), new StatsresProg(), "", null, true);
-		assertNotNull(gui.createDialogPanel("", true));
+		assertNotNull(gui.createDialogPanel(true));
 		assertNotNull(gui.saveCurrentSettings());
 		gui.deselectAllStatOptions();
 		assertNotNull(gui.saveCurrentSettings());

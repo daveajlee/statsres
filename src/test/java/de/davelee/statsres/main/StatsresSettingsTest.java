@@ -7,9 +7,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.davelee.statsres.main.StatisticalFunctions;
-import de.davelee.statsres.main.StatsresSettings;
-
 public class StatsresSettingsTest {
 	
 	@Test
@@ -17,12 +14,12 @@ public class StatsresSettingsTest {
 		StatsresSettings settings = new StatsresSettings();
 		settings.setFile("test.txt");
 		assertEquals(settings.getFile(), "test.txt");
-		List<String> columnData = new ArrayList<String>();
+		List<String> columnData = new ArrayList<>();
 		columnData.add("TestColumn");
 		settings.setColumnData(columnData);
 		assertEquals(settings.getColumnData().size(), 1);
 		assertEquals(settings.getColumnData().get(0), "TestColumn");
-		List<StatisticalFunctions> statisticalFunctions = new ArrayList<StatisticalFunctions>();
+		List<StatisticalFunctions> statisticalFunctions = new ArrayList<>();
 		statisticalFunctions.add(StatisticalFunctions.MEAN);
 		settings.setStatisticalFunctions(statisticalFunctions);
 		assertEquals(settings.getStatisticalFunctions().size(), 1);

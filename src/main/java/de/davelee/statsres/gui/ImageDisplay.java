@@ -1,5 +1,8 @@
 package de.davelee.statsres.gui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 
 /**
@@ -12,9 +15,10 @@ public class ImageDisplay extends Canvas {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Image image;
-    private int leftBorder;
-    private int topBorder;
+	private final Image image;
+    private final int leftBorder;
+    private final int topBorder;
+    private final static Logger logger = LoggerFactory.getLogger(ImageDisplay.class);
     
     /**
      * Create a new image display.
@@ -32,14 +36,11 @@ public class ImageDisplay extends Canvas {
         //theImage = toolkit.getImage(fileName);
         MediaTracker mediaTracker = new MediaTracker(this);
         mediaTracker.addImage(image, 0);
-        try
-	{
+        try {
             mediaTracker.waitForID(0);
         }
-	catch (InterruptedException ie)
-	{
-            System.err.println(ie);
-            System.exit(1);
+	    catch (InterruptedException ie) {
+            logger.error("Picture could not be read ", ie);
         }
     }
     

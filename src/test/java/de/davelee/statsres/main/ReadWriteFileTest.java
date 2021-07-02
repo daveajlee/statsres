@@ -47,10 +47,10 @@ public class ReadWriteFileTest {
 	@Test
 	public void testWriteFile ( ) {
 		URL url = this.getClass().getResource("/writefiletest.txt");
-		List<String> newList = new ArrayList<String>();
+		List<String> newList = new ArrayList<>();
 		newList.add("WriteTest");
 		assertTrue(ReadWriteFileUtil.writeFile(newList, new File(url.getFile()), false));
-		newList = new ArrayList<String>();
+		newList = new ArrayList<>();
 		newList.add("appendTest");
 		assertTrue(ReadWriteFileUtil.writeFile(newList, new File(url.getFile()), true));
 	}

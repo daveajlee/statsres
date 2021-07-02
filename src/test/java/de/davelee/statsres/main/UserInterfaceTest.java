@@ -12,8 +12,6 @@ import javax.swing.JOptionPane;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.davelee.statsres.main.UserInterface;
-
 public class UserInterfaceTest {
 	
 	@Test

@@ -7,13 +7,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.davelee.statsres.main.StatisticalFunctions;
-
 public class StatisticalFunctionsTest {
 	
 	@Test
 	public void testMean () {
-		List<Double> numericalData = new ArrayList<Double>();
+		List<Double> numericalData = new ArrayList<>();
 		numericalData.add(1.0); 
 		numericalData.add(2.0); 
 		numericalData.add(3.0);
@@ -24,18 +22,18 @@ public class StatisticalFunctionsTest {
 	
 	@Test
 	public void testStandardDeviation() {
-		List<Double> numericalData = new ArrayList<Double>();
+		List<Double> numericalData = new ArrayList<>();
 		numericalData.add(1.0); 
 		numericalData.add(2.0); 
 		numericalData.add(3.0);
 		double mean = StatisticalFunctions.STANDARD_DEVIATION.calculate(numericalData);
-		assertEquals(mean, 1.0, 0.1);
+		assertEquals(mean, 0.816496580927726, 0.1);
 		assertEquals(StatisticalFunctions.STANDARD_DEVIATION.getDisplayName(), "Standard Deviation");
 	}
 	
 	@Test
 	public void testMin() {
-		List<Double> numericalData = new ArrayList<Double>();
+		List<Double> numericalData = new ArrayList<>();
 		numericalData.add(2.0); 
 		numericalData.add(1.0); 
 		numericalData.add(3.0);
@@ -46,7 +44,7 @@ public class StatisticalFunctionsTest {
 	
 	@Test
 	public void testMax() {
-		List<Double> numericalData = new ArrayList<Double>();
+		List<Double> numericalData = new ArrayList<>();
 		numericalData.add(2.0); 
 		numericalData.add(1.0); 
 		numericalData.add(3.0); 
@@ -58,24 +56,24 @@ public class StatisticalFunctionsTest {
 	
 	@Test
 	public void testMedian() {
-		List<Double> numericalData = new ArrayList<Double>();
+		List<Double> numericalData = new ArrayList<>();
 		numericalData.add(2.0); 
 		numericalData.add(1.0); 
 		numericalData.add(3.0); 
 		numericalData.add(2.5);
 		double median = StatisticalFunctions.MEDIAN.calculate(numericalData);
 		assertEquals(median, 2.25, 0.1);
-		List<Double> numericalData2 = new ArrayList<Double>();
+		List<Double> numericalData2 = new ArrayList<>();
 		numericalData2.add(2.0); 
 		numericalData2.add(1.0); 
 		numericalData2.add(3.0);
 		double median2 = StatisticalFunctions.MEDIAN.calculate(numericalData2);
-		assertEquals(median2, 1.5, 0.1);
-		List<Double> numericalData3 = new ArrayList<Double>();
+		assertEquals(median2, 2.0, 0.1);
+		List<Double> numericalData3 = new ArrayList<>();
 		numericalData3.add(2.0);
 		double median3 = StatisticalFunctions.MEDIAN.calculate(numericalData3);
 		assertEquals(median3, 2.0, 0.1);
-		List<Double> numericalData4 = new ArrayList<Double>();
+		List<Double> numericalData4 = new ArrayList<>();
 		numericalData4.add(1.55557); 
 		numericalData4.add(2.68437);
 		double median4 = StatisticalFunctions.MEDIAN.calculate(numericalData4);
@@ -85,7 +83,7 @@ public class StatisticalFunctionsTest {
 	
 	@Test
 	public void testCount() {
-		List<Double> numericalData = new ArrayList<Double>();
+		List<Double> numericalData = new ArrayList<>();
 		numericalData.add(2.0); 
 		numericalData.add(1.0); 
 		numericalData.add(3.0); 
@@ -96,7 +94,7 @@ public class StatisticalFunctionsTest {
 	
 	@Test
 	public void testFirstQuartile() {
-		List<Double> numericalData = new ArrayList<Double>();
+		List<Double> numericalData = new ArrayList<>();
 		numericalData.add(2.0); 
 		numericalData.add(1.0); 
 		numericalData.add(3.0); 
@@ -104,19 +102,19 @@ public class StatisticalFunctionsTest {
 		numericalData.add(5.0); 
 		numericalData.add(6.0);
 		double quartile1 = StatisticalFunctions.QUARTILE_FIRST.calculate(numericalData);
-		assertEquals(quartile1, 1.5, 0.1);
-		List<Double> numericalData2 = new ArrayList<Double>();
+		assertEquals(quartile1, 2.0, 0.1);
+		List<Double> numericalData2 = new ArrayList<>();
 		numericalData2.add(2.0); 
 		numericalData2.add(1.0); 
 		numericalData2.add(3.0); 
 		numericalData2.add(2.5);
 		double quartile12 = StatisticalFunctions.QUARTILE_FIRST.calculate(numericalData2);
 		assertEquals(quartile12, 1.5, 0.1);
-		List<Double> numericalData3 = new ArrayList<Double>();
+		List<Double> numericalData3 = new ArrayList<>();
 		numericalData3.add(2.0);
 		double quartile13 = StatisticalFunctions.QUARTILE_FIRST.calculate(numericalData3);
 		assertEquals(quartile13, 2.0, 0.1);
-		List<Double> numericalData4 = new ArrayList<Double>();
+		List<Double> numericalData4 = new ArrayList<>();
 		numericalData4.add(1.55557); 
 		numericalData4.add(2.68437);
 		double quartile14 = StatisticalFunctions.QUARTILE_FIRST.calculate(numericalData4);
@@ -126,7 +124,7 @@ public class StatisticalFunctionsTest {
 	
 	@Test
 	public void testThreeQuartile() {
-		List<Double> numericalData = new ArrayList<Double>();
+		List<Double> numericalData = new ArrayList<>();
 		numericalData.add(2.0); 
 		numericalData.add(1.0); 
 		numericalData.add(3.0); 
@@ -134,29 +132,29 @@ public class StatisticalFunctionsTest {
 		numericalData.add(5.0); 
 		numericalData.add(6.0);
 		double quartile3 = StatisticalFunctions.QUARTILE_THIRD.calculate(numericalData);
-		assertEquals(quartile3, 2.75, 0.1);
-		List<Double> numericalData2 = new ArrayList<Double>();
+		assertEquals(quartile3, 5.0, 0.1);
+		List<Double> numericalData2 = new ArrayList<>();
 		numericalData2.add(2.0); 
 		numericalData2.add(1.0); 
 		numericalData2.add(3.0); 
 		numericalData2.add(2.5);
 		double quartile32 = StatisticalFunctions.QUARTILE_THIRD.calculate(numericalData2);
 		assertEquals(quartile32, 2.75, 0.1);
-		List<Double> numericalData3 = new ArrayList<Double>();
+		List<Double> numericalData3 = new ArrayList<>();
 		numericalData3.add(2.0);
 		double quartile13 = StatisticalFunctions.QUARTILE_THIRD.calculate(numericalData3);
 		assertEquals(quartile13, 2.0, 0.1);
-		List<Double> numericalData4 = new ArrayList<Double>();
+		List<Double> numericalData4 = new ArrayList<>();
 		numericalData4.add(1.55557); 
 		numericalData4.add(2.68437);
 		double quartile14 = StatisticalFunctions.QUARTILE_THIRD.calculate(numericalData4);
-		assertEquals(quartile14, 1.55557, 0.0001);
+		assertEquals(quartile14, 2.68437, 0.0001);
 		assertEquals(StatisticalFunctions.QUARTILE_THIRD.getDisplayName(), "3rd Quartile");
 	}
 	
 	@Test
 	public void testInterQuartileRange() {
-		List<Double> numericalData = new ArrayList<Double>();
+		List<Double> numericalData = new ArrayList<>();
 		numericalData.add(2.0); 
 		numericalData.add(1.0); 
 		numericalData.add(3.0); 
@@ -164,8 +162,8 @@ public class StatisticalFunctionsTest {
 		numericalData.add(5.0); 
 		numericalData.add(6.0);
 		double iqr1 = StatisticalFunctions.INTER_QUARTILE_RANGE.calculate(numericalData);
-		assertEquals(iqr1, 1.25, 0.1);
-		List<Double> numericalData2 = new ArrayList<Double>();
+		assertEquals(iqr1, 3.0, 0.1);
+		List<Double> numericalData2 = new ArrayList<>();
 		numericalData2.add(2.0); 
 		numericalData2.add(1.0); 
 		numericalData2.add(3.0); 

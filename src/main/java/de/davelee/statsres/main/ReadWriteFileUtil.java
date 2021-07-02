@@ -30,12 +30,12 @@ public final class ReadWriteFileUtil {
      * @return a <code>String</code> linked list of the contents of the file.
      */
     public static List<String> readFile(final String location, final boolean readOnlyFirstLine) {
-        List<String> readList = new ArrayList<String>();
+        List<String> readList = new ArrayList<>();
         //Commencing reading of the file.
         try{
             //Create a new buffered reader object and a new string called line.
-            BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(location))));
-            String line = "";
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(location)));
+            String line;
             //Read each line of the file and add it to the linked list.
             do{
                 line = fileReader.readLine();
@@ -68,17 +68,19 @@ public final class ReadWriteFileUtil {
     public static boolean writeFile(final List<String> phrase, final File file, final boolean append ){
         try{
             //Create the file.
-            file.createNewFile();
-            //Create a new buffered writer object.
-            BufferedWriter filewriter = new BufferedWriter(new FileWriter(file, append));
-            //For each phrase in the String array write the phrase to the file and then a new line character.
-            for(int i=0;i<phrase.size();i++){
-                filewriter.write(phrase.get(i));
-                filewriter.newLine();
+            if ( file.createNewFile() ) {
+                //Create a new buffered writer object.
+                BufferedWriter filewriter = new BufferedWriter(new FileWriter(file, append));
+                //For each phrase in the String array write the phrase to the file and then a new line character.
+                for (String s : phrase) {
+                    filewriter.write(s);
+                    filewriter.newLine();
+                }
+                //Close the writer.
+                filewriter.close();
+                return true;
             }
-            //Close the writer.
-            filewriter.close();
-            return true;
+            return false;
         } catch(IOException e){
         	LOG.error("Error while writing file", e);
             JOptionPane.showMessageDialog(null,"An error has occurred while writing this file.","Error: Writing file",JOptionPane.ERROR_MESSAGE);

@@ -46,9 +46,9 @@ public class StatsresGUI extends JFrame {
 
     private JTextArea outputArea;
     
-    private StatsresProg statsresProg;
-    private UserInterface userInterface;
-    private StatsresSettings statsresSettings;
+    private final StatsresProg statsresProg;
+    private final UserInterface userInterface;
+    private final StatsresSettings statsresSettings;
     
     private static final Font ARIAL_BOLD = new Font("Arial", Font.BOLD+Font.ITALIC, 16);
     
@@ -65,12 +65,8 @@ public class StatsresGUI extends JFrame {
     	//Create ProgramOperations object and store it.
         this.statsresProg = statsresProg;
         userInterface = ui;
-        
-        if ( settings == null ) {
-        	statsresSettings = StatsresSettings.createDefaultSettings(fileName);
-        } else {
-        	statsresSettings = settings;
-        }
+
+        statsresSettings = Objects.requireNonNullElseGet(settings, () -> StatsresSettings.createDefaultSettings(fileName));
         
         //Set this as the current frame.
         userInterface.setCurrentFrame(this);
@@ -81,7 +77,7 @@ public class StatsresGUI extends JFrame {
         Container c = this.getContentPane();
         
         //Add the panel to the container.
-        c.add ( createDialogPanel(fileName, testMode) );
+        c.add ( createDialogPanel(testMode) );
         
         //Display the dialog box to the user.
         if (!testMode) {
@@ -119,11 +115,10 @@ public class StatsresGUI extends JFrame {
     
     /**
      * Create the dialog panel based on the specified file name.
-     * @param fileName a <code>String</code> with the file name to load. Can be empty.
      * @param testMode a <code>boolean</code> which is true iff the method is being called through JUnit tests.
      * @return a <code>JPanel</code> object representing the created dialog panel.
      */
-    public JPanel createDialogPanel ( final String fileName, final boolean testMode ) {
+    public JPanel createDialogPanel ( final boolean testMode ) {
     	JPanel overallDialogPanel = new JPanel(new BorderLayout());
     	
     	JPanel statusPanel = createStatusBarPanel(this.getWidth());
@@ -134,7 +129,7 @@ public class StatsresGUI extends JFrame {
         dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
         
         //Add results file panel to dialogPanel.
-        dialogPanel.add(createFileOptionsPanel(fileName, testMode));
+        dialogPanel.add(createFileOptionsPanel(testMode));
         dialogPanel.add(Box.createRigidArea(new Dimension(0, 10))); //Spacer.
        
         //Add results selection panel to dialog panel.
@@ -264,7 +259,7 @@ public class StatsresGUI extends JFrame {
      * @param fileName a <code>String</code> with the file to save the output text to.
      */
     public void saveOutputMenu ( final String fileName ) {
-        List<String> output = new ArrayList<String>();
+        List<String> output = new ArrayList<>();
         output.add(outputArea.getText());
         if ( statsresProg.saveContent(output, fileName, ".sro" ) ) {
             updateStatusText("Output was successfully saved to the selected file!");
@@ -284,82 +279,49 @@ public class StatsresGUI extends JFrame {
         fileMenu.setMnemonic('F');
         menuBar.add(fileMenu);
         JMenuItem newMenuItem = new JMenuItem("New Session");
-        newMenuItem.addActionListener ( new ActionListener() {
-            public void actionPerformed ( ActionEvent e ) {
-                clearFields();
-            }
-        });
+        newMenuItem.addActionListener (e -> clearFields());
         fileMenu.add(newMenuItem);
         fileMenu.addSeparator();
         JMenu loadMenu = new JMenu("Load");
         JMenuItem loadSettingsMenuItem = new JMenuItem("Settings");
-        loadSettingsMenuItem.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                loadSettingsMenu(testMode, loadSaveInputOutputFile("", "Load Settings File"));
-            }
-        });
+        loadSettingsMenuItem.addActionListener(e -> loadSettingsMenu(testMode, loadSaveInputOutputFile("", "Load Settings File")));
         loadMenu.add(loadSettingsMenuItem);
         JMenuItem loadOutputMenuItem = new JMenuItem("Output");
-        loadOutputMenuItem.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                loadOutputMenu(loadSaveInputOutputFile("", "Load Output File"));
-            }
-        });
+        loadOutputMenuItem.addActionListener(e -> loadOutputMenu(loadSaveInputOutputFile("", "Load Output File")));
         loadMenu.add(loadOutputMenuItem);
         fileMenu.add(loadMenu);
         fileMenu.addSeparator();
         JMenu saveMenu = new JMenu("Save");
         JMenuItem saveSettingsMenuItem = new JMenuItem("Settings");
-        saveSettingsMenuItem.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                saveSettingsMenu(loadSaveInputOutputFile("", "Save Settings File"));
-            }
-        });
+        saveSettingsMenuItem.addActionListener(e -> saveSettingsMenu(loadSaveInputOutputFile("", "Save Settings File")));
         saveMenu.add(saveSettingsMenuItem);
         JMenuItem saveOutputMenuItem = new JMenuItem("Output");
-        saveOutputMenuItem.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                saveOutputMenu(loadSaveInputOutputFile("", "Save Output File"));
-            }
-        });
+        saveOutputMenuItem.addActionListener(e -> saveOutputMenu(loadSaveInputOutputFile("", "Save Output File")));
         saveMenu.add(saveOutputMenuItem);
         fileMenu.add(saveMenu);
         fileMenu.addSeparator();
         JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.addActionListener ( new ActionListener() {
-            public void actionPerformed ( ActionEvent e ) {
-                userInterface.exit();
-            }
-        });
+        exitMenuItem.addActionListener (e -> userInterface.exit());
         fileMenu.add(exitMenuItem);
         JMenu helpMenu = new JMenu("Help");
         helpMenu.setMnemonic('H');
         menuBar.add(helpMenu);
         JMenuItem contentMenuItem = new JMenuItem("Contents");
-        contentMenuItem.addActionListener ( new ActionListener() {
-            public void actionPerformed ( ActionEvent e ) {
-                new HelpGUI(false);
-            }
-        });
+        contentMenuItem.addActionListener (e -> new HelpGUI(false));
         helpMenu.add(contentMenuItem);
         helpMenu.addSeparator();
         JMenuItem aboutMenuItem = new JMenuItem("About");
-        aboutMenuItem.addActionListener ( new ActionListener() {
-            public void actionPerformed ( ActionEvent e ) {
-                new SplashWindow(true, userInterface, false);
-            }
-        });
+        aboutMenuItem.addActionListener (e -> new SplashWindow(true, userInterface, false));
         helpMenu.add(aboutMenuItem);
         return menuBar;
     }
     
     /**
      * Create a file options panel.
-     * @param fileName a <code>String</code> with the current selected file name.
      * @param testMode a <code>boolean</code> which is true iff the method is called from JUnit tests.
      * @return a <code>JPanel</code> object representing the created file options panel.
      */
-    public JPanel createFileOptionsPanel ( final String fileName, final boolean testMode ) {
+    public JPanel createFileOptionsPanel ( final boolean testMode ) {
     	//Create fileOptions panel with border layout.
         JPanel fileOptionsPanel = new JPanel();
         fileOptionsPanel.setLayout( new BoxLayout ( fileOptionsPanel, BoxLayout.PAGE_AXIS ) );
@@ -383,16 +345,14 @@ public class StatsresGUI extends JFrame {
         resultsFilePanel.add(resultsFileField);
         //Results File Button.
         JButton resultsFileButton = new JButton("Choose");
-        resultsFileButton.addActionListener ( new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String file = loadResultsFile(resultsFileField.getText());
-                if ( !"".equalsIgnoreCase(file) ) {
-                	statsresSettings.setFile(file);
-                    new StatsresGUI(userInterface, statsresProg, file, statsresSettings, testMode);
-                    dispose();
-                }
+        resultsFileButton.addActionListener (e -> {
+            String file = loadResultsFile(resultsFileField.getText());
+            if ( !"".equalsIgnoreCase(file) ) {
+                statsresSettings.setFile(file);
+                new StatsresGUI(userInterface, statsresProg, file, statsresSettings, testMode);
+                dispose();
             }
-        }); 
+        });
         resultsFilePanel.add(resultsFileButton);
         
         //Add results file panel to dialogPanel.
@@ -425,11 +385,11 @@ public class StatsresGUI extends JFrame {
         JLabel columnLabel = new JLabel("Select Column(s):");
         columnPanel.add(columnLabel);
         //JList for column headings.
-        columnData = new DefaultListModel<String>();
+        columnData = new DefaultListModel<>();
         //Only process contents of file if current settings is not null or a file was selected!
         List<String> columns = statsresSettings.getColumnData();
-        for ( int i = 0; i < columns.size(); i++ ) {
-        	columnData.addElement(columns.get(i));
+        for (String column : columns) {
+            columnData.addElement(column);
         }
         if ( !"".equalsIgnoreCase(resultsFileField.getText()) ) { 
             //If folder selected then get list of files.
@@ -446,7 +406,7 @@ public class StatsresGUI extends JFrame {
                 loadFileGUI(resultsFileField.getText());
             }
         }
-        columnHeadings = new JList<String>(columnData);
+        columnHeadings = new JList<>(columnData);
         columnHeadings.setVisibleRowCount(3);
         JScrollPane columnPane = new JScrollPane(columnHeadings);
         columnPanel.add(columnPane);
@@ -456,20 +416,14 @@ public class StatsresGUI extends JFrame {
         //Create select button panel.
         JPanel selectButtonPanel = new JPanel();
         JButton selectAllButton = new JButton("Select All");
-        selectAllButton.addActionListener( new ActionListener() {
-            public void actionPerformed ( ActionEvent e ) {
-                if ( columnHeadings.getModel().getSize()>0 ) {
-                    columnHeadings.setSelectionInterval(0, columnHeadings.getModel().getSize()-1);
-                }
-            }
-        }); 
-        selectButtonPanel.add(selectAllButton);
-        JButton deselectAllButton = new JButton("Deselect All");
-        deselectAllButton.addActionListener( new ActionListener() {
-            public void actionPerformed ( ActionEvent e ) {
-                columnHeadings.clearSelection();
+        selectAllButton.addActionListener(e -> {
+            if ( columnHeadings.getModel().getSize()>0 ) {
+                columnHeadings.setSelectionInterval(0, columnHeadings.getModel().getSize()-1);
             }
         });
+        selectButtonPanel.add(selectAllButton);
+        JButton deselectAllButton = new JButton("Deselect All");
+        deselectAllButton.addActionListener(e -> columnHeadings.clearSelection());
         selectButtonPanel.add(deselectAllButton);
         //Add selectButtonPanel to results selection panel.
         resultsSelectionPanel.add(selectButtonPanel);
@@ -489,8 +443,8 @@ public class StatsresGUI extends JFrame {
         	resultsFileField.setText("");
             showErrorStatus("input");
         }
-        for ( int i = 0; i < contents.length; i++ ) {
-            columnData.addElement(contents[i]);
+        for (String content : contents) {
+            columnData.addElement(content);
         }
     }
     
@@ -558,7 +512,7 @@ public class StatsresGUI extends JFrame {
      */
     private List<StatisticalFunctions> processListOptions ( ) {
     	//Make list of boolean options.
-        List<StatisticalFunctions> statisticalFunctions = new ArrayList<StatisticalFunctions>();
+        List<StatisticalFunctions> statisticalFunctions = new ArrayList<>();
         if ( meanBox.isSelected() ) {
         	statisticalFunctions.add(StatisticalFunctions.MEAN);
         } 
@@ -598,38 +552,28 @@ public class StatsresGUI extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout());
         //Create the Process Button.
         JButton processButton = new JButton ( "Process Results" );
-        processButton.addActionListener ( new ActionListener() {
-            public void actionPerformed ( ActionEvent e ) {
-                //Check process variable.
-                if ( userInterface.getProcessRunning() ) {
-                    JOptionPane.showMessageDialog(StatsresGUI.this, "Cannot start process as another process is already running!", "ERROR: Attempting to Start Multiple Processes!", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    //Set isProcessRunning variable to true.
-                    userInterface.setProcessRunning(true);
-                    //Do all other work in another thread to improve performance.
-                    ProcessRunner pr = new ProcessRunner(userInterface, resultsFileField.getText(), processListOptions(), columnHeadings.getSelectedValuesList(), outputArea);
-                    new Thread(pr).start();
-                }
+        processButton.addActionListener (e -> {
+            //Check process variable.
+            if ( userInterface.getProcessRunning() ) {
+                JOptionPane.showMessageDialog(StatsresGUI.this, "Cannot start process as another process is already running!", "ERROR: Attempting to Start Multiple Processes!", JOptionPane.ERROR_MESSAGE);
+            } else {
+                //Set isProcessRunning variable to true.
+                userInterface.setProcessRunning(true);
+                //Do all other work in another thread to improve performance.
+                ProcessRunner pr = new ProcessRunner(userInterface, resultsFileField.getText(), processListOptions(), columnHeadings.getSelectedValuesList(), outputArea);
+                new Thread(pr).start();
             }
         });
         processButton.setMaximumSize(new Dimension(50, 25));
         buttonPanel.add ( processButton );
         //Create the Clear Button.
         JButton clearButton = new JButton("Reset");
-        clearButton.addActionListener ( new ActionListener() {
-            public void actionPerformed ( ActionEvent e ) {
-                clearFields();
-            }
-        });
+        clearButton.addActionListener (e -> clearFields());
         clearButton.setMaximumSize(new Dimension(50, 25));
         buttonPanel.add ( clearButton );
         //Create the Exit Button.
         JButton exitButton = new JButton ( "Exit" );
-        exitButton.addActionListener ( new ActionListener() {
-            public void actionPerformed ( ActionEvent e ) {
-                userInterface.exit();
-            }
-        });
+        exitButton.addActionListener (e -> userInterface.exit());
         exitButton.setMaximumSize(new Dimension(50, 25));
         buttonPanel.add ( exitButton );
         return buttonPanel;
@@ -750,7 +694,7 @@ public class StatsresGUI extends JFrame {
     	StatsresSettings settings = new StatsresSettings();
     	settings.setFile(resultsFileField.getText());
     	//Convert DefaultListModel to proper List.
-    	List<String> columnDataStr = new ArrayList<String>();
+    	List<String> columnDataStr = new ArrayList<>();
     	Enumeration<String> columnDataEnum = columnData.elements();
     	while (columnDataEnum.hasMoreElements()) {
     		columnDataStr.add(columnDataEnum.nextElement());

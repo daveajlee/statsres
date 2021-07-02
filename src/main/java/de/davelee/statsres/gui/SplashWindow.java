@@ -19,8 +19,6 @@ public class SplashWindow extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -2481626829536427543L;
-    private JLabel loadingLabel;
-    private JLabel versionLabel;
 
     private ImageDisplay logoDisplay;
 
@@ -110,7 +108,7 @@ public class SplashWindow extends JFrame {
             //Construct loading panel to add to the centre panel.
             JPanel loadingPanel = new JPanel();
             loadingPanel.setBackground(Color.WHITE);
-            loadingLabel = new JLabel("Loading... Please Wait");
+            JLabel loadingLabel = new JLabel("Loading... Please Wait");
             loadingLabel.setFont(new Font(FONT_FAMILY, Font.BOLD+Font.ITALIC, 16));
             loadingPanel.add(loadingLabel);
             centrePanel.add(loadingPanel);
@@ -118,7 +116,7 @@ public class SplashWindow extends JFrame {
             //Construct version panel to add to the centre panel. This presents "Version" if about screen.
             JPanel versionPanel = new JPanel();
             versionPanel.setBackground(Color.WHITE);
-            versionLabel = new JLabel("Version " + VERSION_NUMBER);
+            JLabel versionLabel = new JLabel("Version " + VERSION_NUMBER);
             versionLabel.setFont(new Font(FONT_FAMILY, Font.BOLD+Font.ITALIC, 16));
             versionPanel.add(versionLabel);
             centrePanel.add(versionPanel);
@@ -165,7 +163,7 @@ public class SplashWindow extends JFrame {
         Toolkit tools = Toolkit.getDefaultToolkit();
         Dimension screenDim = tools.getScreenSize();
         Dimension displayDim = getPreferredSize();
-        this.setLocation ( (int) (screenDim.width/2)-(displayDim.width/2), (int) (screenDim.height/2)-(displayDim.height/2));
+        this.setLocation ( (screenDim.width/2)-(displayDim.width/2), (screenDim.height/2)-(displayDim.height/2));
     }
     
 }

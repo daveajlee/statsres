@@ -20,14 +20,14 @@ public class StatsresProg extends Thread {
     private List<String> columns;
     private List<StatisticalFunctions> statisticalFunctions;
     //Variable to display output and boolean variable indicating whether finished or not.
-    private String output = "";
+    private StringBuilder outputBuilder = new StringBuilder();
     private boolean stillRunning = false;
     
     private static final Logger LOG = LoggerFactory.getLogger(StatsresProg.class);
     
     /** Default constructor. */
     public StatsresProg() {
-        fileData = new ArrayList<Double>();
+        fileData = new ArrayList<>();
     }
     
     /**
@@ -48,15 +48,15 @@ public class StatsresProg extends Thread {
      */
     public void run (  ) {
     	stillRunning = true;
-        output = "";
+        outputBuilder = new StringBuilder();
         //Repeat for all files,
         for ( int g = 0; g < files.size(); g++ ) {
             //Ensure fileData is blank.
-            fileData = new ArrayList<Double>();
+            fileData = new ArrayList<>();
             //Open results file.
             List<String> resultsFileContents = ReadWriteFileUtil.readFile(files.get(g), false);
             //Look through first row of data file to determine which positions in the array we need to look through.
-            Map<String, Integer> columnPositions = new HashMap<String, Integer>();
+            Map<String, Integer> columnPositions = new HashMap<>();
             String[] firstRow = resultsFileContents.get(0).split(",");
             for ( int i = 0; i < firstRow.length; i++ ) {
             	columnPositions.put(firstRow[i], i);
@@ -66,9 +66,10 @@ public class StatsresProg extends Thread {
             }
             //Append file name.
             if ( g != 0 ) { 
-            	output += "\n\n\n";
+            	outputBuilder.append("\n\n\n");
             }
-            output += "File: " + files.get(g);
+            outputBuilder.append("File: ");
+            outputBuilder.append(files.get(g));
             //Now for each column position,
             performCalculationsOnColumns(columnPositions, resultsFileContents);
         }
@@ -84,7 +85,7 @@ public class StatsresProg extends Thread {
     public void performCalculationsOnColumns ( final Map<String,Integer> columnPositions, final List<String> resultsFileContents ) {
     	for ( int h = 0; h < columns.size(); h++ ) {
             //Ensure fileData is blank.
-            fileData = new ArrayList<Double>();
+            fileData = new ArrayList<>();
             //Now go through rest of file contents and add data in the columnPosition of the row.
             try {
             	for ( int i = 1; i < resultsFileContents.size(); i++ ) {
@@ -93,15 +94,16 @@ public class StatsresProg extends Thread {
             	}
             	//Now call performCalculations method on the String LinkedList.
             	if (h != 0) { 
-            		output += "\n";
+            		outputBuilder.append("\n");
             	}
-            	output += "\n" + performCalculations ( fileData, columns.get(h), statisticalFunctions);
+            	outputBuilder.append("\n");
+            	outputBuilder.append(performCalculations ( fileData, columns.get(h), statisticalFunctions));
             	if ( !stillRunning ) { 
         			return;
         		}
             } catch ( Exception e ) {
             	LOG.error("Error mit non-numerical data", e);
-                output += "ERROR: Non-numerical data was present. Please ensure only numerical data is included except for column headings.";
+                outputBuilder.append("ERROR: Non-numerical data was present. Please ensure only numerical data is included except for column headings.");
             }
         }
     }
@@ -110,23 +112,29 @@ public class StatsresProg extends Thread {
      * Method to perform all statistical calculations.
      * @param data a <code>List</code> containing the data to be used in calculations.
      * @param columnHeading a <code>String</code> containing the column heading currently being processed.
-     * @param outputs a <code>StatisticalFunctions List</code> containing the statistical measurements to calculate.
+     * @param functions a <code>StatisticalFunctions List</code> containing the statistical measurements to calculate.
      * @return a <code>String</code> with the results to be presented in text area.
      */
     private String performCalculations ( List<Double> data, String columnHeading, List<StatisticalFunctions> functions ) {
         //Reset the output variable.
-        String outputStr = "Statistical Results for column " + columnHeading + ":";
+        StringBuilder outputStrBuilder = new StringBuilder();
+        outputStrBuilder.append("Statistical Results for column ");
+        outputStrBuilder.append(columnHeading);
+        outputStrBuilder.append(":");
         //Try all of the following - printing out an arithmetic error if an error occurs.
         try {
-        	for ( int i = 0; i < functions.size(); i++ ) {
-        		outputStr += "\n" + functions.get(i).getDisplayName() + ": " + removeZeros("" + functions.get(i).calculate(data));
-        	} 
+            for (StatisticalFunctions function : functions) {
+                outputStrBuilder.append("\n");
+                outputStrBuilder.append(function.getDisplayName());
+                outputStrBuilder.append(": ");
+                outputStrBuilder.append(removeZeros("" + function.calculate(data)));
+            }
         } catch ( Exception e ) {
         	LOG.error("Arithmetic error", e);
-            outputStr += "\nERROR: An arithmetic error has occurred. Cannot calculate remaining results";
+            outputStrBuilder.append("\nERROR: An arithmetic error has occurred. Cannot calculate remaining results");
         }
         //Finished so return output variable.
-        return outputStr;
+        return outputStrBuilder.toString();
     }
     
     /**
@@ -134,7 +142,7 @@ public class StatsresProg extends Thread {
      * @return a <code>String</code> containing the output.
      */
     public String getOutput () {
-        return output;
+        return outputBuilder.toString();
     }
     
     /**
@@ -150,14 +158,14 @@ public class StatsresProg extends Thread {
      */
     public void stopProcessing () {
         stillRunning = false;
-        output += "\nWARNING: Processing was interrupted!";
+        outputBuilder.append("\nWARNING: Processing was interrupted!");
     }
     
     private boolean fileAlreadyAdded ( final String fileToCheck, final List<String> currentFileList) {
     	boolean alreadyExists = false;
-        for ( int i = 0; i < currentFileList.size(); i++ ) {
-            if ( currentFileList.get(i).equalsIgnoreCase(fileToCheck) ) {
-                alreadyExists = true; 
+        for (String s : currentFileList) {
+            if (s.equalsIgnoreCase(fileToCheck)) {
+                alreadyExists = true;
                 break;
             }
         }
@@ -180,22 +188,22 @@ public class StatsresProg extends Thread {
      * @return a <code>String</code> List with all files.
      */
     private List<String> getFilesInDirectory ( final String directory ) {
-    	List<String> filesToProcess = new ArrayList<String>();
+    	List<String> filesToProcess = new ArrayList<>();
     	//Obtain a list for this directory of subfolders on the next level and files in this folder.
         String[] directoryFiles = new File(directory).list();
         if ( directoryFiles == null ) { 
         	return filesToProcess;
         }
         //Go through all files or subdirectories in this directory
-        for ( int i = 0; i < directoryFiles.length; i++ ) {
-        	//It is a csv file - great we add it to the list if we don't have it.
-        	if ( directoryFiles[i].endsWith(".csv") ) {
-        		if (!fileAlreadyAdded(directoryFiles[i], filesToProcess)) { 
-        			filesToProcess.add(directory + directoryFiles[i]);
-        		}
-        	} else if (!directoryFiles[i].contains(".")){
-        		//It must be a directory.
-                filesToProcess.addAll(getFilesInDirectory(directory + directoryFiles[i] + "/"));
+        for (String directoryFile : directoryFiles) {
+            //It is a csv file - great we add it to the list if we don't have it.
+            if (directoryFile.endsWith(".csv")) {
+                if (!fileAlreadyAdded(directoryFile, filesToProcess)) {
+                    filesToProcess.add(directory + directoryFile);
+                }
+            } else if (!directoryFile.contains(".")) {
+                //It must be a directory.
+                filesToProcess.addAll(getFilesInDirectory(directory + directoryFile + "/"));
             }
         }
         return filesToProcess;
@@ -211,14 +219,15 @@ public class StatsresProg extends Thread {
         if ( !location.endsWith(".sro") ) {
             return "";
         } else {
-            String outputText = "";
+            StringBuilder outputTextBuilder = new StringBuilder();
             List<String> outputList = ReadWriteFileUtil.readFile(location, false);
             //Process file into single string with new line characters.
-            for ( int i = 0; i < outputList.size(); i++ ) {
-                outputText += outputList.get(i) + "\n";
+            for (String s : outputList) {
+                outputTextBuilder.append(s);
+                outputTextBuilder.append("\n");
             }
             //Return output text.
-            return outputText;
+            return outputTextBuilder.toString();
         }
     }
     
