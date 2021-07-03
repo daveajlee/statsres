@@ -2,6 +2,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/de73c59384824981a8c901ec4f2e02d8)](https://app.codacy.com/manual/dave_33/statsres?utm_source=github.com&utm_medium=referral&utm_content=daveajlee/statsres&utm_campaign=Badge_Grade_Dashboard)
 
+![example workflow](https://github.com/daveajlee/statsres/actions/workflows/maven.yml/badge.svg)
 
 Statsres is a java program which calculates statistical measurements (including mean, median, standard deviation and others) for single or multiple dataset(s) during a single run. Statsres’s output is suitable for publications or further analysis. It is designed as a simple free solution for non-profit organisations needing a quick tool to perform statistical analysis. The ideas behind Statsres were conceived in 2008 and since then the program has been regularly updated for new Java versions up to and including Java 8. Statsres is an open source project but is no longer in active development.
 
