@@ -44,15 +44,4 @@ public class ReadWriteFileTest {
 		assertEquals(firstLine.get(0), "Hello");
 	}
 	
-	@Test
-	public void testWriteFile ( ) {
-		URL url = this.getClass().getResource("/writefiletest.txt");
-		List<String> newList = new ArrayList<>();
-		newList.add("WriteTest");
-		assertTrue(ReadWriteFileUtil.writeFile(newList, new File(url.getFile()), false));
-		newList = new ArrayList<>();
-		newList.add("appendTest");
-		assertTrue(ReadWriteFileUtil.writeFile(newList, new File(url.getFile()), true));
-	}
-	
 }
