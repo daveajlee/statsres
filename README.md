@@ -16,7 +16,7 @@ You need the Java 11 Runtime Enviroment (or later) installed on your computer. I
 
 ## How to checkout the code and begin to make changes ##
 
-This repository contains the current version of Statsres and the current source code in Java. The current version of Statsres is 2.2.1. The next planned version is 2.3.0 - building the current source code builds version 2.3.0 beta:
+This repository contains the current version of Statsres and the current source code in Java. The current version of Statsres is 2.3.0. The next planned version is 2.4.0 - building the current source code builds version 2.4.0 beta:
 
 *   Clone the git branch and import the project in your favourite IDE.
 *   The current main class is UserInterface.
