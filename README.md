@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://www.davelee.de/common/assets/img/portfolio/statsres-logo.png" alt="Statsres" width="300" height="300">
+<img src="https://www.davelee.de/common/assets/img/portfolio/statsres.webp" alt="Statsres" width="300" height="300">
 </p>
 
 <p align=center><a href="https://app.codacy.com/manual/dave_33/statsres?utm_source=github.com&utm_medium=referral&utm_content=daveajlee/statsres&utm_campaign=Badge_Grade_Dashboard"><img src="https://api.codacy.com/project/badge/Grade/de73c59384824981a8c901ec4f2e02d8" alt="Codacy Badge"> </a>
