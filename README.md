@@ -1,29 +1,97 @@
-<p align="center">
-<img src="https://www.davelee.de/common/assets/img/portfolio/statsres.webp" alt="Statsres" width="300" height="300">
-</p>
+This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-<p align=center><a href="https://app.codacy.com/manual/dave_33/statsres?utm_source=github.com&utm_medium=referral&utm_content=daveajlee/statsres&utm_campaign=Badge_Grade_Dashboard"><img src="https://api.codacy.com/project/badge/Grade/de73c59384824981a8c901ec4f2e02d8" alt="Codacy Badge"> </a>
-</p>
+# Getting Started
 
-Statsres is a simple open source free solution for non-profit organisations needing a quick tool to calculate statistical measurements  such as mean, median, standard deviation and others. The output is suitable for publications or further analysis. 
+> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
-## Current version of Statsres
+## Step 1: Start Metro
 
-Statsres is a java program which calculates statistical measurements (including mean, median, standard deviation and others) for single or multiple dataset(s) during a single run. Statsres’s output is suitable for publications or further analysis. It is designed as a simple free solution for non-profit organisations needing a quick tool to perform statistical analysis. The ideas behind Statsres were conceived in 2008 and since then the program has been regularly updated for new Java versions up to and including Java 11. Statsres is an open source project but is no longer in active development.
+First, you will need to run **Metro**, the JavaScript build tool for React Native.
 
-###  How to run Statsres without checking out the code base
+To start the Metro dev server, run the following command from the root of your React Native project:
 
-You need the Java 11 Runtime Enviroment (or later) installed on your computer. If you are not sure which version of Java you have, run “java -version” from the command prompt (Windows) or from a terminal (Linux/Mac). You can download the latest version of the Java Runtime Environment <a href="http://java.sun.com/">here</a>.
+```sh
+# Using npm
+npm start
 
-*   Windows/Linux/Mac: <a href="https://github.com/daveajlee/statsres/packages/881594">JAR File</a> (Download the file to a directory of your choice). After installation, open a console or terminal and navigate to the chosen folder. Once in this directory, run java -jar “statsres-2.2.1.jar” Statsres contains an on-line help system to answer queries and provide further help during use of Statsres.
+# OR using Yarn
+yarn start
+```
 
-### How to checkout the code and begin to make changes
+## Step 2: Build and run your app
 
-This repository contains the current version of Statsres and the current source code in Java. The current version of Statsres is 2.3.0. The next planned version is 2.4.0 - building the current source code builds version 2.4.0 beta:
+With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
 
-*   Clone the git branch and import the project in your favourite IDE.
-*   The current main class is UserInterface.
-*   Dependencies are managed through the pom.xml file and Apache Maven.
-*   No database configuration is currently used.
-*   JUnit tests can be run either individually or collectively in the IDE or through maven.
-*   Releases can be built through Maven - this should happen only after permission from the Repo Owner!
+### Android
+
+```sh
+# Using npm
+npm run android
+
+# OR using Yarn
+yarn android
+```
+
+### iOS
+
+For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+
+The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+
+```sh
+bundle install
+```
+
+Then, and every time you update your native dependencies, run:
+
+```sh
+bundle exec pod install
+```
+
+For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+
+```sh
+# Using npm
+npm run ios
+
+# OR using Yarn
+yarn ios
+```
+
+If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+
+This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+
+## Step 3: Modify your app
+
+Now that you have successfully run the app, let's make changes!
+
+Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+
+When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+
+- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
+- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+
+## Congratulations! :tada:
+
+You've successfully run and modified your React Native App. :partying_face:
+
+### Now what?
+
+- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
+- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+
+# Troubleshooting
+
+If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+
+# Learn More
+
+To learn more about React Native, take a look at the following resources:
+
+- [React Native Website](https://reactnative.dev) - learn more about React Native.
+- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
+- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
+- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
+- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
