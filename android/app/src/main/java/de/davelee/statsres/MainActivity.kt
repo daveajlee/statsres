@@ -1,4 +1,4 @@
-package com.statsres
+package de.davelee.statsres
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

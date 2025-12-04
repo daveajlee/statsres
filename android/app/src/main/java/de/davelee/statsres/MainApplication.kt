@@ -1,4 +1,4 @@
-package com.statsres
+package de.davelee.statsres
 
 import android.app.Application
 import com.facebook.react.PackageList
