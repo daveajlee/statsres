@@ -1,16 +1,23 @@
 import { Appearance, Switch, StyleSheet, Text, View } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type OperationSwitchProps = {
     label: string;
     value: boolean;
     onChange: Function;
+    disabled: boolean;
 }
 
-export default function OperationSwitch({label, value, onChange}: OperationSwitchProps) {
+export default function OperationSwitch({label, value, onChange, disabled}: OperationSwitchProps) {
 
     const colorScheme = Appearance.getColorScheme();
     const [isEnabled, setIsEnabled] = useState<boolean>(value);
+    const [isDisabled, setIsDisabled] = useState<boolean>(disabled);
+
+    useEffect(() => {
+        setIsEnabled(value);
+        setIsDisabled(disabled);
+    }, [value, disabled]);
 
     function toggleSwitch() {
         setIsEnabled(!isEnabled);
@@ -26,6 +33,7 @@ export default function OperationSwitch({label, value, onChange}: OperationSwitc
                 ios_backgroundColor="#3e3e3e"
                 onValueChange={toggleSwitch}
                 value={isEnabled}
+                disabled={isDisabled}
             />
         </View>
     );

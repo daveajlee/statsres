@@ -1,4 +1,4 @@
-import { Appearance, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Appearance, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OperationResult from "../components/OperationResult";
@@ -15,6 +15,8 @@ type OutputScreenProps = {
 export default function OutputScreen({route}: OutputScreenProps) {
 
     const colorScheme = Appearance.getColorScheme();
+
+    const logoImage = require('./../assets/images/logo-1024.png');
 
     const navigation = useNavigation<NavigationStackParams>();
 
@@ -33,15 +35,19 @@ export default function OutputScreen({route}: OutputScreenProps) {
     return (
       <SafeAreaView style={styles.safeContainer}>
         <ScrollView contentContainerStyle={[styles.container, colorScheme === 'dark' ? styles.darkBackground : styles.lightBackground]}>
-            <OperationResult label="Mean" value={route.params.mean} />
-            <OperationResult label="Median" value={route.params.median} />
-            <OperationResult label="Count" value={route.params.count} />
-            <OperationResult label="Minimum" value={route.params.min} />
-            <OperationResult label="Maximum" value={route.params.max} />
-            <OperationResult label="IQR" value={route.params.iqr} />
-            <OperationResult label="Q1" value={route.params.q1} />
-            <OperationResult label="Q3" value={route.params.q3} />
-            <OperationResult label="Standard Deviation" value={route.params.stdDev} />
+            <Image style={styles.logo} source={logoImage}/>
+            <View style={styles.headerContainer}>
+                <Text style={[styles.headerText, colorScheme === 'dark' ? styles.darkText : styles.lightText]}>Output</Text>
+            </View>
+            { route.params.calculateMean && <OperationResult label="Mean" value={route.params.mean} /> }
+            { route.params.calculateMedian && <OperationResult label="Median" value={route.params.median} /> }
+            { route.params.calculateCount && <OperationResult label="Count" value={route.params.count} /> }
+            { route.params.calculateMin && <OperationResult label="Minimum" value={route.params.min} /> }
+            { route.params.calculateMax && <OperationResult label="Maximum" value={route.params.max} /> }
+            { route.params.calculateIQR && <OperationResult label="IQR" value={route.params.iqr} /> }
+            { route.params.calculateQ1 && <OperationResult label="Q1" value={route.params.q1} /> }
+            { route.params.calculateQ3 && <OperationResult label="Q3" value={route.params.q3} /> }
+            { route.params.calculateStdDev && <OperationResult label="Standard Deviation" value={route.params.stdDev} /> }
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.button} onPress={newHandler}>
                     <Text style={styles.buttonText}>New Analysis</Text>
