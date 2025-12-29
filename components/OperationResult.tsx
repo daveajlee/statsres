@@ -1,4 +1,4 @@
-import { Appearance, StyleSheet, Text, View } from "react-native";
+import { Appearance, StyleSheet, Text, View } from 'react-native';
 
 type OperationResultProps = {
     label: string;
@@ -30,12 +30,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         paddingBottom: 16,
-        paddingRight: 10
+        paddingRight: 10,
     },
     darkText: {
-        color: 'white'
+        color: 'white',
     },
     lightText: {
-        color: 'black'
+        color: 'black',
     },
 });

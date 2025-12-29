@@ -1,11 +1,11 @@
 /**
  * Show the input screen with configuration options and a submit button.
  */
-import { Appearance, Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, ScrollView, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import OperationSwitch from "../components/OperationSwitch";
+import { Appearance, Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, ScrollView, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import OperationSwitch from '../components/OperationSwitch';
 
 type NavigationStackParams = {
   navigate: Function;
@@ -17,7 +17,7 @@ export default function InputScreen() {
     const colorScheme = Appearance.getColorScheme();
 
     const logoImage = require('./../assets/images/logo-1024.png');
-    
+
     const navigation = useNavigation<NavigationStackParams>();
 
     const [data, setData] = useState<string>('');
@@ -47,8 +47,14 @@ export default function InputScreen() {
      */
     function calculateHandler() {
         // Check that at least one number has been entered.
-        if ( data.length === 0 || !data.includes(',') || data.split(',').length < 2 ) {
+        if ( data.length === 0 || !data.includes(';') || data.split(';').length < 2 ) {
             Alert.alert('Please enter at least two numbers.');
+            return;
+        }
+        // Check that the text field does not contain any characters apart from numbers, commas and decimal points.
+        var regex = new RegExp('[^0-9;.]');
+        if(regex.test(data)){
+            Alert.alert('Please enter only numbers separated by semi-colons.');
             return;
         }
         // Check that at least one operation is selected.
@@ -57,53 +63,53 @@ export default function InputScreen() {
             return;
         }
         // Trim any whitespace and remove any comma at the end.
-        let formattedText = data.trim().replace(/,\s*$/, "");
+        let formattedText = data.trim().replace(/;\s*$/, '');
         // Initialise variables.
-        let [mean, median, count, min, max, iqr, q1, q3, stdDev] = ["", "", "", "", "", "", "", "", ""];
+        let [mean, median, count, min, max, iqr, q1, q3, stdDev] = ['', '', '', '', '', '', '', '', ''];
         // Calculate count.
-        let dataArray = formattedText.split(',');
-        count = "" + dataArray.length;
+        let dataArray = formattedText.split(';');
+        count = '' + dataArray.length;
         // Calculate mean.
         let sum = 0;
         for ( let i = 0; i < dataArray.length; i++ ) {
             sum += parseFloat(dataArray[i]);
         }
-        mean = "" + (sum / dataArray.length);
+        mean = '' + (sum / dataArray.length);
         // Calculate median.
         dataArray.sort((a, b) => parseFloat(a) - parseFloat(b));
-        median = "" +calculateMedianFromArray(dataArray);
+        median = '' + calculateMedianFromArray(dataArray);
         // Calculate min.
-        min = "" + parseFloat(dataArray[0]);
+        min = '' + parseFloat(dataArray[0]);
         // Calculate max.
-        max = "" + parseFloat(dataArray[dataArray.length - 1]);
+        max = '' + parseFloat(dataArray[dataArray.length - 1]);
         // Calculate Q1 and Q3.
         if ( dataArray.length % 2 === 0 ) {
             // Calculate Q1
             let lowerHalf = dataArray.slice(0, dataArray.length / 2);
             // If it is even in total, then half will be odd so take half and round up. Subtract 1 because of zero indexing.
-            q1 = "" + calculateMedianFromArray(lowerHalf);
+            q1 = '' + calculateMedianFromArray(lowerHalf);
             // Calculate Q3
             let upperHalf = dataArray.slice(dataArray.length / 2, dataArray.length);
             // If it is even in total, then half will be odd so take half and round up. Subtract 1 because of zero indexing.
-            q3 = "" + calculateMedianFromArray(upperHalf);
+            q3 = '' + calculateMedianFromArray(upperHalf);
         } else {
             // Calculate lower half depending on whether it was even or not.
             let lowerHalf = dataArray.slice(0, Math.floor(dataArray.length / 2));
             if ( lowerHalf.length % 2 === 0 ) {
-                q1 = "" + (parseFloat(lowerHalf[lowerHalf.length / 2 - 1]) + parseFloat(lowerHalf[lowerHalf.length / 2])) / 2;
+                q1 = '' + (parseFloat(lowerHalf[lowerHalf.length / 2 - 1]) + parseFloat(lowerHalf[lowerHalf.length / 2])) / 2;
             } else {
-                q1 = "" + parseFloat(lowerHalf[Math.floor(lowerHalf.length / 2)]);
+                q1 = '' + parseFloat(lowerHalf[Math.floor(lowerHalf.length / 2)]);
             }
             // Calculate upper half depending on whether it was even or not.
             let upperHalf = dataArray.slice(Math.floor(dataArray.length / 2) + 1, dataArray.length);
             if ( upperHalf.length % 2 === 0 ) {
-                q3 = "" + (parseFloat(upperHalf[upperHalf.length / 2 - 1]) + parseFloat(upperHalf[upperHalf.length / 2])) / 2;
+                q3 = '' + (parseFloat(upperHalf[upperHalf.length / 2 - 1]) + parseFloat(upperHalf[upperHalf.length / 2])) / 2;
             } else {
-                q3 = "" + parseFloat(upperHalf[Math.floor(upperHalf.length / 2)]);
+                q3 = '' + parseFloat(upperHalf[Math.floor(upperHalf.length / 2)]);
             }
         }
         // Calculate IQR.
-        iqr = "" + (parseFloat(q3) - parseFloat(q1));
+        iqr = '' + (parseFloat(q3) - parseFloat(q1));
         // Calculate standard deviation.
         let varianceSum = 0;
         for ( let i = 0; i < dataArray.length; i++ ) {
@@ -112,7 +118,7 @@ export default function InputScreen() {
         let variance = varianceSum / dataArray.length;
         stdDev = (Math.sqrt(variance)).toFixed(13);
         // Navigate to output screen with results.
-        navigation.navigate('OutputScreen', { mean, calculateMean, median, calculateMedian, count, calculateCount, 
+        navigation.navigate('OutputScreen', { mean, calculateMean, median, calculateMedian, count, calculateCount,
             min, calculateMin, max, calculateMax, iqr, calculateIQR, q1, calculateQ1, q3, calculateQ3, stdDev, calculateStdDev });
     }
 
@@ -136,9 +142,8 @@ export default function InputScreen() {
     function dataInputHandler(enteredText: string) {
         setData(enteredText);
         // Validate input to only allow numbers and commas.
-        if ( enteredText.includes(',') ) {
-            let array = enteredText.split(',');
-            console.log('array has length ' + array.length);
+        if ( enteredText.includes(';') ) {
+            let array = enteredText.split(';');
             if ( array.length > 1 ) {
                 setDisableMean(false);
                 setDisableMedian(false);
@@ -176,8 +181,8 @@ export default function InputScreen() {
           </View>
           <ScrollView contentContainerStyle={styles.bodyContainer}>
             <View style={styles.dataContainer}>
-                <Text style={[styles.bodyText, colorScheme === 'dark' ? styles.darkText : styles.lightText]}>Data:</Text>
-                <TextInput style={colorScheme === 'dark' ? styles.textInputDark : styles.textInputLight} placeholder='Comma separated numbers' onChangeText={dataInputHandler} value={data} multiline={true}/>
+                <Text style={[styles.bodyText, colorScheme === 'dark' ? styles.darkText : styles.lightText]}>Population Data:</Text>
+                <TextInput style={colorScheme === 'dark' ? styles.textInputDark : styles.textInputLight} placeholder="Numbers separated with semicolons" onChangeText={dataInputHandler} value={data} multiline={true}/>
             </View>
             <View style={styles.operationsContainer}>
                 <Text style={[styles.bodyText, colorScheme === 'dark' ? styles.darkText : styles.lightText]}>Operation(s):</Text>
@@ -207,7 +212,7 @@ export default function InputScreen() {
           </ScrollView>
         </ScrollView>
       </SafeAreaView>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -220,9 +225,9 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     logo: {
-        marginTop: 10, 
-        width: 128, 
-        height: 128
+        marginTop: 10,
+        width: 128,
+        height: 128,
     },
     darkBackground: {
         backgroundColor: 'black',
@@ -231,10 +236,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#F0F0F0',
     },
     darkText: {
-        color: 'white'
+        color: 'white',
     },
     lightText: {
-        color: 'black'
+        color: 'black',
     },
     container: {
         flex: 1,
@@ -242,13 +247,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerContainer: {
-        paddingTop: 30
+        paddingTop: 30,
     },
     bodyContainer: {
         paddingTop: 20,
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     dataContainer: {
         flexDirection: 'column',
@@ -257,18 +262,18 @@ const styles = StyleSheet.create({
     operationsContainer: {
         flexDirection: 'column',
         width: '80%',
-        marginTop: 20
+        marginTop: 20,
     },
     headerText: {
         fontSize: 32,
         fontWeight: 'bold',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     bodyText: {
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        paddingBottom: 16
+        paddingBottom: 16,
     },
     textInputLight: {
         borderWidth: 1,
@@ -279,7 +284,7 @@ const styles = StyleSheet.create({
         width: 300,
         height: 100,
         padding: 8,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     textInputDark: {
         borderWidth: 1,
@@ -290,19 +295,19 @@ const styles = StyleSheet.create({
         width: 300,
         height: 100,
         padding: 8,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     buttonContainer: {
         marginTop: 20,
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     button: {
-        alignItems: "center",
-        backgroundColor: "#e72f41ff",
+        alignItems: 'center',
+        backgroundColor: '#e72f41ff',
         width: '90%',
         padding: 10,
         marginBottom: 30,
-        borderRadius: 50
+        borderRadius: 50,
     },
     buttonText: {
         color: 'white',

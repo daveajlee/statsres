@@ -1,7 +1,7 @@
-import { Appearance, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import OperationResult from "../components/OperationResult";
+import { Appearance, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import OperationResult from '../components/OperationResult';
 
 type NavigationStackParams = {
   navigate: Function;
@@ -55,7 +55,7 @@ export default function OutputScreen({route}: OutputScreenProps) {
             </View>
           </ScrollView>
       </SafeAreaView>
-    )
+    );
 
 }
 
@@ -64,9 +64,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     logo: {
-        marginTop: 10, 
-        width: 128, 
-        height: 128
+        marginTop: 10,
+        width: 128,
+        height: 128,
     },
     darkBackground: {
         backgroundColor: 'black',
@@ -75,10 +75,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#F0F0F0',
     },
     darkText: {
-        color: 'white'
+        color: 'white',
     },
     lightText: {
-        color: 'black'
+        color: 'black',
     },
     container: {
         flex: 1,
@@ -86,13 +86,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerContainer: {
-        paddingTop: 30
+        paddingTop: 30,
     },
     bodyContainer: {
         paddingTop: 20,
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     usernameContainer: {
         flexDirection: 'column',
@@ -101,23 +101,23 @@ const styles = StyleSheet.create({
     passwordContainer: {
         flexDirection: 'column',
         width: '80%',
-        marginTop: 10
+        marginTop: 10,
     },
     activationContainer: {
         flexDirection: 'column',
         width: '80%',
-        marginTop: 10
+        marginTop: 10,
     },
     headerText: {
         fontSize: 32,
         fontWeight: 'bold',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     bodyText: {
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        paddingBottom: 16
+        paddingBottom: 16,
     },
     textInputLight: {
         borderWidth: 1,
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         color: '#120438',
         borderRadius: 6,
         width: '100%',
-        padding: 8
+        padding: 8,
     },
     textInputDark: {
         borderWidth: 1,
@@ -135,19 +135,19 @@ const styles = StyleSheet.create({
         color: 'white',
         borderRadius: 6,
         width: '100%',
-        padding: 8
+        padding: 8,
     },
     buttonContainer: {
         marginTop: 20,
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     button: {
-        alignItems: "center",
-        backgroundColor: "#e72f41ff",
+        alignItems: 'center',
+        backgroundColor: '#e72f41ff',
         width: '90%',
         padding: 10,
         marginBottom: 30,
-        borderRadius: 50
+        borderRadius: 50,
     },
     buttonText: {
         color: 'white',

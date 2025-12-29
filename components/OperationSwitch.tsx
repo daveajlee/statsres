@@ -1,5 +1,5 @@
-import { Appearance, Switch, StyleSheet, Text, View } from "react-native";
-import { useEffect, useState } from "react";
+import { Appearance, Switch, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
 
 type OperationSwitchProps = {
     label: string;
@@ -51,12 +51,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        paddingBottom: 16
+        paddingBottom: 16,
     },
     darkText: {
-        color: 'white'
+        color: 'white',
     },
     lightText: {
-        color: 'black'
+        color: 'black',
     },
 });
