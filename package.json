@@ -1,6 +1,6 @@
 {
   "name": "statsres",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -11,7 +11,8 @@
     "windows": "npx @react-native-community/cli run-windows"
   },
   "dependencies": {
-    "@react-navigation/native": "^7.1.26",
+    "@react-native-vector-icons/ionicons": "^13.1.1",
+    "@react-navigation/native": "^7.2.2",
     "@react-navigation/native-stack": "^7.9.0",
     "react": "19.0.0",
     "react-native": "0.79.0",

@@ -1,7 +1,7 @@
 /**
  * Show the input screen with configuration options and a submit button.
  */
-import { Appearance, Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, ScrollView, View } from 'react-native';
+import { Appearance, Alert, StyleSheet, Text, TextInput, TouchableOpacity, ScrollView, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,8 +15,6 @@ type NavigationStackParams = {
 export default function InputScreen() {
 
     const colorScheme = Appearance.getColorScheme();
-
-    const logoImage = require('./../assets/images/logo-1024.png');
 
     const navigation = useNavigation<NavigationStackParams>();
 
@@ -175,13 +173,9 @@ export default function InputScreen() {
     return (
       <SafeAreaView style={[styles.safeContainer, colorScheme === 'dark' ? styles.darkBackground : styles.lightBackground]}>
         <ScrollView contentContainerStyle={[styles.container, colorScheme === 'dark' ? styles.darkBackground : styles.lightBackground]}>
-          <Image style={styles.logo} source={logoImage} />
-          <View style={styles.headerContainer}>
-            <Text style={[styles.headerText, colorScheme === 'dark' ? styles.darkText : styles.lightText]}>Perform Analysis</Text>
-          </View>
           <ScrollView contentContainerStyle={styles.bodyContainer}>
             <View style={styles.dataContainer}>
-                <Text style={[styles.bodyText, colorScheme === 'dark' ? styles.darkText : styles.lightText]}>Population Data:</Text>
+                <Text style={[styles.bodyText, colorScheme === 'dark' ? styles.darkText : styles.lightText]}>Population Data {'\n'} (separated by semicolons):</Text>
                 <TextInput style={colorScheme === 'dark' ? styles.textInputDark : styles.textInputLight} placeholder="Numbers separated with semicolons" onChangeText={dataInputHandler} value={data} multiline={true}/>
             </View>
             <View style={styles.operationsContainer}>
@@ -303,7 +297,7 @@ const styles = StyleSheet.create({
     },
     button: {
         alignItems: 'center',
-        backgroundColor: '#e72f41ff',
+        backgroundColor: 'rgb(240, 74, 9)',
         width: '90%',
         padding: 10,
         marginBottom: 30,
