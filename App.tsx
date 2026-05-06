@@ -10,11 +10,12 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import InputScreen from './screens/InputScreen';
 import OutputScreen from './screens/OutputScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import HelpScreen from './screens/HelpScreen';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
-import { Appearance, View } from 'react-native';
+import { Alert, Appearance, View } from 'react-native';
 import IconButton from './components/IconButton';
 
 // Define stack navigation
@@ -59,10 +60,10 @@ function App() {
           <Stack.Screen name="InputScreen" component={InputScreen} options={{ title: 'Perform Analysis', 
             headerRight: () => <View style={{flexDirection: 'row'}}>
                 <View>
-                    <IconButton onPress={() => navigation.navigate('LoadScreen')} iconName='folder-open-outline' color="white" />
+                    <IconButton onPress={() => Alert.alert("Coming Soon!", "Not yet available!")} iconName='folder-open-outline' color="white" />
                 </View>
                 <View style={{marginLeft: 10}}>
-                    <IconButton onPress={() => navigation.navigate('SaveScreen')} iconName='save-outline' color="white" />
+                    <IconButton onPress={() => Alert.alert("Coming Soon!", "Not yet available!")} iconName='save-outline' color="white" />
                 </View>
                 <View style={{marginLeft: 10}}>
                     <IconButton onPress={() => navigation.navigate('HelpScreen')} iconName='help-circle-outline' color="white" />
@@ -72,7 +73,17 @@ function App() {
                 </View>
               </View>
            }} />
-          <Stack.Screen name="OutputScreen" component={OutputScreen} options={{ title: 'Output' }} />
+          <Stack.Screen name="OutputScreen" component={OutputScreen} options={{ title: 'Output',
+            headerRight: () => <View style={{flexDirection: 'row'}}>
+                <View style={{marginLeft: 10}}>
+                    <IconButton onPress={() => navigation.navigate('HelpScreen')} iconName='help-circle-outline' color="white" />
+                </View>
+                <View style={{marginLeft: 10}}>
+                    <IconButton onPress={() => navigation.navigate('SettingsScreen')} iconName='settings-outline' color="white" />
+                </View>
+              </View>
+           }} />
+           <Stack.Screen name="HelpScreen" component={HelpScreen} options={{ title: 'Statsres Help' }} />
           <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={{ title: 'Settings' }} />
       </Stack.Navigator>
     );

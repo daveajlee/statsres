@@ -1,4 +1,4 @@
-import { Appearance, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Appearance, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import OperationResult from '../components/OperationResult';
@@ -16,17 +16,23 @@ export default function OutputScreen({route}: OutputScreenProps) {
 
     const colorScheme = Appearance.getColorScheme();
 
-    const logoImage = require('./../assets/images/logo-1024.png');
-
     const navigation = useNavigation<NavigationStackParams>();
 
     console.log('OutputScreen: Mean is ' + route.params.mean);
 
     /**
-     * Attempt to activate the user with the code supplied.
+     * Run a new analysis, navigating back to the input screen.
      */
     function newHandler() {
         navigation.navigate('InputScreen');
+    }
+
+    function saveOutputHandler() {
+        Alert.alert("Coming Soon!", "Not yet available!");
+    }
+
+    function loadOutputHandler() {
+        Alert.alert("Coming Soon!", "Not yet available!");
     }
 
     /**
@@ -35,10 +41,6 @@ export default function OutputScreen({route}: OutputScreenProps) {
     return (
       <SafeAreaView style={styles.safeContainer}>
         <ScrollView contentContainerStyle={[styles.container, colorScheme === 'dark' ? styles.darkBackground : styles.lightBackground]}>
-            <Image style={styles.logo} source={logoImage}/>
-            <View style={styles.headerContainer}>
-                <Text style={[styles.headerText, colorScheme === 'dark' ? styles.darkText : styles.lightText]}>Output</Text>
-            </View>
             { route.params.calculateMean && <OperationResult label="Mean" value={route.params.mean} /> }
             { route.params.calculateMedian && <OperationResult label="Median" value={route.params.median} /> }
             { route.params.calculateCount && <OperationResult label="Count" value={route.params.count} /> }
@@ -51,6 +53,12 @@ export default function OutputScreen({route}: OutputScreenProps) {
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.button} onPress={newHandler}>
                     <Text style={styles.buttonText}>New Analysis</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={saveOutputHandler}>
+                    <Text style={styles.buttonText}>Save Output</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={loadOutputHandler}>
+                    <Text style={styles.buttonText}>Load Another Output</Text>
                 </TouchableOpacity>
             </View>
           </ScrollView>
@@ -139,14 +147,17 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginTop: 20,
-        flexDirection: 'row',
+        flexDirection: 'column',
+        width: '100%',
     },
     button: {
         alignItems: 'center',
-        backgroundColor: '#e72f41ff',
+        backgroundColor: 'rgb(240, 74, 9)',
         width: '90%',
         padding: 10,
         marginBottom: 30,
+        marginLeft: 20,
+        marginRight: 20,
         borderRadius: 50,
     },
     buttonText: {
