@@ -59,7 +59,7 @@ function App() {
           }, headerTitleAlign: 'left', headerTintColor: 'white'}}>
           <Stack.Screen name="InputScreen" component={InputScreen} options={{ title: 'Perform Analysis', 
             headerRight: () => <View style={{flexDirection: 'row'}}>
-                <View>
+                {/*<View>
                     <IconButton onPress={() => Alert.alert("Coming Soon!", "Not yet available!")} iconName='folder-open-outline' color="white" />
                 </View>
                 <View style={{marginLeft: 10}}>
@@ -67,7 +67,7 @@ function App() {
                 </View>
                 <View style={{marginLeft: 10}}>
                     <IconButton onPress={() => navigation.navigate('HelpScreen')} iconName='help-circle-outline' color="white" />
-                </View>
+                </View>*/}
                 <View style={{marginLeft: 10}}>
                     <IconButton onPress={() => navigation.navigate('SettingsScreen')} iconName='settings-outline' color="white" />
                 </View>
@@ -75,9 +75,9 @@ function App() {
            }} />
           <Stack.Screen name="OutputScreen" component={OutputScreen} options={{ title: 'Output',
             headerRight: () => <View style={{flexDirection: 'row'}}>
-                <View style={{marginLeft: 10}}>
+                {/*<View style={{marginLeft: 10}}>
                     <IconButton onPress={() => navigation.navigate('HelpScreen')} iconName='help-circle-outline' color="white" />
-                </View>
+                </View>*/}
                 <View style={{marginLeft: 10}}>
                     <IconButton onPress={() => navigation.navigate('SettingsScreen')} iconName='settings-outline' color="white" />
                 </View>

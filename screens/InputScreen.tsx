@@ -44,14 +44,17 @@ export default function InputScreen() {
      * Attempt to perform the calculations based on the configuration supplied by the user.
      */
     function calculateHandler() {
+
+        // Remove all spaces from string to prevent errors.
+        let numbers = data.replace(/\s/g, '');
         // Check that at least one number has been entered.
-        if ( data.length === 0 || !data.includes(';') || data.split(';').length < 2 ) {
+        if ( numbers.length === 0 || !numbers.includes(';') || numbers.split(';').length < 2 ) {
             Alert.alert('Please enter at least two numbers.');
             return;
         }
         // Check that the text field does not contain any characters apart from numbers, commas and decimal points.
         var regex = new RegExp('[^0-9;.]');
-        if(regex.test(data)){
+        if(regex.test(numbers)){
             Alert.alert('Please enter only numbers separated by semi-colons.');
             return;
         }
@@ -61,7 +64,7 @@ export default function InputScreen() {
             return;
         }
         // Trim any whitespace and remove any comma at the end.
-        let formattedText = data.trim().replace(/;\s*$/, '');
+        let formattedText = numbers.trim().replace(/;\s*$/, '');
         // Initialise variables.
         let [mean, median, count, min, max, iqr, q1, q3, stdDev] = ['', '', '', '', '', '', '', '', ''];
         // Calculate count.

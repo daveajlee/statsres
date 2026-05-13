@@ -54,12 +54,12 @@ export default function OutputScreen({route}: OutputScreenProps) {
                 <TouchableOpacity style={styles.button} onPress={newHandler}>
                     <Text style={styles.buttonText}>New Analysis</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={saveOutputHandler}>
+                {/*<TouchableOpacity style={styles.button} onPress={saveOutputHandler}>
                     <Text style={styles.buttonText}>Save Output</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={loadOutputHandler}>
                     <Text style={styles.buttonText}>Load Another Output</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>*/}
             </View>
           </ScrollView>
       </SafeAreaView>
