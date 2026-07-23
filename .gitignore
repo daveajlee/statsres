@@ -73,3 +73,7 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Android Releases
+android/app/release
+gradle-daemon-jvm.properties
