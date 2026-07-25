@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import InputScreen from './screens/InputScreen';
@@ -15,7 +8,7 @@ import HelpScreen from './screens/HelpScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
-import { Alert, Appearance, View } from 'react-native';
+import { Appearance, View } from 'react-native';
 import IconButton from './components/IconButton';
 
 // Define stack navigation
